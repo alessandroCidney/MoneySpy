@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ['@nuxt/eslint', '@nuxt/test-utils'],
+  modules: ["@nuxt/eslint", "@nuxt/test-utils"],
 
   runtimeConfig: {
     public: {
@@ -12,6 +12,14 @@ export default defineNuxtConfig({
       STORAGE_BUCKET: process.env.STORAGE_BUCKET,
       MESSAGING_SENDER_ID: process.env.MESSAGING_SENDER_ID,
       APP_ID: process.env.APP_ID,
-    }
+    },
+  },
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: "always-multiline",
+      },
+    },
   },
 })
