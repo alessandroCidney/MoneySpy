@@ -7,7 +7,7 @@
 <script setup lang="ts">
 const expensesCrud = useExpensesCrud()
 
-const expensesArr = ref<Expense[]>([])
+const expensesArr = ref<BaseObject[]>([])
 
 async function listExpenses() {
   try {

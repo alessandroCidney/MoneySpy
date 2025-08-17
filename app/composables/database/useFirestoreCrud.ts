@@ -10,33 +10,26 @@ import {
 
 import { v4 as uuidV4 } from 'uuid'
 
-export interface Expense {
+export interface BaseObject {
   id: string
   name: string
 
   createdBy: string
   createdAt: number
-
-  value: number
-  currency: string
-  type: string
 }
 
-interface ExpenseCreationPayload
-  extends Omit<Expense, 'id' | 'createdAt' | 'createdBy'> {
+export type BaseObjectCreationPayload<T extends BaseObject> = Omit<T, 'id' | 'createdAt' | 'createdBy'> & {
   id?: string
 
   createdBy?: string
   createdAt?: number
 }
 
-export function useExpensesCrud() {
-  const basePath = 'expenses'
-
+export function useFirestoreCrud<T extends BaseObject>(basePath: string) {
   const nuxtApp = useNuxtApp()
 
   return {
-    async create(data: ExpenseCreationPayload) {
+    async create(data: BaseObjectCreationPayload<T>) {
       data.createdAt = dateToUnixTimestamp(new Date())
       data.createdBy = 'test user'
 
@@ -46,7 +39,7 @@ export function useExpensesCrud() {
 
       await setDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), data)
 
-      return data as Expense
+      return data as BaseObject
     },
 
     async get(id: string) {
@@ -55,7 +48,7 @@ export function useExpensesCrud() {
       const docSnap = await getDoc(docRef)
 
       if (docSnap.exists()) {
-        return docSnap.data() as Expense
+        return docSnap.data() as BaseObject
       } else {
         throw new ApplicationError('Document not found', 404)
       }
@@ -66,7 +59,7 @@ export function useExpensesCrud() {
 
       const querySnapshot = await getDocs(q)
 
-      return querySnapshot.docs.map(item => item.data()) as Expense[]
+      return querySnapshot.docs.map(item => item.data()) as BaseObject[]
     },
 
     async remove(id: string) {
