@@ -1,8 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-07-15",
+  modules: ['@nuxt/eslint', '@nuxt/test-utils'],
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "@nuxt/test-utils"],
 
   runtimeConfig: {
     public: {
@@ -14,11 +13,13 @@ export default defineNuxtConfig({
       APP_ID: process.env.APP_ID,
     },
   },
+  compatibilityDate: '2025-07-15',
 
   eslint: {
     config: {
       stylistic: {
-        commaDangle: "always-multiline",
+        commaDangle: 'always-multiline',
+        braceStyle: '1tbs',
       },
     },
   },

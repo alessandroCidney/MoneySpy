@@ -6,9 +6,9 @@ import {
   getDocs,
   query,
   setDoc,
-} from "firebase/firestore"
+} from 'firebase/firestore'
 
-import { v4 as uuidV4 } from "uuid"
+import { v4 as uuidV4 } from 'uuid'
 
 export interface Expense {
   id: string
@@ -23,7 +23,7 @@ export interface Expense {
 }
 
 interface ExpenseCreationPayload
-  extends Omit<Expense, "id" | "createdAt" | "createdBy"> {
+  extends Omit<Expense, 'id' | 'createdAt' | 'createdBy'> {
   id?: string
 
   createdBy?: string
@@ -31,14 +31,14 @@ interface ExpenseCreationPayload
 }
 
 export function useExpensesCrud() {
-  const basePath = "expenses"
+  const basePath = 'expenses'
 
   const nuxtApp = useNuxtApp()
 
   return {
     async create(data: ExpenseCreationPayload) {
       data.createdAt = dateToUnixTimestamp(new Date())
-      data.createdBy = "test user"
+      data.createdBy = 'test user'
 
       if (!data.id) {
         data.id = uuidV4()
@@ -57,7 +57,7 @@ export function useExpensesCrud() {
       if (docSnap.exists()) {
         return docSnap.data() as Expense
       } else {
-        throw new ApplicationError("Document not found", 404)
+        throw new ApplicationError('Document not found', 404)
       }
     },
 
@@ -66,7 +66,7 @@ export function useExpensesCrud() {
 
       const querySnapshot = await getDocs(q)
 
-      return querySnapshot.docs.map((item) => item.data()) as Expense[]
+      return querySnapshot.docs.map(item => item.data()) as Expense[]
     },
 
     async remove(id: string) {
