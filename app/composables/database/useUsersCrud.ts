@@ -1,9 +1,9 @@
-import { useFirestoreCrud, type BaseObject } from './useFirestoreCrud'
+import { useFirestoreCrud, type DatabaseObject } from './commons/useFirestoreCrud'
 
-export interface UserObject extends BaseObject {
+export interface DatabaseUser extends DatabaseObject {
   active: true
 }
 
 export function useUsersCrud() {
-  return useFirestoreCrud<UserObject>('users')
+  return useFirestoreCrud<DatabaseUser>('users')
 }

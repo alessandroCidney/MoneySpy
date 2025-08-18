@@ -10,7 +10,7 @@ import {
 
 import { v4 as uuidV4 } from 'uuid'
 
-export interface BaseObject {
+export interface DatabaseObject {
   id: string
   name: string
 
@@ -18,20 +18,20 @@ export interface BaseObject {
   createdAt: number
 }
 
-export type BaseObjectCreationPayload<T extends BaseObject> = Omit<T, 'id' | 'createdAt' | 'createdBy'> & {
+export type PartialDatabaseObject<T extends DatabaseObject> = Omit<T, 'id' | 'createdAt' | 'createdBy'> & {
   id?: string
 
   createdBy?: string
   createdAt?: number
 }
 
-export function useFirestoreCrud<T extends BaseObject>(basePath: string) {
+export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
   const nuxtApp = useNuxtApp()
 
   return {
-    async create(data: BaseObjectCreationPayload<T>) {
+    async create(data: PartialDatabaseObject<T>) {
       data.createdAt = dateToUnixTimestamp(new Date())
-      data.createdBy = 'test user'
+      data.createdBy = nuxtApp.$firebaseAuth.currentUser?.uid
 
       if (!data.id) {
         data.id = uuidV4()
@@ -39,7 +39,7 @@ export function useFirestoreCrud<T extends BaseObject>(basePath: string) {
 
       await setDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), data)
 
-      return data as BaseObject
+      return data as T
     },
 
     async get(id: string) {
@@ -48,7 +48,7 @@ export function useFirestoreCrud<T extends BaseObject>(basePath: string) {
       const docSnap = await getDoc(docRef)
 
       if (docSnap.exists()) {
-        return docSnap.data() as BaseObject
+        return docSnap.data() as T
       } else {
         throw new ApplicationError('Document not found', 404)
       }
@@ -59,7 +59,7 @@ export function useFirestoreCrud<T extends BaseObject>(basePath: string) {
 
       const querySnapshot = await getDocs(q)
 
-      return querySnapshot.docs.map(item => item.data()) as BaseObject[]
+      return querySnapshot.docs.map(item => item.data()) as T[]
     },
 
     async remove(id: string) {
