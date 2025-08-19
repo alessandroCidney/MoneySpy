@@ -16,12 +16,14 @@
     "@nuxt/eslint": "^1.8.0",
     "@nuxt/test-utils": "^3.19.2",
     "@pinia/nuxt": "^0.11.2",
+    "echarts": "^5.6.0",
     "eslint": "^9.33.0",
     "firebase": "^12.1.0",
     "nuxt": "^4.0.3",
     "pinia": "^3.0.3",
     "uuid": "^11.1.0",
     "vue": "^3.5.18",
+    "vue-echarts": "^7.0.3",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
