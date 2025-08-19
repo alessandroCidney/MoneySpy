@@ -1,5 +1,5 @@
 <template>
-  <v-btn color="primary">
-    Test
-  </v-btn>
+  <v-container>
+    <div>Index</div>
+  </v-container>
 </template>

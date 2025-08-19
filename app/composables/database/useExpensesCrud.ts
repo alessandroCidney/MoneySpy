@@ -6,6 +6,10 @@ export interface DatabaseExpense extends DatabaseObject {
   type: string
 }
 
-export function useExpensesCrud() {
-  return useFirestoreCrud<DatabaseExpense>('expenses')
+interface UseExpensesCrudParameters {
+  userId: string
+}
+
+export function useExpensesCrud(params: UseExpensesCrudParameters) {
+  return useFirestoreCrud<DatabaseExpense>(`users/${params.userId}/expenses`)
 }

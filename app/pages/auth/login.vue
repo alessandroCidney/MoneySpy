@@ -21,14 +21,18 @@ const usersCrud = useUsersCrud()
 
 async function handleSignInWithGoogle() {
   try {
-    const response = await signInWithPopup(nuxtApp.$firebaseAuth, googleProvider)
+    const result = await signInWithPopup(nuxtApp.$firebaseAuth, googleProvider)
 
-    await usersCrud.create({
-      id: response.user.uid,
-      name: response.user.displayName || 'Name not found',
+    await usersCrud.create(
+      {
+        id: result.user.uid,
+        name: result.user.displayName || 'Name not found',
 
-      active: true,
-    })
+        active: true,
+      }, {
+        email: result.user.email,
+      },
+    )
 
     window.location.reload()
   } catch (err) {

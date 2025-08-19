@@ -36,7 +36,13 @@
 </template>
 
 <script setup lang="ts">
-const expensesCrud = useLocalCrud(useExpensesCrud())
+const authStore = useAuthStore()
+
+if (!authStore.databaseUser) {
+  throw new Error('Unauthenticated')
+}
+
+const expensesCrud = useLocalCrud(useExpensesCrud({ userId: authStore.databaseUser.id }))
 
 const newExpensePayload = ref<PartialDatabaseObject<DatabaseExpense>>({
   name: '',

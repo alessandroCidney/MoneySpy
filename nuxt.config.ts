@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/test-utils',
+    '@pinia/nuxt',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error - Vuetify documentation says this comment is required for the configuration to work correctly
@@ -12,6 +13,8 @@ export default defineNuxtConfig({
       })
     },
   ],
+
+  ssr: false,
 
   devtools: { enabled: true },
 
