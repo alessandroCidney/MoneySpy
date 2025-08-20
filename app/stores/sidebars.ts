@@ -1,6 +1,6 @@
 export const useSidebarsStore = defineStore('sidebars', {
   state: () => ({
-    defaultSidebarIsOpen: false,
+    defaultSidebarIsOpen: true,
   }),
 
   actions: {
