@@ -4,31 +4,28 @@
       Resumo Geral
     </h1>
 
-    <div class="d-flex align-start ga-6 justify-center w-100">
-      <div class="homePageSection">
-        <section class=" bg-white ultraRounded pa-8 mb-6">
-          <h2>
-            Como foi a sua semana:
-          </h2>
+    <div class="homePageGrid w-100">
+      <section class="summaryChart bg-white ultraRounded pa-8">
+        <h2>
+          Como foi a sua semana:
+        </h2>
 
-          <charts-expenses-bars
-            :expenses="fakeExpensesArr"
-            height="500px"
-          />
-        </section>
+        <charts-expenses-bars
+          :expenses="fakeExpensesArr"
+          height="500px"
+        />
+      </section>
 
-        <div>
-          <section class="bg-white ultraRounded pa-8">
-            <charts-expenses-pie
-              :expenses="fakeExpensesArr"
-              width="500px"
-              height="500px"
-            />
-          </section>
-        </div>
-      </div>
+      <section class="expensesPie bg-white ultraRounded pa-8">
+        <charts-expenses-pie
+          :expenses="fakeExpensesArr"
+          width="500px"
+          height="500px"
+          class="mx-auto"
+        />
+      </section>
 
-      <section class="homePageAside bg-white ultraRounded pa-8">
+      <section class="latestExpenses bg-white ultraRounded pa-8">
         <h2 class="mb-4">
           Movimentações recentes
         </h2>
@@ -144,16 +141,61 @@ onMounted(() => {
   flex: 1 1 0;
 }
 
-.homePageAside {
-  height: 100%;
+// .homePageAside {
+//   height: 100%;
 
-  width: 35%;
+//   width: 35%;
 
-  max-width: 450px;
+//   max-width: 450px;
 
-  .v-list {
-    // Item height = 80px
-    min-height: 800px;
+//   .v-list {
+//     // Item height = 80px
+//     min-height: 800px;
+//   }
+// }
+
+.homePageGrid {
+  display: grid;
+
+  height: 1200px;
+  width: 100%;
+
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+
+  grid-template-areas:
+    "summaryChart summaryChart latestExpenses"
+    "expensesPie . latestExpenses";
+
+  gap: 24px;
+
+  .summaryChart {
+    grid-area: summaryChart;
+    // grid-row: 1 / 2;
+    // grid-column: 1 / 3;
+  }
+
+  .expensesPie {
+    grid-area: expensesPie;
+    // grid-row: 2 / 3;
+    // grid-column: 1 / 2;
+  }
+
+  .latestExpenses {
+    grid-area: latestExpenses;
+    // grid-row: 1 / 3;
+    // grid-column: 3 / 4;
+  }
+}
+
+@media(max-width: 1000px) {
+  .homePageGrid {
+    height: auto;
+
+    grid-template-areas:
+      "summaryChart summaryChart summaryChart"
+      "expensesPie expensesPie expensesPie"
+      "latestExpenses latestExpenses latestExpenses";
   }
 }
 </style>
