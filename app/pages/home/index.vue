@@ -1,67 +1,75 @@
 <template>
-  <v-container
-    v-bind="$attrs"
-    class="px-10"
-    tag="section"
-  >
-    <h2>
-      Valores da semana
-    </h2>
+  <div class="bg-gray-background ultraRounded pa-8 my-2 mx-4 position-relative">
+    <h1 class="mb-4">
+      Resumo Geral
+    </h1>
 
-    <charts-expenses-bars
-      :expenses="fakeExpensesArr"
-      height="500px"
-    />
+    <div class="d-flex align-start ga-6 justify-center w-100">
+      <section class="homePageSection bg-white ultraRounded pa-8">
+        <h2>
+          Como foi a sua semana:
+        </h2>
 
-    <v-form @submit.prevent="handleSaveExpense">
-      <v-text-field
-        v-model="newExpensePayload.name"
-        label="Nome da despesa"
-      />
+        <charts-expenses-bars
+          :expenses="fakeExpensesArr"
+          height="500px"
+        />
+      </section>
 
-      <v-text-field
-        v-model="newExpensePayload.value"
-        label="Valor da despesa"
-      />
+      <section class="homePageAside bg-white ultraRounded pa-8">
+        <h2 class="mb-4">
+          Movimentações recentes
+        </h2>
 
-      <v-combobox
-        v-model="newExpensePayload.type"
-        label="Tipo da despesa"
-        :items="['Mercado', 'Conta', 'Delivery', 'Doação', 'Compra']"
-      />
+        <v-list class="pa-0">
+          <v-list-item
+            v-for="expenseData in fakeExpensesArr"
+            :key="expenseData.id"
+            :class="{
+              'py-5 px-0': true,
+            }"
+          >
+            <template #prepend>
+              <v-avatar color="black">
+                <v-icon>
+                  {{ expenseData.icon }}
+                </v-icon>
+              </v-avatar>
+            </template>
 
+            <v-list-item-title>
+              {{ expenseData.type }}
+            </v-list-item-title>
+
+            <v-list-item-subtitle>
+              {{ formatExpenseDate(expenseData.createdAt) }}
+            </v-list-item-subtitle>
+
+            <template #append>
+              <div>
+                {{ expenseData.currency }}{{ Math.abs(expenseData.value).toFixed(2) }}
+              </div>
+            </template>
+          </v-list-item>
+        </v-list>
+      </section>
+    </div>
+
+    <div class="position-absolute top-0 right-0 pa-8">
       <v-btn
         color="primary"
-        type="submit"
+        size="large"
+        rounded
+        flat
       >
-        Salvar
+        <v-icon start>
+          mdi-plus-circle
+        </v-icon>
+
+        Adicionar
       </v-btn>
-    </v-form>
-  </v-container>
-
-  <aside class="homePageAside pa-4 fill-height">
-    <v-list>
-      <v-list-item
-        v-for="expenseData in fakeExpensesArr"
-        :key="expenseData.id"
-        class="mb-4"
-      >
-        <template #prepend>
-          <v-icon>
-            {{ expenseData.icon }}
-          </v-icon>
-        </template>
-
-        <v-list-item-title>
-          {{ expenseData.type }}
-        </v-list-item-title>
-
-        <v-list-item-subtitle>
-          {{ expenseData.currency }}{{ expenseData.value }}
-        </v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
-  </aside>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -82,7 +90,7 @@ const fakeExpensesArr = generateFakeExpensesArr().map((item) => {
   })
 })
 
-const expensesCrud = useLocalCrud(useExpensesCrud({ userId: authStore.databaseUser.id }))
+const expensesCrud = useLocalCrud(useExpensesCrud())
 
 const newExpensePayload = ref<PartialDatabaseObject<DatabaseExpense>>({
   name: '',
@@ -99,13 +107,39 @@ async function handleSaveExpense() {
   }
 }
 
+function formatExpenseDate(unixTime: number) {
+  const formatter = new Intl.DateTimeFormat('pt', {
+    hour12: true,
+    day: 'numeric',
+    month: 'long',
+    year: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+
+  return formatter.format(unixTimestampToDate(unixTime))
+}
+
 onMounted(() => {
   // expensesCrud.list()
 })
 </script>
 
 <style lang="scss" scoped>
+.homePageSection {
+  flex: 1 1 0;
+}
+
 .homePageAside {
-  width: 30%;
+  height: 100%;
+
+  width: 35%;
+
+  max-width: 450px;
+
+  .v-list {
+    // Item height = 80px
+    min-height: 800px;
+  }
 }
 </style>

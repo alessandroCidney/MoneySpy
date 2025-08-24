@@ -1,11 +1,11 @@
 <template>
   <layouts-loading-container>
     <v-app>
-      <layouts-default-app-bar />
-
       <layouts-default-sidebar />
 
-      <v-main class="d-flex align-center justify-center">
+      <layouts-default-app-bar />
+
+      <v-main>
         <slot />
       </v-main>
     </v-app>

@@ -71,6 +71,12 @@ const optionData = computed(() => ({
   yAxis: {
     type: 'value',
   },
+  grid: {
+    left: '32px',
+    right: '32px',
+    top: '32px',
+    bottom: '32px',
+  },
   series: [
     {
       data: expensesPerDay.value.map(item => _.sum(item.positive.map(expenseData => expenseData.value))),
@@ -78,14 +84,14 @@ const optionData = computed(() => ({
 
       name: 'positive',
 
-      barMaxWidth: '15px',
+      barMaxWidth: '40px',
       itemStyle: {
         color: '#48EAA4',
         borderRadius: [
           50,
           50,
-          0,
-          0,
+          50,
+          50,
         ],
       },
     },
@@ -96,21 +102,19 @@ const optionData = computed(() => ({
       name: 'negative',
       z: 2,
 
-      barMaxWidth: '15px',
+      barMaxWidth: '40px',
       itemStyle: {
         color: '#000000',
         borderRadius: [
           50,
           50,
-          0,
-          0,
+          50,
+          50,
         ],
       },
     },
   ] as BarSeriesOption,
 }))
-
-console.log('optionData', optionData.value)
 
 const option = ref(optionData.value)
 </script>

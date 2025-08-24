@@ -1,8 +1,24 @@
 <template>
   <v-navigation-drawer
     v-model="sidebarsStore.defaultSidebarIsOpen"
+    tag="div"
+    floating
   >
-    <v-list>
+    <div class="d-flex align-center justify-start ga-2 pa-5">
+      <v-img
+        src="@/assets/images/logos/mainLogo.svg"
+        :max-width="50"
+        :min-width="50"
+      />
+
+      <h1>
+        MyApp
+      </h1>
+    </div>
+
+    <v-list
+      tag="nav"
+    >
       <v-list-item
         v-for="routeData in routes"
         :key="routeData.title"

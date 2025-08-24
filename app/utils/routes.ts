@@ -1,7 +1,7 @@
 export function getRoutes() {
   return [
     {
-      icon: 'mdi-home-variant',
+      icon: 'mdi-chart-donut',
       title: 'Home',
       path: '/home',
     },

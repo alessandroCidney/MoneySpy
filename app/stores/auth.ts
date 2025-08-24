@@ -8,6 +8,16 @@ export const useAuthStore = defineStore('auth', {
     authLoading: true,
   }),
 
+  getters: {
+    validatedAuthUser(state) {
+      if (!state.authUser) {
+        throw new Error('Unauthenticated')
+      }
+
+      return state.authUser
+    },
+  },
+
   actions: {
     setAuthUser(data: typeof this.authUser) {
       this.authUser = data
