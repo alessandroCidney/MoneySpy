@@ -5,16 +5,28 @@
     </h1>
 
     <div class="d-flex align-start ga-6 justify-center w-100">
-      <section class="homePageSection bg-white ultraRounded pa-8">
-        <h2>
-          Como foi a sua semana:
-        </h2>
+      <div class="homePageSection">
+        <section class=" bg-white ultraRounded pa-8 mb-6">
+          <h2>
+            Como foi a sua semana:
+          </h2>
 
-        <charts-expenses-bars
-          :expenses="fakeExpensesArr"
-          height="500px"
-        />
-      </section>
+          <charts-expenses-bars
+            :expenses="fakeExpensesArr"
+            height="500px"
+          />
+        </section>
+
+        <div>
+          <section class="bg-white ultraRounded pa-8">
+            <charts-expenses-pie
+              :expenses="fakeExpensesArr"
+              width="500px"
+              height="500px"
+            />
+          </section>
+        </div>
+      </div>
 
       <section class="homePageAside bg-white ultraRounded pa-8">
         <h2 class="mb-4">
@@ -30,7 +42,9 @@
             }"
           >
             <template #prepend>
-              <v-avatar color="black">
+              <v-avatar
+                :color="expenseData.value > 0 ? 'primary' : 'black'"
+              >
                 <v-icon>
                   {{ expenseData.icon }}
                 </v-icon>
