@@ -76,13 +76,13 @@ const optionData = computed(() => ({
         show: false,
         position: 'center',
       },
-      emphasis: {
-        label: {
-          show: true,
-          fontSize: 40,
-          fontWeight: 'bold',
-        },
-      },
+      // emphasis: {
+      //   label: {
+      //     show: true,
+      //     fontSize: 40,
+      //     fontWeight: 'bold',
+      //   },
+      // },
       labelLine: {
         show: false,
       },

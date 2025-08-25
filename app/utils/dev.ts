@@ -39,7 +39,7 @@ export function generateFakeExpensesArr() {
         createdBy: 'abc',
         currency: 'R$',
         name: 'test',
-        type: _.sample(['Pagamento']),
+        type: _.sample(['Entrada']),
         value: getRandomInt(1, 500),
       })
     }
