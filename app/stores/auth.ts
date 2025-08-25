@@ -16,6 +16,14 @@ export const useAuthStore = defineStore('auth', {
 
       return state.authUser
     },
+
+    validatedProfilePhoto(state) {
+      if (!state.authUser) {
+        throw new Error('Unauthenticated')
+      }
+
+      return state.authUser.photoURL || ''
+    },
   },
 
   actions: {

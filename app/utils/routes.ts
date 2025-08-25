@@ -6,6 +6,11 @@ export function getRoutes() {
       path: '/home',
     },
     {
+      icon: 'mdi-cash-multiple',
+      title: 'Despesas',
+      path: '/expenses/new',
+    },
+    {
       icon: 'mdi-account-circle',
       title: 'Conta',
       path: '/profile',
