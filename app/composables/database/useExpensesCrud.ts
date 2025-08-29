@@ -28,6 +28,10 @@ export const expenseTypes = [
   },
 ]
 
+export function getExpenseTypeData(typeName: string) {
+  return expenseTypes.find(item => item.name === typeName)
+}
+
 export interface DatabaseExpense extends DatabaseObject {
   value: number
   currency: string

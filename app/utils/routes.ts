@@ -7,7 +7,7 @@ export function getRoutes() {
     },
     {
       icon: 'mdi-cash-multiple',
-      title: 'Despesas',
+      title: 'Registros',
       path: '/expenses/new',
     },
     {

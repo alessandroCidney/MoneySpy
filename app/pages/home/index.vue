@@ -93,7 +93,7 @@
             </v-list-item-title>
 
             <v-list-item-subtitle>
-              {{ formatExpenseDate(expenseData.createdAt) }}
+              {{ dateToLargeStr(expenseData.createdAt) }}
             </v-list-item-subtitle>
 
             <template #append>
@@ -188,19 +188,6 @@ async function handleSaveExpense() {
   } catch (err) {
     globalErrorHandler(err)
   }
-}
-
-function formatExpenseDate(unixTime: number) {
-  const formatter = new Intl.DateTimeFormat('pt', {
-    hour12: true,
-    day: 'numeric',
-    month: 'long',
-    year: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  })
-
-  return formatter.format(unixTimestampToDate(unixTime))
 }
 
 onMounted(() => {
