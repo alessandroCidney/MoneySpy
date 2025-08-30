@@ -11,6 +11,11 @@ export function getRoutes() {
       path: '/expenses/new',
     },
     {
+      icon: 'mdi-autorenew',
+      title: 'Gastos Recorrentes',
+      path: '/test',
+    },
+    {
       icon: 'mdi-account-circle',
       title: 'Conta',
       path: '/profile',

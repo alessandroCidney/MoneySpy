@@ -1,10 +1,11 @@
 <template>
   <v-navigation-drawer
     v-model="sidebarsStore.defaultSidebarIsOpen"
+    class="defaultSidebar"
     tag="div"
     floating
   >
-    <div class="d-flex align-center justify-start ga-2 pa-5">
+    <div class="logoArea d-flex align-center justify-start ga-2 px-5">
       <v-img
         src="@/assets/images/logos/mainLogo.svg"
         :max-width="50"
@@ -17,6 +18,8 @@
     </div>
 
     <v-list
+      class="sidebarList py-0"
+      active-class="bg-secondary text-white"
       tag="nav"
     >
       <v-list-item
@@ -43,3 +46,20 @@ const sidebarsStore = useSidebarsStore()
 
 const routes = getRoutes()
 </script>
+
+<style lang="scss" scoped>
+.defaultSidebar {
+  .logoArea {
+    height: 80px;
+  }
+
+  .sidebarList {
+    background-color: rgb(var(--v-theme-gray-background)) !important;
+    border-radius: 0 var(--ultra-rounded-border-radius) var(--ultra-rounded-border-radius) 0 !important;
+
+    .v-list-item {
+      height: 60px;
+    }
+  }
+}
+</style>
