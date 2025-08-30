@@ -11,9 +11,9 @@ export function getRoutes() {
       path: '/expenses/new',
     },
     {
-      icon: 'mdi-autorenew',
-      title: 'Gastos Recorrentes',
-      path: '/test',
+      icon: 'mdi-trophy-variant',
+      title: 'Conquistas',
+      path: '/achievements',
     },
     {
       icon: 'mdi-account-circle',

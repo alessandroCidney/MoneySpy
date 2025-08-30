@@ -18,3 +18,31 @@ h1, h2, h3, h4, h5, h6 {
 .v-btn {
   letter-spacing: 0 !important;
 }
+
+.onlyForScreenReader {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.defaultPageContainer {
+  background-color: rgb(var(--v-theme-gray-background));
+  border-radius: var(--ultra-rounded-border-radius);
+
+  padding: 32px;
+  margin: 8px 16px;
+
+  position: relative;
+
+  min-height: calc(100% - 24px);
+}
+
+.defaultWhiteCard {
+  background-color: white;
+
+  border-radius: var(--ultra-rounded-border-radius);
+
+  padding: 32px;
+}

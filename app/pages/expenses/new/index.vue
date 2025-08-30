@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-gray-background ultraRounded pa-8 my-2 mx-4 position-relative">
-    <h1 class="mb-4 d-none">
+  <div class="defaultPageContainer">
+    <h1 class="mb-4 onlyForScreenReader">
       Novo registro
     </h1>
 

@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-gray-background ultraRounded pa-8 my-2 mx-4 position-relative">
+  <div class="defaultPageContainer">
     <h1 class="mb-4">
       Resumo Geral
     </h1>
 
     <div class="homePageGrid w-100">
-      <section class="expensesBars bg-white ultraRounded pa-8">
+      <section class="expensesBars defaultWhiteCard">
         <h2>
           Como foi a sua semana:
         </h2>
@@ -16,7 +16,7 @@
         />
       </section>
 
-      <section class="expensesPie bg-white ultraRounded pa-8">
+      <section class="expensesPie defaultWhiteCard">
         <h2>
           Entradas e saídas
         </h2>
@@ -29,7 +29,7 @@
         />
       </section>
 
-      <section class="mainExpenses bg-white ultraRounded pa-8">
+      <section class="mainExpenses defaultWhiteCard">
         <h2>
           Principais despesas
         </h2>
@@ -65,7 +65,7 @@
         </v-list>
       </section>
 
-      <section class="latestExpenses bg-white ultraRounded pa-8">
+      <section class="latestExpenses defaultWhiteCard">
         <h2 class="mb-4">
           Movimentações recentes
         </h2>

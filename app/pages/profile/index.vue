@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-background ultraRounded pa-8 my-2 mx-4 position-relative">
+  <div class="defaultPageContainer">
     <h1 class="mb-4">
       Perfil
     </h1>
@@ -11,7 +11,7 @@
 
       <div class="profilePhotoSettings d-flex align-center ga-8">
         <v-avatar
-          size="200"
+          size="150"
           class="profilePhotoAvatar"
         >
           <v-img
@@ -23,7 +23,6 @@
         <div class="d-flex flex-column ga-3">
           <v-btn
             color="primary"
-            size="large"
             rounded
             flat
           >
@@ -32,7 +31,6 @@
 
           <v-btn
             color="neutral"
-            size="large"
             rounded
             flat
           >
