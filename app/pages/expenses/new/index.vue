@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-background ultraRounded pa-8 my-2 mx-4 position-relative">
-    <h1 class="mb-4">
+    <h1 class="mb-4 d-none">
       Novo registro
     </h1>
 
@@ -18,7 +18,7 @@
             mdi-minus-circle
           </v-icon>
 
-          Despesa
+          Nova Despesa
         </v-btn>
 
         <v-btn
@@ -29,19 +29,23 @@
             mdi-plus-circle
           </v-icon>
 
-          Entrada
+          Nova Entrada
         </v-btn>
       </v-btn-toggle>
 
-      <v-form class="d-flex align-center justify-start ga-4">
+      <v-form
+        v-model="createExpenseFormIsValid"
+        class="d-flex align-center justify-start ga-4"
+        @submit.prevent="handleSaveExpense"
+      >
         <div class="bg-white giantInput d-flex align-center justify-start px-6">
           <div>R$</div>
 
           <v-text-field
-            :value="0"
+            v-model="createExpenseFormPayload.value"
+            :rules="[formRules.requiredNumber]"
             variant="solo"
             type="number"
-            class="mr-6"
             hide-details
             rounded
             flat
@@ -50,12 +54,13 @@
 
         <div class="bg-white giantInput d-flex align-center justify-start px-6">
           <v-combobox
+            v-model="createExpenseFormPayload.type"
+            :rules="[formRules.requiredString]"
             :items="expenseTypes"
             item-title="name"
-            item-value="id"
+            item-value="name"
             placeholder="Tipo"
             variant="solo"
-            class="mr-6"
             hide-details
             rounded
             flat
@@ -64,6 +69,7 @@
 
         <v-btn
           :color="selectedMode === 'expense' ? 'secondary' : 'primary'"
+          type="submit"
           size="70"
           icon
         >
@@ -131,7 +137,16 @@
 <script setup lang="ts">
 import type { VDataTable } from 'vuetify/components'
 
+const formRules = useRules()
+
 type ReadonlyHeaders = VDataTable['$props']['headers']
+
+const createExpenseFormIsValid = ref(false)
+
+const createExpenseFormPayload = ref({
+  value: 0,
+  type: '',
+})
 
 const selectedMode = ref<'expense' | 'income'>('expense')
 
@@ -155,10 +170,15 @@ const expenseTableHeaders: ReadonlyHeaders = [
     key: 'actions',
     title: 'Ações',
     align: 'center',
+    sortable: false,
   },
 ]
 
 const fakeExpensesArr = ref(generateFakeExpensesArr())
+
+function handleSaveExpense() {
+  window.alert('test')
+}
 </script>
 
 <style lang="scss">
