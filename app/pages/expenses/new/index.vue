@@ -125,7 +125,7 @@
         </template>
 
         <template #[`item.value`]="{ item: expenseData }">
-          {{ expenseData.currency }} {{ Math.abs(expenseData.value).toFixed(2) }}
+          {{ expenseData.currency }}{{ Math.abs(expenseData.value).toFixed(2) }}
         </template>
 
         <template #[`item.actions`]="{ item: expenseData }">
@@ -137,12 +137,27 @@
             flat
           />
 
-          <v-btn
-            icon="mdi-delete"
-            color="secondary"
-            variant="text"
-            flat
-          />
+          <commons-confirm-dialog
+            :confirm="() => expensesStore.remove(expenseData.id)"
+          >
+            <template #title>
+              Excluir registro
+            </template>
+
+            <template #text>
+              O registro será excluído e não poderá ser recuperado. Deseja continuar?
+            </template>
+
+            <template #activator="{ props: activatorProps }">
+              <v-btn
+                v-bind="activatorProps"
+                icon="mdi-delete"
+                color="secondary"
+                variant="text"
+                flat
+              />
+            </template>
+          </commons-confirm-dialog>
         </template>
       </v-data-table>
     </section>
@@ -233,7 +248,7 @@ async function handleCreateExpense() {
 }
 
 .expensesTable {
-  *:not(.v-btn *) {
+  *:not(i) {
     font-size: 1rem;
   }
 

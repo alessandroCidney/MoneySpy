@@ -4,8 +4,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   setDoc,
+  type OrderByDirection,
 } from 'firebase/firestore'
 
 import { v4 as uuidV4 } from 'uuid'
@@ -54,10 +56,10 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       }
     },
 
-    async list() {
+    async list(params = { orderBy: 'createdAt', orderDirection: 'desc' as OrderByDirection }) {
       console.log('Calling list on crud', basePath)
 
-      const q = query(collection(nuxtApp.$firebaseFirestore, basePath))
+      const q = query(collection(nuxtApp.$firebaseFirestore, basePath), orderBy(params.orderBy, params.orderDirection))
 
       const querySnapshot = await getDocs(q)
 
