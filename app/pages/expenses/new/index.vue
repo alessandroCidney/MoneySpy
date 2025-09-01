@@ -34,9 +34,10 @@
       </v-btn-toggle>
 
       <v-form
+        ref="createExpenseForm"
         v-model="createExpenseFormIsValid"
         class="d-flex align-center justify-start ga-4"
-        @submit.prevent="handleSaveExpense"
+        @submit.prevent="handleCreateExpense"
       >
         <div
           :class="{
@@ -51,6 +52,7 @@
             v-model:focused="valueFieldIsFocused"
             :rules="[formRules.requiredNumber]"
             :autofocus="$route.query.autofocus === 'true'"
+            :disabled="expensesStore.loadingCreate"
             variant="solo"
             type="number"
             hide-details
@@ -69,9 +71,8 @@
             v-model="createExpenseFormPayload.type"
             v-model:focused="typeFieldIsFocused"
             :rules="[formRules.requiredString]"
-            :items="expenseTypes"
-            item-title="name"
-            item-value="name"
+            :items="expenseTypes.map(item => item.name)"
+            :disabled="expensesStore.loadingCreate"
             placeholder="Tipo"
             variant="solo"
             hide-details
@@ -82,6 +83,7 @@
 
         <v-btn
           :color="selectedMode === 'expense' ? 'secondary' : 'primary'"
+          :loading="expensesStore.loadingCreate"
           type="submit"
           size="70"
           icon
@@ -99,7 +101,7 @@
       <h2>Registros anteriores</h2>
 
       <v-data-table
-        :items="fakeExpensesArr"
+        :items="expensesStore.items"
         :headers="expenseTableHeaders"
         class="expensesTable"
       >
@@ -150,8 +152,13 @@
 <script setup lang="ts">
 import type { VDataTable } from 'vuetify/components'
 
+import { useExpensesStore } from '@/stores/cruds/expenses'
+
+const expensesStore = useExpensesStore()
+
 const formRules = useRules()
 
+const createExpenseForm = useTemplateRef('createExpenseForm')
 const valueFieldIsFocused = ref(false)
 const typeFieldIsFocused = ref(false)
 
@@ -190,10 +197,21 @@ const expenseTableHeaders: ReadonlyHeaders = [
   },
 ]
 
-const fakeExpensesArr = ref(generateFakeExpensesArr())
+async function handleCreateExpense() {
+  const validationResult = await createExpenseForm.value?.validate()
 
-function handleSaveExpense() {
-  window.alert('test')
+  console.log('validationResult', validationResult)
+
+  if (validationResult?.valid) {
+    await expensesStore.create({
+      value: selectedMode.value === 'expense' ? createExpenseFormPayload.value.value * -1 : createExpenseFormPayload.value.value,
+      type: createExpenseFormPayload.value.type,
+      currency: expensesStore.selectedCurrency,
+      name: '',
+    })
+  } else {
+    window.alert('Dados inválidos!')
+  }
 }
 </script>
 
@@ -215,7 +233,7 @@ function handleSaveExpense() {
 }
 
 .expensesTable {
-  * {
+  *:not(.v-btn *) {
     font-size: 1rem;
   }
 

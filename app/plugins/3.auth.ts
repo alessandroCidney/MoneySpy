@@ -1,5 +1,7 @@
 import { onAuthStateChanged, getAuth } from 'firebase/auth'
 
+import { useExpensesStore } from '~/stores/cruds/expenses'
+
 export default defineNuxtPlugin(async () => {
   const firebaseAuth = getAuth()
 
@@ -14,6 +16,10 @@ export default defineNuxtPlugin(async () => {
 
         authStore.setAuthUser(authUser)
         authStore.setDatabaseUser(databaseUser)
+
+        // load "cached" cruds
+        const expensesStore = useExpensesStore()
+        await expensesStore.list()
       } else {
         authStore.setAuthUser(null)
         authStore.setDatabaseUser(null)

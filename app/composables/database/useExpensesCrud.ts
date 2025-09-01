@@ -38,6 +38,20 @@ export interface DatabaseExpense extends DatabaseObject {
   type: string
 }
 
-export function useExpensesCrud() {
-  return useFirestoreCrud<DatabaseExpense>('expenses')
+interface UseExpensesCrudParams {
+  userId: string
+}
+
+export function useExpensesCrud(params?: UseExpensesCrudParams) {
+  if (params?.userId) {
+    return useFirestoreCrud<DatabaseExpense>(`users/${params.userId}/expenses`)
+  }
+
+  const authStore = useAuthStore()
+
+  if (authStore.authUser) {
+    return useFirestoreCrud<DatabaseExpense>(`users/${authStore.authUser.uid}/expenses`)
+  }
+
+  throw new Error('Unauthenticated')
 }

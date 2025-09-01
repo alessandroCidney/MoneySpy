@@ -55,6 +55,8 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
     },
 
     async list() {
+      console.log('Calling list on crud', basePath)
+
       const q = query(collection(nuxtApp.$firebaseFirestore, basePath))
 
       const querySnapshot = await getDocs(q)

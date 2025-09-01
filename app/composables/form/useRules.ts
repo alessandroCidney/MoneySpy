@@ -4,8 +4,8 @@ export function useRules() {
       return (typeof value === 'string' && !!value) || 'Valor obrigatório'
     },
 
-    requiredNumber(value: unknown) {
-      return (typeof value === 'number' && !isNaN(value) && value !== undefined) || 'Valor obrigatório'
+    requiredNumber(value: string | number) {
+      return (!isNaN(typeof value === 'string' ? parseFloat(value) : value) && value !== undefined) || 'Valor obrigatório'
     },
   }
 }
