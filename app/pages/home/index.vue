@@ -112,6 +112,10 @@
         size="large"
         rounded
         flat
+        @click="$router.push({
+          path: '/expenses/new',
+          query: { autofocus: 'true' },
+        })"
       >
         <v-icon start>
           mdi-plus-circle
@@ -142,13 +146,6 @@ const fakeExpensesArr = generateFakeExpensesArr().map((item) => {
 })
 
 const expensesCrud = useLocalCrud(useExpensesCrud())
-
-const newExpensePayload = ref<PartialDatabaseObject<DatabaseExpense>>({
-  name: '',
-  type: '',
-  value: 0,
-  currency: 'R$',
-})
 
 const expensesByType = computed(() => {
   interface ExpenseTypeData {
@@ -181,14 +178,6 @@ const expensesByType = computed(() => {
 
   return expenseTypesData
 })
-
-async function handleSaveExpense() {
-  try {
-    await expensesCrud.create(newExpensePayload.value)
-  } catch (err) {
-    globalErrorHandler(err)
-  }
-}
 
 onMounted(() => {
   // expensesCrud.list()

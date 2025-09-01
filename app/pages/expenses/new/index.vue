@@ -38,12 +38,19 @@
         class="d-flex align-center justify-start ga-4"
         @submit.prevent="handleSaveExpense"
       >
-        <div class="bg-white giantInput d-flex align-center justify-start px-6">
+        <div
+          :class="{
+            'bg-white giantInput d-flex align-center justify-start px-6': true,
+            'isFocused': valueFieldIsFocused,
+          }"
+        >
           <div>R$</div>
 
           <v-text-field
             v-model="createExpenseFormPayload.value"
+            v-model:focused="valueFieldIsFocused"
             :rules="[formRules.requiredNumber]"
+            :autofocus="$route.query.autofocus === 'true'"
             variant="solo"
             type="number"
             hide-details
@@ -52,9 +59,15 @@
           />
         </div>
 
-        <div class="bg-white giantInput d-flex align-center justify-start px-6">
+        <div
+          :class="{
+            'bg-white giantInput d-flex align-center justify-start px-6': true,
+            'isFocused': typeFieldIsFocused,
+          }"
+        >
           <v-combobox
             v-model="createExpenseFormPayload.type"
+            v-model:focused="typeFieldIsFocused"
             :rules="[formRules.requiredString]"
             :items="expenseTypes"
             item-title="name"
@@ -139,6 +152,9 @@ import type { VDataTable } from 'vuetify/components'
 
 const formRules = useRules()
 
+const valueFieldIsFocused = ref(false)
+const typeFieldIsFocused = ref(false)
+
 type ReadonlyHeaders = VDataTable['$props']['headers']
 
 const createExpenseFormIsValid = ref(false)
@@ -191,6 +207,10 @@ function handleSaveExpense() {
 
   * {
     font-size: 2rem !important;
+  }
+
+  &.isFocused {
+    outline: 3px solid rgb(var(--v-theme-secondary));
   }
 }
 
