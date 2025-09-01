@@ -7,6 +7,7 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
   type OrderByDirection,
 } from 'firebase/firestore'
 
@@ -18,9 +19,12 @@ export interface DatabaseObject {
 
   createdBy: string
   createdAt: number
+
+  updatedBy: string
+  updatedAt: number
 }
 
-export type PartialDatabaseObject<T extends DatabaseObject> = Omit<T, 'id' | 'createdAt' | 'createdBy'> & {
+export type PartialDatabaseObject<T extends DatabaseObject> = Omit<T, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'> & {
   id?: string
 
   createdBy?: string
@@ -30,10 +34,12 @@ export type PartialDatabaseObject<T extends DatabaseObject> = Omit<T, 'id' | 'cr
 export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
   const nuxtApp = useNuxtApp()
 
+  const authStore = useAuthStore()
+
   return {
     async create(data: PartialDatabaseObject<T>) {
       data.createdAt = dateToUnixTimestamp(new Date())
-      data.createdBy = nuxtApp.$firebaseAuth.currentUser?.uid
+      data.createdBy = authStore.validatedAuthUser.uid
 
       if (!data.id) {
         data.id = uuidV4()
@@ -54,6 +60,15 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       } else {
         throw new ApplicationError('Document not found', 404)
       }
+    },
+
+    async update(data: DatabaseObject) {
+      data.updatedAt = dateToUnixTimestamp(new Date())
+      data.updatedBy = authStore.validatedAuthUser.uid
+
+      await updateDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), { ...data })
+
+      return data as T
     },
 
     async list(params = { orderBy: 'createdAt', orderDirection: 'desc' as OrderByDirection }) {

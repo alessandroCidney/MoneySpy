@@ -6,6 +6,7 @@ export const useExpensesStore = defineStore('expenses', {
     loadedOnce: false,
 
     loadingCreate: false,
+    loadingUpdate: false,
     loadingRemove: false,
 
     selectedCurrency: 'R$',
@@ -39,6 +40,30 @@ export const useExpensesStore = defineStore('expenses', {
         globalErrorHandler(err)
       } finally {
         this.loadingCreate = false
+      }
+    },
+
+    async update(...rest: Parameters<Awaited<ReturnType<typeof useExpensesCrud>>['update']>) {
+      try {
+        this.loadingUpdate = true
+
+        const expensesCrud = useExpensesCrud()
+
+        const itemObj = await expensesCrud.update(...rest)
+
+        const itemIndex = this.items.findIndex(item => item.id === itemObj.id)
+
+        if (itemIndex === -1) {
+          this.items.push(itemObj)
+        } else {
+          this.items[itemIndex] = itemObj
+        }
+
+        return itemObj
+      } catch (err) {
+        globalErrorHandler(err)
+      } finally {
+        this.loadingUpdate = false
       }
     },
 

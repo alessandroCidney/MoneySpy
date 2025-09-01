@@ -125,17 +125,51 @@
         </template>
 
         <template #[`item.value`]="{ item: expenseData }">
-          {{ expenseData.currency }}{{ Math.abs(expenseData.value).toFixed(2) }}
+          {{ expenseData.currency }} {{ Math.abs(expenseData.value).toFixed(2) }}
         </template>
 
         <template #[`item.actions`]="{ item: expenseData }">
-          <v-btn
-            icon="mdi-pencil"
-            color="secondary"
-            variant="text"
-            class="mr-2"
-            flat
-          />
+          <commons-form-dialog
+            :base-payload="expenseData"
+            :confirm="(finalPayload) => expensesStore.update(finalPayload as DatabaseObject)"
+          >
+            <template #title>
+              Editar registro
+            </template>
+
+            <template #text>
+              <p class="mb-4">
+                Atualize as informações do seu registro!
+              </p>
+            </template>
+
+            <template #form="{ internalPayload }">
+              <v-text-field
+                v-model="internalPayload.value"
+                :rules="[formRules.requiredNumber]"
+                label="Valor"
+                type="number"
+              />
+
+              <v-combobox
+                v-model="internalPayload.type"
+                :rules="[formRules.requiredString]"
+                :items="expenseTypes.map(item => item.name)"
+                label="Tipo"
+              />
+            </template>
+
+            <template #activator="{ props: activatorProps }">
+              <v-btn
+                v-bind="activatorProps"
+                icon="mdi-pencil"
+                color="secondary"
+                variant="text"
+                class="mr-2"
+                flat
+              />
+            </template>
+          </commons-form-dialog>
 
           <commons-confirm-dialog
             :confirm="() => expensesStore.remove(expenseData.id)"
@@ -145,7 +179,9 @@
             </template>
 
             <template #text>
-              O registro será excluído e não poderá ser recuperado. Deseja continuar?
+              <p>
+                O registro será excluído e não poderá ser recuperado. Deseja continuar?
+              </p>
             </template>
 
             <template #activator="{ props: activatorProps }">
