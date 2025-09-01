@@ -64,18 +64,42 @@ const expensesPerDay = computed(() => {
 })
 
 const optionData = computed(() => ({
+  textStyle: {
+    fontFamily: 'Roboto',
+  },
+
   xAxis: {
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+
+    axisTick: { show: false },
+    axisLine: {
+      lineStyle: {
+        color: '#',
+      },
+    },
   },
   yAxis: {
     type: 'value',
+
+    splitLine: {
+      lineStyle: {
+        color: '#eee',
+      },
+    },
+
+    axisLabel: {
+      formatter: (value: number) => {
+        return formatNumberToSmallStr(value)
+      },
+    },
   },
   grid: {
-    left: '32px',
-    right: '32px',
+    left: '10px',
+    right: '10px',
     top: '32px',
-    bottom: '32px',
+    bottom: '0',
+    containLabel: true,
   },
   series: [
     {
@@ -83,6 +107,18 @@ const optionData = computed(() => ({
       type: 'bar',
 
       name: 'positive',
+
+      // label: {
+      //   show: true,
+      //   position: 'top',
+
+      //   formatter(params: BarsLabelFormatterParams) {
+      //     return params.value === 0 ? '' : formatNumberToSmallStr(params.value)
+      //   },
+
+      //   fontWeight: '600',
+      //   fontSize: '1rem',
+      // },
 
       barMaxWidth: '40px',
       itemStyle: {
@@ -101,6 +137,18 @@ const optionData = computed(() => ({
 
       name: 'negative',
       z: 2,
+
+      // label: {
+      //   show: true,
+      //   position: 'top',
+
+      //   formatter(params: BarsLabelFormatterParams) {
+      //     return params.value === 0 ? '' : formatNumberToSmallStr(params.value)
+      //   },
+
+      //   fontWeight: '600',
+      //   fontSize: '1rem',
+      // },
 
       barMaxWidth: '40px',
       itemStyle: {

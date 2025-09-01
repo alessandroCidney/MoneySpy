@@ -28,7 +28,7 @@ export function generateFakeExpensesArr() {
         currency: 'R$',
         name: 'test',
         type: _.sample(['Mercado', 'Conta', 'Doação', 'Delivery']),
-        value: getRandomInt(-500, -1),
+        value: getRandomInt(-1000, -1),
       })
     }
 
@@ -40,7 +40,7 @@ export function generateFakeExpensesArr() {
         currency: 'R$',
         name: 'test',
         type: _.sample(['Entrada']),
-        value: getRandomInt(1, 500),
+        value: getRandomInt(1, 1000),
       })
     }
   }
