@@ -35,32 +35,36 @@ const props = defineProps({
 })
 
 const expensesPerDay = computed(() => {
-  const registeredDays: {
-    date: number
-    positive: DatabaseExpense[]
-    negative: DatabaseExpense[]
-  }[] = []
+  const lastSevenDaysExpenses = props.expenses.filter((item) => {
+    /**
+     * This calculation will return the start of the day after the day seven days ago.
+     * Example: If today is Monday, the calculation will not return Monday, but rather the start of Tuesday.
+     */
 
-  for (const expenseData of props.expenses) {
-    const registeredDayData = registeredDays.find(registeredDay => registeredDay.date === expenseData.createdAt)
+    const sevenDaysAgo = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
+
+    sevenDaysAgo.setHours(0, 0, 0, 0)
+
+    return item.createdAt >= dateToUnixTimestamp(sevenDaysAgo)
+  })
+
+  const allDays = getLastSevenDays().map(dayName => ({
+    dayName,
+    positive: [] as DatabaseExpense[],
+    negative: [] as DatabaseExpense[],
+  }))
+
+  for (const expenseData of lastSevenDaysExpenses) {
+    const registeredDayData = allDays.find(registeredDay => registeredDay.dayName === getDayName(expenseData.createdAt))
 
     const group = expenseData.value > 0 ? 'positive' : 'negative'
 
     if (registeredDayData) {
       registeredDayData[group].push(expenseData)
-    } else {
-      const newDayData: typeof registeredDays[0] = {
-        date: expenseData.createdAt,
-        positive: [],
-        negative: [],
-      }
-
-      newDayData[group].push(expenseData)
-      registeredDays.push(newDayData)
     }
   }
 
-  return registeredDays
+  return allDays
 })
 
 const optionData = computed(() => ({
@@ -70,7 +74,7 @@ const optionData = computed(() => ({
 
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    data: getLastSevenDays(),
 
     axisTick: { show: false },
     axisLine: {

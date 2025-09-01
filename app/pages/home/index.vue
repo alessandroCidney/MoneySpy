@@ -11,7 +11,7 @@
         </h2>
 
         <charts-expenses-bars
-          :expenses="fakeExpensesArr"
+          :expenses="expensesStore.items"
           height="500px"
         />
       </section>
@@ -22,7 +22,7 @@
         </h2>
 
         <charts-expenses-pie
-          :expenses="fakeExpensesArr"
+          :expenses="expensesStore.items"
           width="400px"
           height="400px"
           class="mx-auto"
@@ -72,7 +72,7 @@
 
         <v-list class="pa-0">
           <v-list-item
-            v-for="expenseData in fakeExpensesArr"
+            v-for="expenseData in expensesStore.items"
             :key="expenseData.id"
             :class="{
               'py-5 px-0': true,
@@ -83,7 +83,7 @@
                 :color="expenseData.value > 0 ? 'primary' : 'black'"
               >
                 <v-icon>
-                  {{ expenseData.icon }}
+                  {{ getExpenseTypeData(expenseData.type)?.icon }}
                 </v-icon>
               </v-avatar>
             </template>
@@ -129,6 +129,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import { useExpensesStore } from '~/stores/cruds/expenses'
 
 const authStore = useAuthStore()
 
@@ -136,16 +137,7 @@ if (!authStore.databaseUser) {
   throw new Error('Unauthenticated')
 }
 
-const fakeExpensesArr = generateFakeExpensesArr().map((item) => {
-  const expenseType = expenseTypes.find(typeData => typeData.name === item.type)
-
-  return ({
-    ...item,
-    icon: expenseType?.icon,
-  })
-})
-
-const expensesCrud = useLocalCrud(useExpensesCrud())
+const expensesStore = useExpensesStore()
 
 const expensesByType = computed(() => {
   interface ExpenseTypeData {
@@ -157,7 +149,7 @@ const expensesByType = computed(() => {
 
   const expenseTypesData: ExpenseTypeData[] = []
 
-  for (const expenseData of fakeExpensesArr) {
+  for (const expenseData of expensesStore.items) {
     if (expenseData.value < 0) {
       const expenseTypeDataItem = expenseTypesData.find(item => item.type === expenseData.type)
 
@@ -177,10 +169,6 @@ const expensesByType = computed(() => {
   }
 
   return expenseTypesData
-})
-
-onMounted(() => {
-  // expensesCrud.list()
 })
 </script>
 
