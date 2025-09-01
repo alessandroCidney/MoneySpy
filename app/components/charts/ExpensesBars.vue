@@ -35,18 +35,7 @@ const props = defineProps({
 })
 
 const expensesPerDay = computed(() => {
-  const lastSevenDaysExpenses = props.expenses.filter((item) => {
-    /**
-     * This calculation will return the start of the day after the day seven days ago.
-     * Example: If today is Monday, the calculation will not return Monday, but rather the start of Tuesday.
-     */
-
-    const sevenDaysAgo = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
-
-    sevenDaysAgo.setHours(0, 0, 0, 0)
-
-    return item.createdAt >= dateToUnixTimestamp(sevenDaysAgo)
-  })
+  const lastSevenDaysExpenses = props.expenses
 
   const allDays = getLastSevenDays().map(dayName => ({
     dayName,

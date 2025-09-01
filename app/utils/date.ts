@@ -41,3 +41,19 @@ export function getLastSevenDays(baseDate = new Date()) {
 
   return daysSorted
 }
+
+export function filterByTheLastSevenDays<T extends DatabaseObject>(arr: T[]) {
+  /**
+   * This calculation will return the start of the day after the day seven days ago.
+   * Example: If today is Monday, the calculation will not return Monday, but rather the start of Tuesday.
+   *
+   * If you want the "literal" behavior, try using "7" instead of "6" days in the calculation and remove the line with "setHours".
+   */
+  const sevenDaysAgo = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
+
+  sevenDaysAgo.setHours(0, 0, 0, 0)
+
+  return arr.filter((item) => {
+    return item.createdAt >= dateToUnixTimestamp(sevenDaysAgo)
+  })
+}

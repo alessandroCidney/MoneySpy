@@ -11,7 +11,7 @@
         </h2>
 
         <charts-expenses-bars
-          :expenses="expensesStore.items"
+          :expenses="filterByTheLastSevenDays(expensesStore.items)"
           height="500px"
         />
       </section>
@@ -22,7 +22,7 @@
         </h2>
 
         <charts-expenses-pie
-          :expenses="expensesStore.items"
+          :expenses="filterByTheLastSevenDays(expensesStore.items)"
           width="400px"
           height="400px"
           class="mx-auto"
@@ -72,7 +72,7 @@
 
         <v-list class="pa-0">
           <v-list-item
-            v-for="expenseData in expensesStore.items"
+            v-for="expenseData in filterByTheLastSevenDays(expensesStore.items)"
             :key="expenseData.id"
             :class="{
               'py-5 px-0': true,
@@ -149,7 +149,7 @@ const expensesByType = computed(() => {
 
   const expenseTypesData: ExpenseTypeData[] = []
 
-  for (const expenseData of expensesStore.items) {
+  for (const expenseData of filterByTheLastSevenDays(expensesStore.items)) {
     if (expenseData.value < 0) {
       const expenseTypeDataItem = expenseTypesData.find(item => item.type === expenseData.type)
 
