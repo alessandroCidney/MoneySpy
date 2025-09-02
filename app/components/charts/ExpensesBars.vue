@@ -19,6 +19,7 @@ import {
 import VChart from 'vue-echarts'
 
 import _ from 'lodash'
+import { useTheme } from 'vuetify'
 
 use([
   CanvasRenderer,
@@ -55,6 +56,8 @@ const expensesPerDay = computed(() => {
 
   return allDays
 })
+
+const vuetifyTheme = useTheme()
 
 const optionData = computed(() => ({
   textStyle: {
@@ -115,7 +118,7 @@ const optionData = computed(() => ({
 
       barMaxWidth: '40px',
       itemStyle: {
-        color: '#48EAA4',
+        color: vuetifyTheme.computedThemes.value.customTheme?.colors.primary,
         borderRadius: [
           50,
           50,
@@ -145,7 +148,7 @@ const optionData = computed(() => ({
 
       barMaxWidth: '40px',
       itemStyle: {
-        color: '#000000',
+        color: vuetifyTheme.computedThemes.value.customTheme?.colors.secondary,
         borderRadius: [
           50,
           50,

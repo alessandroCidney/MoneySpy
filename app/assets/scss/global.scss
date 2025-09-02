@@ -4,10 +4,13 @@
   --ultra-rounded-border-radius: 40px;
 }
 
+* {
+  font-family: Roboto !important;
+}
+
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.5px !important;
 
-  font-family: Roboto !important;
   font-weight: 500 !important;
 }
 
@@ -17,6 +20,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .v-btn {
   letter-spacing: 0 !important;
+
+  &.v-btn--variant-outlined {
+    border: 3px solid currentColor;
+  }
 }
 
 .onlyForScreenReader {
