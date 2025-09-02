@@ -39,7 +39,10 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
   return {
     async create(data: PartialDatabaseObject<T>) {
       data.createdAt = dateToUnixTimestamp(new Date())
-      data.createdBy = authStore.validatedAuthUser.uid
+
+      if (!data.createdBy) {
+        data.createdBy = authStore.validatedAuthUser.uid
+      }
 
       if (!data.id) {
         data.id = uuidV4()
@@ -50,6 +53,26 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       return data as T
     },
 
+    async createIfNotExists(data: PartialDatabaseObject<T>) {
+      try {
+        if (data.id) {
+          await this.get(data.id)
+
+          // Document already exists
+          throw new ApplicationError({
+            code: APP_ERROR_CODES.CRUD_OPERATIONS.DOCUMENT_ALREADY_EXISTS,
+            status: 409,
+          })
+        }
+      } catch (err) {
+        if (err instanceof ApplicationError && err.code === APP_ERROR_CODES.CRUD_OPERATIONS.DOCUMENT_NOT_FOUND) {
+          return this.create(data)
+        } else {
+          throw err
+        }
+      }
+    },
+
     async get(id: string) {
       const docRef = doc(nuxtApp.$firebaseFirestore, basePath, id)
 
@@ -58,13 +81,19 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       if (docSnap.exists()) {
         return docSnap.data() as T
       } else {
-        throw new ApplicationError('Document not found', 404)
+        throw new ApplicationError({
+          code: APP_ERROR_CODES.CRUD_OPERATIONS.DOCUMENT_NOT_FOUND,
+          status: 404,
+        })
       }
     },
 
     async update(data: DatabaseObject) {
       data.updatedAt = dateToUnixTimestamp(new Date())
-      data.updatedBy = authStore.validatedAuthUser.uid
+
+      if (!data.updatedBy) {
+        data.updatedBy = authStore.validatedAuthUser.uid
+      }
 
       await updateDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), { ...data })
 
@@ -72,8 +101,6 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
     },
 
     async list(params = { orderBy: 'createdAt', orderDirection: 'desc' as OrderByDirection }) {
-      console.log('Calling list on crud', basePath)
-
       const q = query(collection(nuxtApp.$firebaseFirestore, basePath), orderBy(params.orderBy, params.orderDirection))
 
       const querySnapshot = await getDocs(q)

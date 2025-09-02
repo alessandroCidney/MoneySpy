@@ -9,7 +9,7 @@ export default defineNuxtPlugin(async () => {
 
   const usersCrud = useUsersCrud()
 
-  onAuthStateChanged(firebaseAuth, async (authUser) => {
+  const unsubscribe = onAuthStateChanged(firebaseAuth, async (authUser) => {
     try {
       if (authUser) {
         const databaseUser = await usersCrud.get(authUser.uid)
@@ -21,11 +21,15 @@ export default defineNuxtPlugin(async () => {
         const expensesStore = useExpensesStore()
         await expensesStore.list()
       } else {
-        authStore.setAuthUser(null)
-        authStore.setDatabaseUser(null)
+        throw new Error('Unauthenticated')
       }
     } catch (err) {
       globalErrorHandler(err)
+
+      authStore.setAuthUser(null)
+      authStore.setDatabaseUser(null)
+
+      unsubscribe()
     } finally {
       authStore.setAuthLoading(false)
     }

@@ -8,27 +8,34 @@ export interface DataUserPrivateData extends DatabaseObject {
   email: string | null
 }
 
+interface UserCreationParams {
+  baseData: PartialDatabaseObject<DatabaseUser>
+  privateData: Partial<DataUserPrivateData>
+}
+
 export function useUsersCrud() {
   const firestoreCrud = useFirestoreCrud<DatabaseUser>('users')
 
   return {
     ...firestoreCrud,
 
-    async create(data: PartialDatabaseObject<DatabaseUser>, privateData: Partial<DataUserPrivateData>) {
-      try {
-        await firestoreCrud.create(data)
+    async registerUser(params: UserCreationParams) {
+      await firestoreCrud.createIfNotExists({
+        ...params.baseData,
 
-        const userPrivateCrud = useFirestoreCrud<DataUserPrivateData>(`users/${data.id}/private`)
+        createdBy: params.baseData.id,
+      })
 
-        userPrivateCrud.create({
-          id: 'profile',
-          name: 'Dados privados do perfil',
+      const userPrivateCrud = useFirestoreCrud<DataUserPrivateData>(`users/${params.baseData.id}/private`)
 
-          email: privateData.email || null,
-        })
-      } catch (err) {
-        globalErrorHandler(err)
-      }
+      await userPrivateCrud.createIfNotExists({
+        id: 'profile',
+        name: 'Dados privados do perfil',
+
+        email: params.privateData.email || null,
+
+        createdBy: params.baseData.id,
+      })
     },
   }
 }

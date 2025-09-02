@@ -7,5 +7,21 @@ export function useRules() {
     requiredNumber(value: string | number) {
       return (!isNaN(typeof value === 'string' ? parseFloat(value) : value) && value !== undefined) || 'Valor obrigatório'
     },
+
+    validEmail(value: unknown) {
+      const emailRegExp = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+
+      return (typeof value === 'string' && emailRegExp.test(value)) || 'E-mail inválido'
+    },
+
+    strongPassword(value: unknown) {
+      const passwordRegExp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/
+
+      return (typeof value === 'string' && passwordRegExp.test(value)) || 'Senha muito fraca'
+    },
+
+    matchingPasswords(password: unknown, confirmPassword: unknown) {
+      return password === confirmPassword || 'As senhas não correspondem'
+    },
   }
 }
