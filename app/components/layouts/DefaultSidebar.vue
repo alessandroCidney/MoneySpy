@@ -7,14 +7,9 @@
   >
     <div class="logoArea d-flex align-center justify-start ga-2 px-5">
       <v-img
-        src="@/assets/images/logos/mainLogo.svg"
-        :max-width="50"
-        :min-width="50"
+        src="@/assets/images/logos/largeAppLogo.png"
+        max-width="170px"
       />
-
-      <h1>
-        MyApp
-      </h1>
     </div>
 
     <v-list
