@@ -11,11 +11,11 @@
 
     <div class="px-5">
       <h1 class="font-weight-bold text-center">
-        Criar nova conta
+        Entrar
       </h1>
 
       <p class="mb-10 text-center">
-        Crie uma nova conta para aproveitar todas as funcionalidades da plataforma!
+        Faça login para aproveitar todas as funcionalidades da plataforma!
       </p>
 
       <v-form
@@ -38,37 +38,29 @@
           flat
         />
 
-        <forms-password-text-field
-          v-model="createAccountPayload.confirmPassword"
-          :rules="[(confirmPassword: unknown) => formRules.matchingPasswords(createAccountPayload.password, confirmPassword)]"
-          label="Confirmar senha"
-          variant="solo-filled"
-          flat
-        />
-
         <v-btn
-          :loading="loadingCreateAccountWithEmailAndPassword"
-          :disabled="loadingCreateAccountWithGoogle"
+          :loading="loadingSignInWithEmailAndPassword"
+          :disabled="loadingSignInWithGoogle"
           color="primary"
           size="x-large"
           variant="flat"
           class="mb-4"
           rounded
           block
-          @click="handleCreateAccountWithEmailAndPassword()"
+          @click="handleSignInWithEmailAndPassword()"
         >
-          Criar conta
+          Fazer login
         </v-btn>
 
         <v-btn
-          :loading="loadingCreateAccountWithGoogle"
-          :disabled="loadingCreateAccountWithEmailAndPassword"
+          :loading="loadingSignInWithGoogle"
+          :disabled="loadingSignInWithEmailAndPassword"
           color="secondary"
           size="x-large"
           variant="outlined"
           rounded
           block
-          @click="handleCreateAccountWithGoogle()"
+          @click="handleSignInWithGoogle()"
         >
           <template #prepend>
             <v-img
@@ -86,20 +78,20 @@
     <div
       class="bottom-0 position-absolute mb-5"
     >
-      Já possui uma conta?
+      Ainda não possui uma conta?
 
       <nuxt-link
-        :to="{ name: 'auth-login' }"
+        :to="{ name: 'auth-join-us' }"
         class="defaultAnchor"
       >
-        Entrar
+        Junte-se a nós!
       </nuxt-link>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup, signOut, type UserCredential } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 
 import googleLogo from '@/assets/images/logos/googleLogo.svg'
 
@@ -111,8 +103,6 @@ definePageMeta({
 
 const nuxtApp = useNuxtApp()
 
-const usersCrud = useUsersCrud()
-
 const formRules = useRules()
 
 const createAccountFormRef = useTemplateRef('createAccountFormRef')
@@ -122,55 +112,36 @@ const createAccountPayload = ref({
   confirmPassword: '',
 })
 
-const loadingCreateAccountWithEmailAndPassword = ref(false)
-const loadingCreateAccountWithGoogle = ref(false)
+const loadingSignInWithEmailAndPassword = ref(false)
+const loadingSignInWithGoogle = ref(false)
 
-async function completeRegister(userCredential: UserCredential) {
-  await usersCrud.registerUser({
-    baseData: {
-      id: userCredential.user.uid,
-      name: userCredential.user.displayName || '',
-
-      active: true,
-    },
-
-    privateData: {
-      email: userCredential.user.email,
-    },
-  })
-}
-
-async function handleCreateAccountWithEmailAndPassword() {
+async function handleSignInWithEmailAndPassword() {
   try {
-    loadingCreateAccountWithEmailAndPassword.value = true
+    loadingSignInWithEmailAndPassword.value = true
 
     const validationResult = await createAccountFormRef.value?.validate()
 
     if (validationResult?.valid) {
       const auth = getAuth()
 
-      const userCredential = await createUserWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         auth,
         createAccountPayload.value.email,
         createAccountPayload.value.password,
       )
 
-      await completeRegister(userCredential)
-
       window.location.reload()
     }
   } catch (err) {
     globalErrorHandler(err)
-
-    handleSignOut()
   } finally {
-    loadingCreateAccountWithEmailAndPassword.value = false
+    loadingSignInWithEmailAndPassword.value = false
   }
 }
 
-async function handleCreateAccountWithGoogle() {
+async function handleSignInWithGoogle() {
   try {
-    loadingCreateAccountWithGoogle.value = true
+    loadingSignInWithGoogle.value = true
 
     const googleProvider = new GoogleAuthProvider()
 
@@ -178,27 +149,13 @@ async function handleCreateAccountWithGoogle() {
       prompt: 'select_account',
     })
 
-    const userCredential = await signInWithPopup(nuxtApp.$firebaseAuth, googleProvider)
-
-    await completeRegister(userCredential)
+    await signInWithPopup(nuxtApp.$firebaseAuth, googleProvider)
 
     window.location.reload()
   } catch (err) {
     globalErrorHandler(err)
-
-    handleSignOut()
   } finally {
-    loadingCreateAccountWithGoogle.value = false
-  }
-}
-
-async function handleSignOut() {
-  try {
-    const auth = getAuth()
-
-    await signOut(auth)
-  } catch (err) {
-    globalErrorHandler(err)
+    loadingSignInWithGoogle.value = false
   }
 }
 </script>
