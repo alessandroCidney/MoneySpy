@@ -112,19 +112,28 @@
       <div
         class="bottom-0 position-absolute mb-5"
       >
-        Já possui uma conta? <nuxt-link to="/auth/login">Entrar</nuxt-link>
+        Já possui uma conta?
+
+        <nuxt-link
+          to="/auth/login"
+          class="defaultAnchor"
+        >
+          Entrar
+        </nuxt-link>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { createUserWithEmailAndPassword, deleteUser, getAuth, GoogleAuthProvider, signInWithPopup, type UserCredential } from 'firebase/auth'
+import { createUserWithEmailAndPassword, deleteUser, getAuth, GoogleAuthProvider, signInWithPopup, signOut, type UserCredential } from 'firebase/auth'
 
 import chartsAndCalcsImagePath from '@/assets/images/illustrations/chartsAndCalcs.png'
 import googleLogo from '@/assets/images/logos/googleLogo.svg'
 
 definePageMeta({
+  middleware: 'unauthenticated',
+
   layout: 'clear',
 })
 
@@ -180,6 +189,8 @@ async function handleCreateAccountWithEmailAndPassword() {
     }
   } catch (err) {
     globalErrorHandler(err)
+
+    handleSignOut()
   } finally {
     loadingCreateAccountWithEmailAndPassword.value = false
   }
@@ -202,20 +213,18 @@ async function handleCreateAccountWithGoogle() {
     window.location.reload()
   } catch (err) {
     globalErrorHandler(err)
+
+    handleSignOut()
   } finally {
     loadingCreateAccountWithGoogle.value = false
   }
 }
 
-async function removeMyUser() {
+async function handleSignOut() {
   try {
-    if (nuxtApp.$firebaseAuth.currentUser?.uid) {
-      await usersCrud.remove(nuxtApp.$firebaseAuth.currentUser?.uid)
+    const auth = getAuth()
 
-      await deleteUser(nuxtApp.$firebaseAuth.currentUser)
-
-      window.location.reload()
-    }
+    await signOut(auth)
   } catch (err) {
     globalErrorHandler(err)
   }

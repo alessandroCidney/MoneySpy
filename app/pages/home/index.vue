@@ -113,7 +113,7 @@
         rounded
         flat
         @click="$router.push({
-          path: '/expenses/new',
+          path: '/expenses',
           query: { autofocus: 'true' },
         })"
       >
@@ -130,6 +130,10 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import { useExpensesStore } from '~/stores/cruds/expenses'
+
+definePageMeta({
+  middleware: 'authenticated',
+})
 
 const authStore = useAuthStore()
 

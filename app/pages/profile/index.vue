@@ -68,11 +68,13 @@
       </h2>
 
       <v-btn
+        :loading="loadingSignOut"
         color="error"
         size="large"
         width="200px"
         rounded
         flat
+        @click="handleSignOut()"
       >
         Sair
       </v-btn>
@@ -81,7 +83,31 @@
 </template>
 
 <script setup lang="ts">
+import { getAuth, signOut } from 'firebase/auth'
+
+definePageMeta({
+  middleware: 'authenticated',
+})
+
 const authStore = useAuthStore()
+
+const loadingSignOut = ref(false)
+
+async function handleSignOut() {
+  try {
+    loadingSignOut.value = true
+
+    const auth = getAuth()
+
+    await signOut(auth)
+
+    window.location.reload()
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    loadingSignOut.value = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>

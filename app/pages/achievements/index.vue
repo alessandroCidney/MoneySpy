@@ -48,6 +48,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'authenticated',
+})
+
 const achievementsList = ref([
   {
     icon: 'mdi-calendar-today',

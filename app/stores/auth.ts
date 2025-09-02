@@ -9,6 +9,10 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
+    isAuthenticated(state) {
+      return !!state.databaseUser && state.authUser
+    },
+
     validatedAuthUser(state) {
       if (!state.authUser) {
         throw new Error('Unauthenticated')

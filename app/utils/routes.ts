@@ -8,7 +8,7 @@ export function getRoutes() {
     {
       icon: 'mdi-cash-multiple',
       title: 'Registros',
-      path: '/expenses/new',
+      path: '/expenses',
     },
     {
       icon: 'mdi-trophy-variant',

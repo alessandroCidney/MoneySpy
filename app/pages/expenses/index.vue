@@ -205,6 +205,10 @@ import type { VDataTable } from 'vuetify/components'
 
 import { useExpensesStore } from '@/stores/cruds/expenses'
 
+definePageMeta({
+  middleware: 'authenticated',
+})
+
 const expensesStore = useExpensesStore()
 
 const formRules = useRules()
