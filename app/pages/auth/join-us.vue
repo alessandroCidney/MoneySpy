@@ -10,7 +10,7 @@
     />
 
     <div class="px-5">
-      <h1 class="font-weight-bold text-center">
+      <h1 class="mb-7 font-weight-bold text-center">
         Criar nova conta
       </h1>
 
@@ -99,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup, signOut, type UserCredential } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendEmailVerification, signInWithPopup, signOut, type UserCredential } from 'firebase/auth'
 
 import googleLogo from '@/assets/images/logos/googleLogo.svg'
 
@@ -156,6 +156,16 @@ async function handleCreateAccountWithEmailAndPassword() {
       )
 
       await completeRegister(userCredential)
+
+      if (!auth.currentUser) {
+        throw new ApplicationError({
+          code: APP_ERROR_CODES.GENERIC_ERRORS.UNIDENTIFIED_ERROR,
+          status: 500,
+          message: 'Erro durante a inicialização do fluxo de verificação de e-mail.',
+        })
+      }
+
+      await sendEmailVerification(auth.currentUser)
 
       window.location.reload()
     }

@@ -3,7 +3,6 @@ import { onAuthStateChanged, getAuth } from 'firebase/auth'
 import { useExpensesStore } from '~/stores/cruds/expenses'
 
 export default defineNuxtPlugin(async () => {
-  console.log('START AUTH PLUGIN')
   const firebaseAuth = getAuth()
 
   const authStore = useAuthStore()
@@ -31,13 +30,11 @@ export default defineNuxtPlugin(async () => {
         authStore.setAuthUser(null)
         authStore.setDatabaseUser(null)
       } finally {
-        authStore.setAuthLoading(false)
+        authStore.setLoadingAuth(false)
 
         unsubscribe()
         resolve()
       }
     })
   })
-
-  console.log('END AUTH PLUGIN')
 })

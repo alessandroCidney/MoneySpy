@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="authStore.authLoading">
+  <v-app v-if="authStore.loadingAuth">
     <v-container class="fill-height">
       <v-progress-circular
         class="mx-auto"

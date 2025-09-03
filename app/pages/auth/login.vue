@@ -10,7 +10,7 @@
     />
 
     <div class="px-5">
-      <h1 class="font-weight-bold text-center">
+      <h1 class="mb-7 font-weight-bold text-center">
         Entrar
       </h1>
 
@@ -32,7 +32,6 @@
 
         <forms-password-text-field
           v-model="createAccountPayload.password"
-          :rules="[formRules.strongPassword]"
           label="Senha"
           variant="solo-filled"
           flat

@@ -18,9 +18,11 @@
           </div>
 
           <div
-            class="w-md-50 w-100 h-100"
+            class="w-md-50 w-100 h-100 loginPageContentContainer"
           >
-            <slot />
+            <div class="h-100 mx-auto loginPageContentContainer">
+              <slot />
+            </div>
           </div>
         </div>
       </v-main>
@@ -38,7 +40,13 @@ import chartsAndCalcsImagePath from '@/assets/images/illustrations/chartsAndCalc
   padding: 1%;
 
   h1 {
-    font-size: 4rem;
+    font-size: 3.5rem;
+
+    line-height: 1;
+  }
+
+  .loginPageContentContainer {
+    max-width: 80%;
   }
 }
 
@@ -46,6 +54,15 @@ import chartsAndCalcsImagePath from '@/assets/images/illustrations/chartsAndCalc
   .loginPageContainer {
     h1 {
       font-size: 3rem;
+    }
+  }
+}
+
+// Vuetify md breakpoint start -> 960px
+@media(max-width: 960px) {
+  .loginPageContainer {
+    .loginPageContentContainer {
+      max-width: 95%;
     }
   }
 }

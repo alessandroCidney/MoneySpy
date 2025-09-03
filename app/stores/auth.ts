@@ -1,16 +1,25 @@
-import type { User } from 'firebase/auth'
+import { getAuth, signOut, type User } from 'firebase/auth'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     databaseUser: null as DatabaseUser | null,
     authUser: null as User | null,
 
-    authLoading: true,
+    loadingAuth: true,
+    loadingSignOut: false,
   }),
 
   getters: {
     isAuthenticated(state) {
-      return !!state.databaseUser && state.authUser
+      return !!state.databaseUser && !!state.authUser
+    },
+
+    emailIsVerified(state) {
+      return state.authUser?.emailVerified
+    },
+
+    incompleteProfile(state) {
+      return !state.databaseUser?.name
     },
 
     validatedAuthUser(state) {
@@ -39,8 +48,24 @@ export const useAuthStore = defineStore('auth', {
       this.databaseUser = data
     },
 
-    setAuthLoading(data: typeof this.authLoading) {
-      this.authLoading = data
+    setLoadingAuth(data: typeof this.loadingAuth) {
+      this.loadingAuth = data
+    },
+
+    async handleSignOut() {
+      try {
+        this.loadingSignOut = true
+
+        const auth = getAuth()
+
+        await signOut(auth)
+      } catch (err) {
+        globalErrorHandler(err)
+      } finally {
+        window.location.reload()
+
+        this.loadingSignOut = false
+      }
     },
   },
 })

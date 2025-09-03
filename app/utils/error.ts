@@ -11,6 +11,11 @@ export const APP_ERROR_CODES = {
   GENERIC_ERRORS: {
     UNIDENTIFIED_ERROR: 'Unidentified error',
   },
+
+  DEFAULT_ERRORS: {
+    METHOD_NOT_ALLOWED: 'Method or operation not allowed',
+    BAD_REQUEST: 'Bad request',
+  },
 }
 
 interface AplicationErrorConstructorParams {
