@@ -34,8 +34,6 @@
 </template>
 
 <script setup lang="ts">
-const sidebarsStore = useSidebarsStore()
-
 const authStore = useAuthStore()
 </script>
 

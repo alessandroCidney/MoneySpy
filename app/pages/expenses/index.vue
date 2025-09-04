@@ -55,6 +55,8 @@
             :disabled="expensesStore.loadingCreate"
             variant="solo"
             type="number"
+            lang="pt"
+            step="0.05"
             hide-details
             rounded
             flat
@@ -71,7 +73,7 @@
             v-model="createExpenseFormPayload.type"
             v-model:focused="typeFieldIsFocused"
             :rules="[formRules.requiredString]"
-            :items="expenseTypes.map(item => item.name)"
+            :items="expenseTypes.filter(item => item.type === selectedMode).map(item => item.name)"
             :disabled="expensesStore.loadingCreate"
             placeholder="Tipo"
             variant="solo"
@@ -131,7 +133,7 @@
         <template #[`item.actions`]="{ item: expenseData }">
           <commons-form-dialog
             :base-payload="expenseData"
-            :confirm="(finalPayload) => expensesStore.update(finalPayload as DatabaseObject)"
+            :confirm="(finalPayload) => expensesStore.update(finalPayload as DatabaseExpense)"
           >
             <template #title>
               Editar registro

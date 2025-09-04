@@ -40,8 +40,18 @@
         Dados pessoais
       </h2>
 
-      <v-form>
+      <p class="mb-4">
+        Aqui você pode atualizar seus dados pessoais.
+      </p>
+
+      <v-form
+        v-model="formIsValid"
+        @submit.prevent="handleUpdateProfileData()"
+      >
         <v-text-field
+          v-model="formPayload.name"
+          :rules="[formRules.requiredString]"
+          :disabled="loadingUpdateProfileData"
           label="Nome"
           variant="solo"
           rounded
@@ -49,11 +59,28 @@
         />
 
         <v-text-field
+          v-model="formPayload.email"
+          :rules="[formRules.requiredString]"
+          :disabled="loadingUpdateProfileData"
           label="E-mail"
           variant="solo"
+          hint="Por enquanto o e-mail não pode ser alterado."
+          readonly
           rounded
           flat
         />
+
+        <v-btn
+          :loading="loadingUpdateProfileData"
+          variant="flat"
+          color="primary"
+          size="large"
+          type="submit"
+          class="mt-2"
+          rounded
+        >
+          Atualizar dados
+        </v-btn>
       </v-form>
     </section>
 
@@ -64,9 +91,9 @@
 
       <v-btn
         :loading="loadingSignOut"
-        color="error"
+        color="#333"
         size="large"
-        width="200px"
+        width="150px"
         rounded
         flat
         @click="handleSignOut()"
@@ -83,6 +110,44 @@ import { getAuth, signOut } from 'firebase/auth'
 definePageMeta({
   middleware: 'authenticated',
 })
+
+const authStore = useAuthStore()
+const formRules = useRules()
+const usersCrud = useUsersCrud()
+
+const formIsValid = ref(false)
+
+if (!authStore.databaseUser || !authStore.authUser) {
+  throw new Error('Unauthenticated')
+}
+
+const formPayload = ref({
+  name: authStore.databaseUser.name,
+  email: authStore.authUser.email,
+})
+
+const loadingUpdateProfileData = ref(false)
+
+async function handleUpdateProfileData() {
+  try {
+    loadingUpdateProfileData.value = true
+
+    if (!authStore.databaseUser) {
+      throw new Error('Unauthenticated')
+    }
+
+    const result = await usersCrud.update({
+      ...authStore.databaseUser,
+      name: formPayload.value.name,
+    })
+
+    authStore.setDatabaseUser(result)
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    loadingUpdateProfileData.value = false
+  }
+}
 
 const loadingSignOut = ref(false)
 

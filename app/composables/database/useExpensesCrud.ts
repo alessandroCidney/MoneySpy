@@ -5,26 +5,43 @@ export const expenseTypes = [
     id: 'market',
     name: 'Mercado',
     icon: 'mdi-store',
+    type: 'expense',
   },
   {
     id: 'bill',
     name: 'Conta',
     icon: 'mdi-file-document-multiple',
+    type: 'expense',
+  },
+  {
+    id: 'education',
+    name: 'Educação',
+    icon: 'mdi-school',
+    type: 'expense',
   },
   {
     id: 'delivery',
     name: 'Delivery',
     icon: 'mdi-moped',
+    type: 'expense',
   },
   {
     id: 'donation',
     name: 'Doação',
     icon: 'mdi-heart',
+    type: 'expense',
   },
   {
     id: 'inflow',
     name: 'Entrada',
     icon: 'mdi-currency-usd',
+    type: 'income',
+  },
+  {
+    id: 'inflow',
+    name: 'Salário',
+    icon: 'mdi-currency-usd',
+    type: 'income',
   },
 ]
 

@@ -15,7 +15,6 @@ export const useExpensesStore = defineStore('expenses', {
   actions: {
     async list() {
       try {
-        console.log('expenses list')
         const expensesCrud = useExpensesCrud()
 
         this.items = await expensesCrud.list()

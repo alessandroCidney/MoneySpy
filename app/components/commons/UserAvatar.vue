@@ -1,6 +1,6 @@
 <template>
   <v-avatar
-    :color="authStore.userProfilePhoto.type === 'icon' ? 'neutral' : undefined"
+    :color="authStore.userProfilePhoto.type === 'icon' ? '#333' : undefined"
     :size="size"
   >
     <v-icon
