@@ -15,12 +15,16 @@ export const useExpensesStore = defineStore('expenses', {
   actions: {
     async list() {
       try {
+        this.loadingList = true
+
         const expensesCrud = useExpensesCrud()
 
         this.items = await expensesCrud.list()
         this.loadedOnce = true
       } catch (err) {
         globalErrorHandler(err)
+      } finally {
+        this.loadingList = false
       }
     },
 

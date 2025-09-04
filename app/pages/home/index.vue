@@ -1,5 +1,20 @@
 <template>
-  <div class="defaultPageContainer">
+  <div
+    v-if="expensesStore.loadingList"
+    class="defaultPageContainer d-flex align-center justify-center"
+  >
+    <v-progress-circular
+      color="primary"
+      size="250"
+      width="10"
+      indeterminate
+    />
+  </div>
+
+  <div
+    v-else
+    class="defaultPageContainer"
+  >
     <h1 class="mb-4">
       Resumo Geral
     </h1>
