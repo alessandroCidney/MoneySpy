@@ -2,6 +2,12 @@ import { useFirestoreCrud, type DatabaseObject, type PartialDatabaseObject } fro
 
 export interface DatabaseUser extends DatabaseObject {
   active: true
+
+  profilePhoto?: {
+    type: 'imageUrl' | 'icon' | 'providerPhoto'
+    value?: string
+    url?: string
+  }
 }
 
 export interface DataUserPrivateData extends DatabaseObject {

@@ -13,7 +13,8 @@ import {
 
 import { v4 as uuidV4 } from 'uuid'
 
-export interface DatabaseObject {
+// DatabaseObject extends GenericObject to prevent Firebase type errors
+export interface DatabaseObject extends GenericObject {
   id: string
   name: string
 
@@ -88,16 +89,16 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       }
     },
 
-    async update(data: DatabaseObject) {
+    async update(data: T) {
       data.updatedAt = dateToUnixTimestamp(new Date())
 
       if (!data.updatedBy) {
         data.updatedBy = authStore.validatedAuthUser.uid
       }
 
-      await updateDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), { ...data })
+      await updateDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), data)
 
-      return data as T
+      return data
     },
 
     async list(params = { orderBy: 'createdAt', orderDirection: 'desc' as OrderByDirection }) {

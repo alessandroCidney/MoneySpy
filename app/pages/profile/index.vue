@@ -10,15 +10,10 @@
       </h2>
 
       <div class="profilePhotoSettings d-flex align-center ga-8">
-        <v-avatar
+        <commons-user-avatar
           size="150"
           class="profilePhotoAvatar"
-        >
-          <v-img
-            :src="authStore.validatedProfilePhoto"
-            cover
-          />
-        </v-avatar>
+        />
 
         <div class="d-flex flex-column ga-3">
           <v-btn
@@ -88,8 +83,6 @@ import { getAuth, signOut } from 'firebase/auth'
 definePageMeta({
   middleware: 'authenticated',
 })
-
-const authStore = useAuthStore()
 
 const loadingSignOut = ref(false)
 

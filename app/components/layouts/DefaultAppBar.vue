@@ -2,6 +2,7 @@
   <v-app-bar
     :elevation="0"
     :height="72"
+    absolute
   >
     <template #append>
       <div class="notificationsArea">
@@ -12,23 +13,19 @@
         />
       </div>
 
-      <div class="userAvatarCard px-4 d-flex align-center justify-center ga-2">
-        <v-avatar
-          size="45"
-        >
-          <v-img
-            :src="authStore.validatedAuthUser.photoURL || ''"
-            cover
-          />
-        </v-avatar>
+      <div
+        v-if="authStore.authUser && authStore.databaseUser"
+        class="userAvatarCard px-4 d-flex align-center justify-center ga-2"
+      >
+        <commons-user-avatar size="45" />
 
         <div>
           <div class="font-weight-medium userDisplayNameText">
-            {{ authStore.validatedAuthUser.displayName }}
+            {{ authStore.databaseUser.name }}
           </div>
 
           <div class="text-medium-emphasis userEmailText">
-            {{ authStore.validatedAuthUser.email }}
+            {{ authStore.authUser.email }}
           </div>
         </div>
       </div>
