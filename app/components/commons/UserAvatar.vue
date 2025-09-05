@@ -47,7 +47,7 @@ const selectedProfilePhotoUrl = computed(() => {
     return authStore.authUser?.photoURL
   }
 
-  return selectedProfilePhoto.value.url
+  return selectedProfilePhoto.value.value
 })
 
 const iconSize = computed(() => Math.floor(parseInt(props.size) * 0.9))

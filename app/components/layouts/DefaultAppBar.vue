@@ -2,8 +2,19 @@
   <v-app-bar
     :elevation="0"
     :height="72"
-    absolute
+    :absolute="vuetifyDisplay.lgAndUp.value"
   >
+    <template
+      v-if="vuetifyDisplay.mdAndDown.value"
+      #prepend
+    >
+      <v-img
+        src="@/assets/images/logos/largeAppLogo.png"
+        width="170px"
+        class="mx-4"
+      />
+    </template>
+
     <template #append>
       <div class="notificationsArea">
         <v-btn
@@ -19,7 +30,7 @@
       >
         <commons-user-avatar size="45" />
 
-        <div>
+        <div v-if="vuetifyDisplay.mdAndUp.value">
           <div class="font-weight-medium userDisplayNameText">
             {{ authStore.databaseUser.name }}
           </div>
@@ -34,7 +45,11 @@
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from 'vuetify'
+
 const authStore = useAuthStore()
+
+const vuetifyDisplay = useDisplay()
 </script>
 
 <style lang="scss" scoped>

@@ -20,6 +20,7 @@
 
       <v-form
         ref="createAccountFormRef"
+        :readonly="somethingIsLoading"
       >
         <v-text-field
           v-model="createAccountPayload.email"
@@ -47,8 +48,8 @@
         />
 
         <v-btn
-          :loading="loadingCreateAccountWithEmailAndPassword"
-          :disabled="loadingCreateAccountWithGoogle"
+          :loading="loading.emailAndPassword"
+          :disabled="somethingIsLoading && !loading.emailAndPassword"
           color="primary"
           size="x-large"
           variant="flat"
@@ -61,8 +62,8 @@
         </v-btn>
 
         <v-btn
-          :loading="loadingCreateAccountWithGoogle"
-          :disabled="loadingCreateAccountWithEmailAndPassword"
+          :loading="loading.google"
+          :disabled="somethingIsLoading && !loading.google"
           color="secondary"
           size="x-large"
           variant="outlined"
@@ -122,8 +123,12 @@ const createAccountPayload = ref({
   confirmPassword: '',
 })
 
-const loadingCreateAccountWithEmailAndPassword = ref(false)
-const loadingCreateAccountWithGoogle = ref(false)
+const loading = ref({
+  emailAndPassword: false,
+  google: false,
+})
+
+const somethingIsLoading = computed(() => Object.values(loading.value).some(item => item === true))
 
 async function completeRegister(userCredential: UserCredential) {
   await usersCrud.registerUser({
@@ -142,7 +147,7 @@ async function completeRegister(userCredential: UserCredential) {
 
 async function handleCreateAccountWithEmailAndPassword() {
   try {
-    loadingCreateAccountWithEmailAndPassword.value = true
+    loading.value.emailAndPassword = true
 
     const validationResult = await createAccountFormRef.value?.validate()
 
@@ -181,13 +186,13 @@ async function handleCreateAccountWithEmailAndPassword() {
 
     handleSignOut()
   } finally {
-    loadingCreateAccountWithEmailAndPassword.value = false
+    loading.value.emailAndPassword = false
   }
 }
 
 async function handleCreateAccountWithGoogle() {
   try {
-    loadingCreateAccountWithGoogle.value = true
+    loading.value.google = true
 
     const googleProvider = new GoogleAuthProvider()
 
@@ -212,7 +217,7 @@ async function handleCreateAccountWithGoogle() {
 
     handleSignOut()
   } finally {
-    loadingCreateAccountWithGoogle.value = false
+    loading.value.google = false
   }
 }
 

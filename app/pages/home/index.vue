@@ -247,7 +247,7 @@ const expensesByType = computed(() => {
   }
 }
 
-@media(max-width: 1000px) {
+@media(max-width: 1280px) {
   .homePageGrid {
     height: auto;
 

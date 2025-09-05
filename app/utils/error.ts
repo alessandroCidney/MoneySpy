@@ -1,3 +1,6 @@
+import { FirebaseError } from 'firebase/app'
+import type { AuthErrorCodes } from 'firebase/auth'
+
 export const APP_ERROR_CODES = {
   CRUD_OPERATIONS: {
     DOCUMENT_ALREADY_EXISTS: 'Document already exists',
@@ -32,15 +35,31 @@ export class ApplicationError extends Error {
   }
 }
 
+const FIREBASE_ERROR_MESSAGES: Partial<Record<ValueOf<typeof AuthErrorCodes>, string>> & Record<FirebaseError['code'], string> = {
+  'auth/popup-closed-by-user': 'O popup de autenticação foi fechado',
+  'auth/wrong-password': 'E-mail ou senha incorretos',
+  'auth/invalid-email': 'E-mail ou senha incorretos',
+  'auth/user-not-found': 'E-mail ou senha incorretos',
+  'auth/email-already-in-use': 'O e-mail já está sendo utilizado',
+}
+
 export function globalErrorHandler(err: unknown) {
   const messageStore = useMessageStore()
 
+  if (err instanceof FirebaseError) {
+    console.log(err.code)
+
+    return messageStore.showErrorMessage({
+      text: FIREBASE_ERROR_MESSAGES[err.code] ?? APP_ERROR_CODES.GENERIC_ERRORS.UNIDENTIFIED_ERROR,
+    })
+  }
+
   if (err instanceof ApplicationError) {
     // TODO: Implement details dialog
-    messageStore.showErrorMessage({ text: err.message })
+    return messageStore.showErrorMessage({ text: err.message })
   }
 
   if (err instanceof Error) {
-    messageStore.showErrorMessage({ text: err.message })
+    return messageStore.showErrorMessage({ text: err.message })
   }
 }

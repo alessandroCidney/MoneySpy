@@ -1,11 +1,38 @@
 <template>
+  <v-bottom-navigation
+    v-if="vuetifyDisplay.smAndDown.value"
+    :model-value="route.name"
+    :height="70"
+    grow
+    @update:model-value="router.push({ name: $event })"
+  >
+    <v-btn
+      v-for="routeData in routes"
+      :key="routeData.title"
+      :value="routeData.name"
+    >
+      <v-icon size="30">
+        {{ routeData.icon }}
+      </v-icon>
+
+      <span>{{ routeData.title }}</span>
+    </v-btn>
+  </v-bottom-navigation>
+
   <v-navigation-drawer
+    v-else
     v-model="sidebarsStore.defaultSidebarIsOpen"
+    :rail="vuetifyDisplay.md.value"
+    :rail-width="82"
+    :mobile="false"
     class="defaultSidebar"
     tag="div"
     floating
   >
-    <div class="logoArea d-flex align-center justify-start ga-2 px-5">
+    <div
+      v-if="vuetifyDisplay.lgAndUp.value"
+      class="logoArea d-flex align-center justify-start ga-2 px-5"
+    >
       <v-img
         src="@/assets/images/logos/largeAppLogo.png"
         max-width="170px"
@@ -20,7 +47,7 @@
       <v-list-item
         v-for="routeData in routes"
         :key="routeData.title"
-        :to="routeData.path"
+        :to="{ name: routeData.name }"
       >
         <template #prepend>
           <v-icon>
@@ -37,12 +64,19 @@
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from 'vuetify'
+
 const sidebarsStore = useSidebarsStore()
 
 const routes = getRoutes()
+
+const route = useRoute()
+const router = useRouter()
+
+const vuetifyDisplay = useDisplay()
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .defaultSidebar {
   .logoArea {
     height: 80px;
@@ -54,6 +88,8 @@ const routes = getRoutes()
 
     .v-list-item {
       height: 60px;
+
+      padding-left: 26px;
     }
   }
 }

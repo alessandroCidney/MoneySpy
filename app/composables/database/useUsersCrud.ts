@@ -6,7 +6,6 @@ export interface DatabaseUser extends DatabaseObject {
   profilePhoto?: {
     type: 'imageUrl' | 'icon' | 'providerPhoto'
     value?: string
-    url?: string
   }
 }
 
