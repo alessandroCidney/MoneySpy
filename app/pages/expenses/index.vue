@@ -212,6 +212,7 @@ definePageMeta({
 })
 
 const expensesStore = useExpensesStore()
+const messageStore = useMessageStore()
 
 const formRules = useRules()
 
@@ -257,8 +258,6 @@ const expenseTableHeaders: ReadonlyHeaders = [
 async function handleCreateExpense() {
   const validationResult = await createExpenseForm.value?.validate()
 
-  console.log('validationResult', validationResult)
-
   if (validationResult?.valid) {
     await expensesStore.create({
       value: selectedMode.value === 'expense' ? createExpenseFormPayload.value.value * -1 : createExpenseFormPayload.value.value,
@@ -267,7 +266,7 @@ async function handleCreateExpense() {
       name: '',
     })
   } else {
-    window.alert('Dados inválidos!')
+    messageStore.showErrorMessage({ text: 'Dados inválidos!' })
   }
 }
 </script>

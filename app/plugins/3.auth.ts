@@ -24,9 +24,7 @@ export default defineNuxtPlugin(async () => {
         } else {
           throw new Error('Unauthenticated')
         }
-      } catch (err) {
-        globalErrorHandler(err)
-
+      } catch {
         authStore.setAuthUser(null)
         authStore.setDatabaseUser(null)
       } finally {

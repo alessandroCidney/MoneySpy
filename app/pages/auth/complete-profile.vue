@@ -19,6 +19,7 @@
       <v-form @submit.prevent="handleSave()">
         <div class="text-center mb-10">
           <commons-user-avatar
+            :profile-photo="authStore.authUser?.photoURL ? { type: 'providerPhoto', value: 'google.com' } : undefined"
             size="300"
           />
         </div>
@@ -83,7 +84,7 @@ interface FormPayload {
 }
 
 const formPayload = ref<Partial<FormPayload>>({
-  name: '',
+  name: authStore.authUser?.displayName ?? '',
   profilePhoto: undefined,
 })
 
@@ -101,17 +102,26 @@ async function handleSave() {
 
     const validatedFormPayload = formPayload.value as FormPayload
 
+    const currentProviderData = authStore.authUser?.providerData[0]
+
     await usersCrud.update({
       ...authStore.databaseUser,
       name: validatedFormPayload.name,
 
-      profilePhoto: {
-        type: 'icon',
-        value: 'mdi-face-man',
-      },
+      profilePhoto: currentProviderData?.photoURL
+        ? {
+            type: 'providerPhoto',
+            value: currentProviderData?.providerId,
+          }
+        : {
+            type: 'icon',
+            value: 'mdi-face-man',
+          },
     })
 
     window.location.reload()
+
+    await wait(3000)
   } catch (err) {
     globalErrorHandler(err)
   } finally {

@@ -16,7 +16,7 @@ const defaultMessage: AppMessage = {
   text: '',
   icon: 'mdi-success',
   color: 'success',
-  timeout: 5000,
+  timeout: 4000,
   multiline: true,
   action: undefined,
 }

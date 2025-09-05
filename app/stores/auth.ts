@@ -19,7 +19,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     incompleteProfile(state) {
-      return !state.databaseUser?.name || !state.databaseUser.profilePhoto
+      if (state.databaseUser) {
+        return !state.databaseUser.name || !state.databaseUser.profilePhoto
+      }
     },
 
     validatedAuthUser(state) {
@@ -31,23 +33,12 @@ export const useAuthStore = defineStore('auth', {
     },
 
     userProfilePhoto(state) {
-      let profilePhotoData: DatabaseUser['profilePhoto'] = {
+      const defaultProfilePhoto: DatabaseUser['profilePhoto'] = {
         type: 'icon',
         value: 'mdi-face-man',
       }
 
-      if (state.databaseUser?.profilePhoto?.type === 'providerPhoto') {
-        const providerPhotoUrl = state.authUser?.providerData.find(item => item.providerId === state.databaseUser?.profilePhoto?.value)?.photoURL
-
-        if (providerPhotoUrl) {
-          profilePhotoData = {
-            type: 'providerPhoto',
-            url: providerPhotoUrl,
-          }
-        }
-      }
-
-      return profilePhotoData
+      return state.databaseUser?.profilePhoto ?? defaultProfilePhoto
     },
   },
 

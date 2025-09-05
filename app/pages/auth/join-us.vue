@@ -170,7 +170,14 @@ async function handleCreateAccountWithEmailAndPassword() {
       window.location.reload()
     }
   } catch (err) {
-    globalErrorHandler(err)
+    if (err instanceof ApplicationError && err.status === 409) {
+      globalErrorHandler(new ApplicationError({
+        ...err,
+        message: 'O usuário já está cadastrado! Faça login para continuar',
+      }))
+    } else {
+      globalErrorHandler(err)
+    }
 
     handleSignOut()
   } finally {
@@ -194,7 +201,14 @@ async function handleCreateAccountWithGoogle() {
 
     window.location.reload()
   } catch (err) {
-    globalErrorHandler(err)
+    if (err instanceof ApplicationError && err.status === 409) {
+      globalErrorHandler(new ApplicationError({
+        ...err,
+        message: 'O usuário já está cadastrado! Faça login para continuar',
+      }))
+    } else {
+      globalErrorHandler(err)
+    }
 
     handleSignOut()
   } finally {

@@ -15,10 +15,12 @@
 
         <template #append>
           <v-btn
+            :loading="authStore.loadingSignOut"
             prepend-icon="mdi-arrow-left"
             variant="tonal"
             class="mr-3"
             rounded
+            @click="authStore.handleSignOut()"
           >
             Sair
           </v-btn>
@@ -31,3 +33,7 @@
     </v-app>
   </layouts-loading-container>
 </template>
+
+<script setup lang="ts">
+const authStore = useAuthStore()
+</script>

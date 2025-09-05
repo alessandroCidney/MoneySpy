@@ -1,7 +1,3 @@
-export function globalErrorHandler(err: unknown) {
-  console.error(err)
-}
-
 export const APP_ERROR_CODES = {
   CRUD_OPERATIONS: {
     DOCUMENT_ALREADY_EXISTS: 'Document already exists',
@@ -33,5 +29,18 @@ export class ApplicationError extends Error {
 
     this.status = params.status
     this.code = params.code
+  }
+}
+
+export function globalErrorHandler(err: unknown) {
+  const messageStore = useMessageStore()
+
+  if (err instanceof ApplicationError) {
+    // TODO: Implement details dialog
+    messageStore.showErrorMessage({ text: err.message })
+  }
+
+  if (err instanceof Error) {
+    messageStore.showErrorMessage({ text: err.message })
   }
 }

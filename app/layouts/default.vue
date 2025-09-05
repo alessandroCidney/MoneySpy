@@ -9,7 +9,5 @@
         <slot />
       </v-main>
     </v-app>
-
-    <layouts-app-message />
   </layouts-loading-container>
 </template>

@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
-  if (!authStore.emailIsVerified && to.name !== 'auth-verify-email') {
+  if (authStore.emailIsVerified === false && to.name !== 'auth-verify-email') {
     return navigateTo({
       name: 'auth-verify-email',
     })
@@ -27,7 +27,7 @@ export default defineNuxtRouteMiddleware((to) => {
     })
   }
 
-  if (!authStore.incompleteProfile && to.name === 'auth-complete-profile') {
+  if (authStore.incompleteProfile === false && to.name === 'auth-complete-profile') {
     return navigateTo({
       name: 'home',
     })

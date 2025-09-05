@@ -38,6 +38,9 @@ export const useExpensesStore = defineStore('expenses', {
 
         this.items.push(itemObj)
 
+        const messageStore = useMessageStore()
+        messageStore.showSuccessMessage({ text: 'Registro adicionado!' })
+
         return itemObj
       } catch (err) {
         globalErrorHandler(err)
@@ -62,6 +65,9 @@ export const useExpensesStore = defineStore('expenses', {
           this.items[itemIndex] = itemObj
         }
 
+        const messageStore = useMessageStore()
+        messageStore.showSuccessMessage({ text: 'Registro atualizado!' })
+
         return itemObj
       } catch (err) {
         globalErrorHandler(err)
@@ -79,6 +85,9 @@ export const useExpensesStore = defineStore('expenses', {
         const itemIndex = this.items.findIndex(item => item.id === id)
 
         this.items.splice(itemIndex, 1)
+
+        const messageStore = useMessageStore()
+        messageStore.showSuccessMessage({ text: 'Registro removido!' })
       } catch (err) {
         globalErrorHandler(err)
       }

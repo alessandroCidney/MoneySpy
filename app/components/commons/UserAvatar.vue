@@ -1,18 +1,19 @@
 <template>
   <v-avatar
-    :color="authStore.userProfilePhoto.type === 'icon' ? '#333' : undefined"
+    :color="selectedProfilePhoto.type === 'icon' ? '#333' : undefined"
     :size="size"
   >
     <v-icon
-      v-if="authStore.userProfilePhoto.type === 'icon'"
+      v-if="selectedProfilePhoto.type === 'icon'"
       :size="iconSize"
     >
-      {{ authStore.userProfilePhoto.value }}
+      {{ selectedProfilePhoto.value }}
     </v-icon>
 
     <v-img
-      v-else
-      :src="authStore.userProfilePhoto.url"
+      v-else-if="selectedProfilePhotoUrl"
+      :src="selectedProfilePhotoUrl"
+      referrerpolicy="no-referrer"
       cover
     />
   </v-avatar>
@@ -23,6 +24,30 @@ const authStore = useAuthStore()
 
 const props = defineProps({
   size: { type: String, required: true },
+
+  profilePhoto: { type: Object as PropType<DatabaseUser['profilePhoto']>, default: undefined },
+})
+
+const selectedProfilePhoto = computed(() => props.profilePhoto ?? authStore.userProfilePhoto)
+
+const selectedProfilePhotoUrl = computed(() => {
+  // The URL should not be saved in the profile photo object.
+  // The "providerPhoto" type signals that it is necessary to fetch the "photoURL" from the "authUser"
+  const isProviderPhoto = selectedProfilePhoto.value.type === 'providerPhoto'
+
+  const isGooglePhoto = selectedProfilePhoto.value.value === 'google.com'
+    && authStore.authUser?.photoURL
+    && isGoogleProfilePhoto(authStore.authUser.photoURL)
+
+  if (isProviderPhoto) {
+    if (isGooglePhoto) {
+      return increaseGoogleProfilePhotoSize(authStore.authUser?.photoURL ?? '', parseInt(props.size))
+    }
+
+    return authStore.authUser?.photoURL
+  }
+
+  return selectedProfilePhoto.value.url
 })
 
 const iconSize = computed(() => Math.floor(parseInt(props.size) * 0.9))
