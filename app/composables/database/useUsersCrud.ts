@@ -9,14 +9,19 @@ export interface DatabaseUser extends DatabaseObject {
   }
 }
 
+export interface CompletedAchievementData {
+  id: string
+  completedAt: number
+}
+
 export interface DatabaseUserPrivateData extends DatabaseObject {
   email: string | null
 
   achievements: {
-    complete: string[]
+    complete: CompletedAchievementData[]
 
     inProgressPayload: {
-      lastDayOfLogin: number
+      lastLoginValidationTime: number
       loginSequenceCounter: number
     }
   }
@@ -51,10 +56,12 @@ export function useUsersCrud() {
         createdBy: params.baseData.id,
 
         achievements: {
-          complete: ['beginner'],
+          complete: [
+            { id: 'beginner', completedAt: getCurrentUnixTime() },
+          ],
 
           inProgressPayload: {
-            lastDayOfLogin: getCurrentUnixTime(),
+            lastLoginValidationTime: getCurrentUnixTime(),
             loginSequenceCounter: 1,
           },
         },
