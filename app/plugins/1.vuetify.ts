@@ -20,6 +20,8 @@ export default defineNuxtPlugin((app) => {
             'secondary': '#000000',
             'gray-background': 'f8f8f8',
             'neutral': '#424A52',
+            'red': '#F44336',
+            'deep-purple': '#673AB7',
           },
         },
       },

@@ -3,6 +3,7 @@ import { getAuth, signOut, type User } from 'firebase/auth'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     databaseUser: null as DatabaseUser | null,
+    privateProfileData: null as DatabaseUserPrivateData | null,
     authUser: null as User | null,
 
     loadingAuth: true,
@@ -49,6 +50,10 @@ export const useAuthStore = defineStore('auth', {
 
     setDatabaseUser(data: typeof this.databaseUser) {
       this.databaseUser = data
+    },
+
+    setPrivateProfileData(data: typeof this.privateProfileData) {
+      this.privateProfileData = data
     },
 
     setLoadingAuth(data: typeof this.loadingAuth) {

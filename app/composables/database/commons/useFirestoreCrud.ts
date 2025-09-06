@@ -14,7 +14,7 @@ import {
 import { v4 as uuidV4 } from 'uuid'
 
 // DatabaseObject extends GenericObject to prevent Firebase type errors
-export interface DatabaseObject extends GenericObject {
+export interface DatabaseObject {
   id: string
   name: string
 
@@ -30,6 +30,9 @@ export type PartialDatabaseObject<T extends DatabaseObject> = Omit<T, 'id' | 'cr
 
   createdBy?: string
   createdAt?: number
+
+  updatedBy?: string
+  updatedAt?: number
 }
 
 export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
@@ -89,13 +92,14 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       }
     },
 
-    async update(data: T) {
+    async update(data: Omit<PartialDatabaseObject<T>, 'id'> & { id: string }) {
       data.updatedAt = dateToUnixTimestamp(new Date())
 
       if (!data.updatedBy) {
         data.updatedBy = authStore.validatedAuthUser.uid
       }
 
+      // Firebase's updateDoc method has some type issues
       await updateDoc(doc(nuxtApp.$firebaseFirestore, basePath, data.id), data)
 
       return data

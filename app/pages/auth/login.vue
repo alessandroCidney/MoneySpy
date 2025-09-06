@@ -20,6 +20,7 @@
 
       <v-form
         ref="createAccountFormRef"
+        :readonly="somethingIsLoading"
       >
         <v-text-field
           v-model="createAccountPayload.email"
@@ -38,8 +39,8 @@
         />
 
         <v-btn
-          :loading="loadingSignInWithEmailAndPassword"
-          :disabled="loadingSignInWithGoogle"
+          :loading="loading.emailAndPassword"
+          :disabled="somethingIsLoading && !loading.emailAndPassword"
           color="primary"
           size="x-large"
           variant="flat"
@@ -52,8 +53,8 @@
         </v-btn>
 
         <v-btn
-          :loading="loadingSignInWithGoogle"
-          :disabled="loadingSignInWithEmailAndPassword"
+          :loading="loading.google"
+          :disabled="somethingIsLoading && !loading.google"
           color="secondary"
           size="x-large"
           variant="outlined"
@@ -111,12 +112,16 @@ const createAccountPayload = ref({
   confirmPassword: '',
 })
 
-const loadingSignInWithEmailAndPassword = ref(false)
-const loadingSignInWithGoogle = ref(false)
+const loading = ref({
+  emailAndPassword: false,
+  google: false,
+})
+
+const somethingIsLoading = computed(() => Object.values(loading.value).some(item => item === true))
 
 async function handleSignInWithEmailAndPassword() {
   try {
-    loadingSignInWithEmailAndPassword.value = true
+    loading.value.emailAndPassword = true
 
     const validationResult = await createAccountFormRef.value?.validate()
 
@@ -134,13 +139,13 @@ async function handleSignInWithEmailAndPassword() {
   } catch (err) {
     globalErrorHandler(err)
   } finally {
-    loadingSignInWithEmailAndPassword.value = false
+    loading.value.emailAndPassword = false
   }
 }
 
 async function handleSignInWithGoogle() {
   try {
-    loadingSignInWithGoogle.value = true
+    loading.value.google = true
 
     const googleProvider = new GoogleAuthProvider()
 
@@ -154,7 +159,7 @@ async function handleSignInWithGoogle() {
   } catch (err) {
     globalErrorHandler(err)
   } finally {
-    loadingSignInWithGoogle.value = false
+    loading.value.google = false
   }
 }
 </script>

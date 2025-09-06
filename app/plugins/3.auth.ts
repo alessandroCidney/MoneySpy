@@ -14,9 +14,11 @@ export default defineNuxtPlugin(async () => {
       try {
         if (authUser) {
           const databaseUser = await usersCrud.get(authUser.uid)
+          const databaseUserPrivateData = await usersCrud.getPrivateProfileData(authUser.uid)
 
           authStore.setAuthUser(authUser)
           authStore.setDatabaseUser(databaseUser)
+          authStore.setPrivateProfileData(databaseUserPrivateData)
 
           // load "cached" cruds
           const expensesStore = useExpensesStore()

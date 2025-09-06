@@ -16,149 +16,67 @@
       </header>
 
       <article
-        v-for="(achievementData, achievementIndex) in achievementsList"
+        v-for="(achievementData, achievementIndex) in achievementsStore.items"
         :key="`achievementIndex${achievementIndex}`"
         :class="{
-          'defaultWhiteCard achievementCard text-center': true,
-          'complete': achievementData.complete,
+          'defaultWhiteCard achievementCard text-center d-flex align-center justify-space-between flex-column': true,
         }"
       >
-        <header>
+        <div>
           <v-avatar
-            :color="achievementData.color"
+            :color="getAchievementProgress(achievementData) === 0 ? 'grey' : vuetifyTheme.current.value.colors[achievementData.color]"
             class="achievementIcon mb-3"
-            size="120"
+            size="150"
           >
-            <v-icon size="70">
+            <v-icon
+              size="80"
+            >
               {{ achievementData.icon }}
             </v-icon>
           </v-avatar>
+        </div>
 
+        <div class="w-100">
           <h3>
             {{ achievementData.title }}
           </h3>
-        </header>
 
-        <section>
-          <p>{{ achievementData.description }}</p>
-        </section>
+          <p class="mb-10">
+            {{ achievementData.description }}
+          </p>
+
+          <div class="w-100 d-flex align-center justify-center ga-2">
+            <v-progress-linear
+              :model-value="getAchievementProgress(achievementData)"
+              :color="getAchievementProgress(achievementData) === 100 ? 'primary' : 'blue'"
+              height="12"
+              rounded
+            />
+
+            <span class="font-weight-medium">
+              {{ achievementData.currentStep }}/{{ achievementData.totalSteps }}
+            </span>
+          </div>
+        </div>
       </article>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useTheme } from 'vuetify'
+
 definePageMeta({
   middleware: 'authenticated',
 })
 
-const achievementsList = ref([
-  {
-    icon: 'mdi-calendar-today',
-    color: 'primary',
-    title: 'Novato',
-    description: 'Entre pela primeira vez.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-calendar-range',
-    color: 'primary',
-    title: 'Curioso',
-    description: 'Entre por 3 dias seguidos.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-calendar-week',
-    color: 'primary',
-    title: 'Honorário',
-    description: 'Entre por 7 dias seguidos.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-calendar-month',
-    color: 'primary',
-    title: 'Esforçado',
-    description: 'Entre por 30 dias seguidos.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-calendar-check',
-    color: 'primary',
-    title: 'Imortal',
-    description: 'Entre por 3 meses seguidos.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-calendar-star',
-    color: 'secondary',
-    title: 'Lendário',
-    description: 'Entre por 1 ano.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-scale-balance',
-    color: 'primary',
-    title: 'Tudo Sob Controle',
-    description: 'Mantenha os gastos de 1 semana abaixo de 100 "dinheiros" por dia.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-cash',
-    color: 'primary',
-    title: 'Compra do Ano',
-    description: 'Faça um único gasto acima de 1000 "dinheiros".',
-    complete: true,
-  },
-  {
-    icon: 'mdi-hand-heart',
-    color: 'red',
-    title: 'Amoroso',
-    description: 'Faça uma doação.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-handshake',
-    color: 'secondary',
-    title: 'Amigo',
-    description: 'Compartilhe o app com outra pessoa.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-close-box',
-    color: 'error',
-    title: 'Mentiroso',
-    description: 'Confesse um registro propositalmente incorreto.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-translate-variant',
-    color: 'primary',
-    title: 'Poliglota',
-    description: 'Use o app em um idioma diferente do padrão por 1 semana.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-lightbulb-on',
-    color: 'primary',
-    title: 'Conselheiro',
-    description: 'Envie uma ideia ou sugestão.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-incognito',
-    color: 'primary',
-    title: 'Vigilante',
-    description: 'Reporte um problema.',
-    complete: true,
-  },
-  {
-    icon: 'mdi-meditation',
-    color: 'secondary',
-    title: 'Transcendental',
-    description: 'Complete todas as conquistas.',
-    complete: true,
-  },
-])
+const achievementsStore = useAchievementsStore()
+
+const vuetifyTheme = useTheme()
+
+function getAchievementProgress(achievementData: AchivementData) {
+  return achievementData.currentStep / achievementData.totalSteps * 100
+}
 </script>
 
 <style lang="scss" scoped>
@@ -166,14 +84,14 @@ const achievementsList = ref([
   display: grid;
 
   // https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 
   gap: 24px;
 
   .achievementCard {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 3 / 4;
 
-    &:not(.complete) {
+    &.zeroProgress {
       opacity: 0.5;
     }
 

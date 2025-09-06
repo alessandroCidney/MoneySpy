@@ -8,6 +8,10 @@ export function unixTimestampToDate(unixTimestamp: number) {
   return new Date(unixTimestamp * 1000)
 }
 
+export function getCurrentUnixTime() {
+  return dateToUnixTimestamp(new Date())
+}
+
 export function dateToLargeStr(unixTime: number) {
   const formatter = new Intl.DateTimeFormat('pt', {
     hour12: true,

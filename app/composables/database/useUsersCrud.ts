@@ -9,13 +9,22 @@ export interface DatabaseUser extends DatabaseObject {
   }
 }
 
-export interface DataUserPrivateData extends DatabaseObject {
+export interface DatabaseUserPrivateData extends DatabaseObject {
   email: string | null
+
+  achievements: {
+    complete: string[]
+
+    inProgressPayload: {
+      lastDayOfLogin: number
+      loginSequenceCounter: number
+    }
+  }
 }
 
 interface UserCreationParams {
   baseData: PartialDatabaseObject<DatabaseUser>
-  privateData: Partial<DataUserPrivateData>
+  privateData: Partial<DatabaseUserPrivateData>
 }
 
 export function useUsersCrud() {
@@ -31,7 +40,7 @@ export function useUsersCrud() {
         createdBy: params.baseData.id,
       })
 
-      const userPrivateCrud = useFirestoreCrud<DataUserPrivateData>(`users/${params.baseData.id}/private`)
+      const userPrivateCrud = useFirestoreCrud<DatabaseUserPrivateData>(`users/${params.baseData.id}/private`)
 
       await userPrivateCrud.createIfNotExists({
         id: 'profile',
@@ -40,7 +49,28 @@ export function useUsersCrud() {
         email: params.privateData.email || null,
 
         createdBy: params.baseData.id,
+
+        achievements: {
+          complete: ['beginner'],
+
+          inProgressPayload: {
+            lastDayOfLogin: getCurrentUnixTime(),
+            loginSequenceCounter: 1,
+          },
+        },
       })
+    },
+
+    getPrivateProfileData(userId: string) {
+      const userPrivateCrud = useFirestoreCrud<DatabaseUserPrivateData>(`users/${userId}/private`)
+
+      return userPrivateCrud.get('profile')
+    },
+
+    updatePrivateProfileData(userId: string, data: Parameters<ReturnType<typeof useFirestoreCrud<DatabaseUserPrivateData>>['update']>[0]) {
+      const userPrivateCrud = useFirestoreCrud<DatabaseUserPrivateData>(`users/${userId}/private`)
+
+      return userPrivateCrud.update(data)
     },
   }
 }

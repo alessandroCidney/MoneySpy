@@ -87,9 +87,9 @@ const vuetifyDisplay = useDisplay()
     border-radius: 0 var(--ultra-rounded-border-radius) var(--ultra-rounded-border-radius) 0 !important;
 
     .v-list-item {
-      height: 60px;
+      height: 60px !important;
 
-      padding-left: 26px;
+      padding-left: 26px !important;
     }
   }
 }
