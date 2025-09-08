@@ -212,7 +212,7 @@ definePageMeta({
 })
 
 const expensesStore = useExpensesStore()
-const messageStore = useMessageStore()
+const messageStore = useMessagesStore()
 
 const formRules = useRules()
 

@@ -17,11 +17,68 @@
 
     <template #append>
       <div class="notificationsArea">
-        <v-btn
-          color="neutral"
-          icon="mdi-bell-outline"
-          variant="tonal"
-        />
+        <v-menu
+          :model-value="notificationsStore.menuIsOpen"
+          max-height="500px"
+          @update:model-value="notificationsStore.setMenuIsOpen"
+        >
+          <template #activator="{ props }">
+            <v-btn
+              color="neutral"
+              icon="mdi-bell-outline"
+              variant="tonal"
+              v-bind="props"
+            >
+              <v-badge
+                :model-value="notificationsStore.unreadNotifications.length > 0"
+                :content="notificationsStore.unreadNotifications.length"
+                color="primary"
+              >
+                <v-icon>
+                  mdi-bell-outline
+                </v-icon>
+              </v-badge>
+            </v-btn>
+          </template>
+
+          <v-card class="pb-2">
+            <template #title>
+              Notificações
+            </template>
+
+            <template #text>
+              <v-list
+                v-if="notificationsStore.items.length"
+                class="py-0"
+              >
+                <v-list-item
+                  v-for="(notificationsData, notificationIndex) in notificationsStore.items"
+                  :key="`notificationIndex${notificationIndex}`"
+                  :to="notificationsData.to"
+                  :active="false"
+                  class="py-4"
+                >
+                  <template #prepend>
+                    <v-icon>
+                      {{ notificationsData.icon }}
+                    </v-icon>
+                  </template>
+
+                  <template #title>
+                    {{ notificationsData.text }}
+                  </template>
+                </v-list-item>
+              </v-list>
+
+              <div
+                v-else
+                class="text-center"
+              >
+                Nenhuma notificação até o momento.
+              </div>
+            </template>
+          </v-card>
+        </v-menu>
       </div>
 
       <div
@@ -48,6 +105,7 @@
 import { useDisplay } from 'vuetify'
 
 const authStore = useAuthStore()
+const notificationsStore = useNotificationsStore()
 
 const vuetifyDisplay = useDisplay()
 </script>

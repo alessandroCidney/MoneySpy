@@ -3,6 +3,7 @@ import _ from 'lodash'
 export default defineNuxtPlugin(async () => {
   const authStore = useAuthStore()
   const achievementsStore = useAchievementsStore()
+  const notificationsStore = useNotificationsStore()
   const usersCrud = useUsersCrud()
 
   if (!authStore.privateProfileData || !authStore.databaseUser) {
@@ -56,15 +57,23 @@ export default defineNuxtPlugin(async () => {
         achievementsStore.resetAchievementSteps(achievementData.id)
 
         updateData.changed = true
-        updateData.newLoginSequenceCounter = 0
+        updateData.newLoginSequenceCounter = 1
       }
     }
 
     // Checks achievements that have been completed but not yet saved
     if (achievementStepsCompleted(achievementData) && !achievementCompletedBefore(achievementData)) {
+      updateData.changed = true
+
       updateData.newCompletedAchievements.push({
         id: achievementData.id,
         completedAt: getCurrentUnixTime(),
+      })
+
+      notificationsStore.addNotification({
+        icon: achievementData.icon,
+        text: `Você adquiriu a conquista ${achievementData.title}! Clique para ver`,
+        to: { name: 'achievements' },
       })
     }
   }

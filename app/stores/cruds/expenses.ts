@@ -38,7 +38,7 @@ export const useExpensesStore = defineStore('expenses', {
 
         this.items.push(itemObj)
 
-        const messageStore = useMessageStore()
+        const messageStore = useMessagesStore()
         messageStore.showSuccessMessage({ text: 'Registro adicionado!' })
 
         return itemObj
@@ -49,23 +49,24 @@ export const useExpensesStore = defineStore('expenses', {
       }
     },
 
-    async update(...rest: Parameters<Awaited<ReturnType<typeof useExpensesCrud>>['update']>) {
+    async update(data: DatabaseExpense) {
       try {
         this.loadingUpdate = true
 
         const expensesCrud = useExpensesCrud()
 
-        const itemObj = await expensesCrud.update(...rest)
+        const itemObj = await expensesCrud.update(data)
 
         const itemIndex = this.items.findIndex(item => item.id === itemObj.id)
 
-        if (itemIndex === -1) {
-          this.items.push(itemObj)
-        } else {
-          this.items[itemIndex] = itemObj
+        if (itemIndex !== -1) {
+          this.items[itemIndex] = {
+            ...data,
+            ...itemObj,
+          }
         }
 
-        const messageStore = useMessageStore()
+        const messageStore = useMessagesStore()
         messageStore.showSuccessMessage({ text: 'Registro atualizado!' })
 
         return itemObj
@@ -86,7 +87,7 @@ export const useExpensesStore = defineStore('expenses', {
 
         this.items.splice(itemIndex, 1)
 
-        const messageStore = useMessageStore()
+        const messageStore = useMessagesStore()
         messageStore.showSuccessMessage({ text: 'Registro removido!' })
       } catch (err) {
         globalErrorHandler(err)

@@ -6,37 +6,6 @@
 
     <section class="mb-8">
       <h2 class="mb-4">
-        Foto de perfil
-      </h2>
-
-      <div class="profilePhotoSettings d-flex align-center ga-8">
-        <commons-user-avatar
-          size="150"
-          class="profilePhotoAvatar"
-        />
-
-        <div class="d-flex flex-column ga-3">
-          <v-btn
-            color="primary"
-            rounded
-            flat
-          >
-            Atualizar foto
-          </v-btn>
-
-          <v-btn
-            color="neutral"
-            rounded
-            flat
-          >
-            Excluir foto
-          </v-btn>
-        </div>
-      </div>
-    </section>
-
-    <section class="mb-8">
-      <h2 class="mb-4">
         Dados pessoais
       </h2>
 
@@ -94,6 +63,7 @@
         color="#333"
         size="large"
         width="150px"
+        prepend-icon="mdi-logout"
         rounded
         flat
         @click="handleSignOut()"
@@ -141,7 +111,7 @@ async function handleUpdateProfileData() {
       name: formPayload.value.name,
     })
 
-    authStore.setDatabaseUser(result)
+    authStore.setDatabaseUser(result as DatabaseUser)
   } catch (err) {
     globalErrorHandler(err)
   } finally {

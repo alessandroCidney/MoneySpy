@@ -21,7 +21,7 @@ const defaultMessage: AppMessage = {
   action: undefined,
 }
 
-export const useMessageStore = defineStore('message', {
+export const useMessagesStore = defineStore('messages', {
   state: () => ({
     messageData: defaultMessage,
   }),

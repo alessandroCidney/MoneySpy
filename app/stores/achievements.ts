@@ -22,7 +22,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       description: 'Entre pela primeira vez.',
 
       totalSteps: 1,
-      initialStep: 0,
+      initialStep: 1,
       currentStep: 0,
 
       type: 'loginSequenceValidation',
@@ -35,7 +35,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       description: 'Entre por 3 dias seguidos.',
 
       totalSteps: 3,
-      initialStep: 0,
+      initialStep: 1,
       currentStep: 0,
 
       type: 'loginSequenceValidation',
@@ -48,7 +48,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       description: 'Entre por 7 dias seguidos.',
 
       totalSteps: 7,
-      initialStep: 0,
+      initialStep: 1,
       currentStep: 0,
 
       type: 'loginSequenceValidation',
@@ -61,7 +61,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       description: 'Entre por 30 dias seguidos.',
 
       totalSteps: 30,
-      initialStep: 0,
+      initialStep: 1,
       currentStep: 0,
 
       type: 'loginSequenceValidation',
@@ -74,7 +74,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       description: 'Entre por 3 meses seguidos.',
 
       totalSteps: 90,
-      initialStep: 0,
+      initialStep: 1,
       currentStep: 0,
 
       type: 'loginSequenceValidation',
@@ -87,7 +87,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       description: 'Entre por 1 ano.',
 
       totalSteps: 365,
-      initialStep: 0,
+      initialStep: 1,
       currentStep: 0,
 
       type: 'loginSequenceValidation',

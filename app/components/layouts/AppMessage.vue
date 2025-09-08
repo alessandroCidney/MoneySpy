@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-const messageStore = useMessageStore()
+const messageStore = useMessagesStore()
 </script>
 
 <style lang="scss">
