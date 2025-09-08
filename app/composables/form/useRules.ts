@@ -17,7 +17,7 @@ export function useRules() {
     strongPassword(value: unknown) {
       const passwordRegExp = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/
 
-      return (typeof value === 'string' && passwordRegExp.test(value)) || 'Senha muito fraca'
+      return (typeof value === 'string' && passwordRegExp.test(value)) || 'No mínimo 8 caracteres, contendo letras, números e caracteres especiais.'
     },
 
     matchingPasswords(password: unknown, confirmPassword: unknown) {

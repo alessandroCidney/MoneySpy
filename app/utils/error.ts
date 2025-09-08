@@ -42,12 +42,16 @@ const FIREBASE_ERROR_MESSAGES: Partial<Record<ValueOf<typeof AuthErrorCodes>, st
   'auth/user-not-found': 'E-mail ou senha incorretos',
   'auth/email-already-in-use': 'O e-mail já está sendo utilizado',
   'auth/invalid-credential': 'E-mail ou senha incorretos',
+  'auth/weak-password': 'A senha informada é muito fraca',
+  'auth/invalid-action-code': 'O link utilizado está expirado ou é inválido',
 }
 
 export function globalErrorHandler(err: unknown) {
-  const messageStore = useMessageStore()
+  const messageStore = useMessagesStore()
 
   if (err instanceof FirebaseError) {
+    console.log('code', err.code)
+
     return messageStore.showErrorMessage({
       text: FIREBASE_ERROR_MESSAGES[err.code] ?? APP_ERROR_CODES.GENERIC_ERRORS.UNIDENTIFIED_ERROR,
     })

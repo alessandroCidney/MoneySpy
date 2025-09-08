@@ -38,6 +38,15 @@
           flat
         />
 
+        <div class="mb-3 text-subtitle-2">
+          <nuxt-link
+            :to="{ name: 'auth-reset-password' }"
+            class="defaultAnchor"
+          >
+            Esqueci minha senha
+          </nuxt-link>
+        </div>
+
         <v-btn
           :loading="loading.emailAndPassword"
           :disabled="somethingIsLoading && !loading.emailAndPassword"

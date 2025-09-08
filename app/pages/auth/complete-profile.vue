@@ -24,27 +24,6 @@
           />
         </div>
 
-        <!-- <commons-upload-area
-          v-model="formPayload.profilePhoto"
-          class="profilePhotoUpload"
-        >
-          <template #label="{ hover, selectedFile }">
-            <v-icon
-              v-if="hover && !selectedFile"
-              size="200"
-            >
-              mdi-image-plus
-            </v-icon>
-
-            <v-icon
-              v-else-if="!selectedFile"
-              size="250"
-            >
-              mdi-face-man
-            </v-icon>
-          </template>
-        </commons-upload-area> -->
-
         <div class="d-flex align-center justify-center flex-column">
           <forms-auto-grow-input
             v-model="formPayload.name"
