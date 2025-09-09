@@ -25,7 +25,10 @@
     :rail="vuetifyDisplay.md.value"
     :rail-width="82"
     :mobile="false"
-    class="defaultSidebar"
+    :class="{
+      'defaultSidebar': true,
+      'pt-2': vuetifyDisplay.md.value,
+    }"
     tag="div"
     floating
   >
@@ -33,8 +36,7 @@
       v-if="vuetifyDisplay.lgAndUp.value"
       class="logoArea d-flex align-center justify-start ga-2 px-5"
     >
-      <v-img
-        src="@/assets/images/logos/largeAppLogo.png"
+      <commons-app-logo
         max-width="170px"
       />
     </div>
@@ -83,7 +85,7 @@ const vuetifyDisplay = useDisplay()
   }
 
   .sidebarList {
-    background-color: rgb(var(--v-theme-gray-background)) !important;
+    background-color: rgb(var(--v-theme-container)) !important;
     border-radius: 0 var(--ultra-rounded-border-radius) var(--ultra-rounded-border-radius) 0 !important;
 
     .v-list-item {

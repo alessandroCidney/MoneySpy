@@ -2,8 +2,7 @@
   <div
     class="w-100 h-100 d-flex align-center justify-center position-relative"
   >
-    <v-img
-      src="@/assets/images/logos/largeAppLogo.png"
+    <commons-app-logo
       max-width="150px"
       min-width="150px"
       class="top-0 position-absolute mt-5"

@@ -8,8 +8,7 @@
       v-if="vuetifyDisplay.mdAndDown.value"
       #prepend
     >
-      <v-img
-        src="@/assets/images/logos/largeAppLogo.png"
+      <commons-app-logo
         width="170px"
         class="mx-4"
       />
@@ -20,6 +19,7 @@
         <v-menu
           :model-value="notificationsStore.menuIsOpen"
           max-height="500px"
+          location="left"
           @update:model-value="notificationsStore.setMenuIsOpen"
         >
           <template #activator="{ props }">

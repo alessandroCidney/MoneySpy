@@ -104,21 +104,9 @@ const optionData = computed(() => ({
 
       name: 'positive',
 
-      // label: {
-      //   show: true,
-      //   position: 'top',
-
-      //   formatter(params: BarsLabelFormatterParams) {
-      //     return params.value === 0 ? '' : formatNumberToSmallStr(params.value)
-      //   },
-
-      //   fontWeight: '600',
-      //   fontSize: '1rem',
-      // },
-
       barMaxWidth: '40px',
       itemStyle: {
-        color: vuetifyTheme.computedThemes.value.customTheme?.colors.primary,
+        color: vuetifyTheme.current.value.colors.primary,
         borderRadius: [
           50,
           50,
@@ -134,21 +122,9 @@ const optionData = computed(() => ({
       name: 'negative',
       z: 2,
 
-      // label: {
-      //   show: true,
-      //   position: 'top',
-
-      //   formatter(params: BarsLabelFormatterParams) {
-      //     return params.value === 0 ? '' : formatNumberToSmallStr(params.value)
-      //   },
-
-      //   fontWeight: '600',
-      //   fontSize: '1rem',
-      // },
-
       barMaxWidth: '40px',
       itemStyle: {
-        color: vuetifyTheme.computedThemes.value.customTheme?.colors.secondary,
+        color: vuetifyTheme.current.value.colors.secondary,
         borderRadius: [
           50,
           50,

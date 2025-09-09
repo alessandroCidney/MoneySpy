@@ -60,7 +60,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .defaultPageContainer {
-  background-color: rgb(var(--v-theme-gray-background));
+  background-color: rgb(var(--v-theme-container));
   border-radius: var(--ultra-rounded-border-radius);
 
   padding: 32px;
@@ -72,9 +72,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .defaultWhiteCard {
-  background-color: white;
+  background-color: rgb(var(--v-theme-card));
 
   border-radius: var(--ultra-rounded-border-radius);
 
   padding: 32px;
+}
+
+.v-main {
+  background-color: rgb(var(--v-theme-root)) !important;
 }

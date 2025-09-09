@@ -7,8 +7,7 @@
         absolute
       >
         <template #title>
-          <v-img
-            src="@/assets/images/logos/largeAppLogo.png"
+          <commons-app-logo
             max-width="170px"
           />
         </template>

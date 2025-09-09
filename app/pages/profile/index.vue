@@ -60,7 +60,7 @@
 
       <v-btn
         :loading="loadingSignOut"
-        color="#333"
+        color="black"
         size="large"
         width="150px"
         prepend-icon="mdi-logout"
@@ -71,15 +71,22 @@
         Sair
       </v-btn>
     </section>
+
+    <v-btn @click="theme.cycle(['defaultDarkTheme', 'defaultLightTheme'])">
+      Teste
+    </v-btn>
   </div>
 </template>
 
 <script setup lang="ts">
 import { getAuth, signOut } from 'firebase/auth'
+import { useTheme } from 'vuetify'
 
 definePageMeta({
   middleware: 'authenticated',
 })
+
+const theme = useTheme()
 
 const authStore = useAuthStore()
 const formRules = useRules()

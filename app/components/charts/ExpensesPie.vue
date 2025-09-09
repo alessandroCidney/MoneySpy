@@ -64,7 +64,7 @@ const optionData = computed(() => ({
   series: [
     {
       name: 'Entradas e Saídas',
-      color: [vuetifyTheme.computedThemes.value.customTheme?.colors.primary, '#000000'],
+      color: [vuetifyTheme.current.value.colors.primary, vuetifyTheme.current.value.colors.secondary],
       type: 'pie',
       radius: ['40%', '70%'],
       avoidLabelOverlap: false,
