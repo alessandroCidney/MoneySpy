@@ -135,6 +135,7 @@ async function completeRegister(userCredential: UserCredential) {
       name: userCredential.user.displayName || '',
 
       active: true,
+      firstLogin: true,
     },
 
     privateData: {

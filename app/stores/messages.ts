@@ -31,7 +31,15 @@ export const useMessagesStore = defineStore('messages', {
       this.messageData = messageData
     },
 
-    showMessage(messageData: Partial<AppMessage>) {
+    async showMessage(messageData: Partial<AppMessage>) {
+      if (this.messageData.active) {
+        await wait(3000)
+
+        this.setMessageActive(false)
+
+        await wait(1000)
+      }
+
       this.setMessageData({
         ...defaultMessage,
         ...messageData,
@@ -73,6 +81,18 @@ export const useMessagesStore = defineStore('messages', {
         icon: 'mdi-alert-circle',
         color: 'error',
       })
+    },
+
+    showAchievementMessage(achievementId: string) {
+      const achievementsStore = useAchievementsStore()
+
+      const achievementData = achievementsStore.getAchievementData(achievementId)
+
+      if (achievementData) {
+        this.showInfoMessage({
+          text: `Nova conquista desbloqueada: ${achievementData.title}!`,
+        })
+      }
     },
 
     callAction() {

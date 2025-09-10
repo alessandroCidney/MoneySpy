@@ -29,6 +29,23 @@ export const useNotificationsStore = defineStore('notifications', {
       })
     },
 
+    addAchievementNotification(achievementId: string) {
+      const achievementsStore = useAchievementsStore()
+      const messagesStore = useMessagesStore()
+
+      const achievementData = achievementsStore.getAchievementData(achievementId)
+
+      if (achievementData) {
+        this.addNotification({
+          text: `Você desbloqueou a conquista ${achievementData.title}! Clique para ver.`,
+          icon: achievementData.icon,
+          to: { name: 'achievements' },
+        })
+
+        messagesStore.showAchievementMessage(achievementId)
+      }
+    },
+
     markAllAsRead() {
       this.items = this.items.map(item => ({
         ...item,

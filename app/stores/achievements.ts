@@ -109,14 +109,17 @@ export const useAchievementsStore = defineStore('achievements', () => {
 
   const usersCrud = useUsersCrud()
   const authStore = useAuthStore()
-  const messagesStore = useMessagesStore()
   const notificationsStore = useNotificationsStore()
 
   return {
     items,
 
+    getAchievementData(id: string) {
+      return items.value.find(item => item.id === id)
+    },
+
     setAchievementCurrentStep(id: string, currentStep: number) {
-      const arrItem = items.value.find(item => item.id === id)
+      const arrItem = this.getAchievementData(id)
 
       if (arrItem) {
         arrItem.currentStep = currentStep
@@ -124,7 +127,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
     },
 
     completeAchievementSteps(id: string) {
-      const arrItem = items.value.find(item => item.id === id)
+      const arrItem = this.getAchievementData(id)
 
       if (arrItem) {
         arrItem.currentStep = arrItem.totalSteps
@@ -132,7 +135,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
     },
 
     incrementAchievementSteps(id: string) {
-      const arrItem = items.value.find(item => item.id === id)
+      const arrItem = this.getAchievementData(id)
 
       if (arrItem) {
         arrItem.currentStep++
@@ -140,7 +143,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
     },
 
     resetAchievementSteps(id: string) {
-      const arrItem = items.value.find(item => item.id === id)
+      const arrItem = this.getAchievementData(id)
 
       if (arrItem) {
         arrItem.currentStep = arrItem.initialStep
@@ -157,7 +160,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
           })
         }
 
-        const achievementData = items.value.find(item => item.id === id)
+        const achievementData = this.getAchievementData(id)
 
         if (!achievementData) {
           throw new ApplicationError({
@@ -178,15 +181,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
 
         this.completeAchievementSteps(id)
 
-        messagesStore.showInfoMessage({
-          text: `Conquista desbloqueada: ${achievementData.title}!`,
-        })
-
-        notificationsStore.addNotification({
-          icon: achievementData.icon,
-          text: `Você desbloqueou a conquista ${achievementData.title}!`,
-          to: { name: 'achievements' },
-        })
+        notificationsStore.addAchievementNotification(achievementData.id)
       } catch (err) {
         globalErrorHandler(err)
       }

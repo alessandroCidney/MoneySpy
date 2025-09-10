@@ -20,6 +20,7 @@
         <v-menu
           :model-value="notificationsStore.menuIsOpen"
           max-height="500px"
+          max-width="600px"
           location="left"
           @update:model-value="notificationsStore.setMenuIsOpen"
         >
@@ -50,7 +51,7 @@
             <template #text>
               <v-list
                 v-if="notificationsStore.items.length"
-                class="py-0"
+                class="py-0 notificationsList"
               >
                 <v-list-item
                   v-for="(notificationsData, notificationIndex) in notificationsStore.items"
@@ -115,6 +116,16 @@ const vuetifyDisplay = useDisplay()
 .userAvatarCard {
   .userEmailText {
     font-size: .9rem;
+  }
+}
+</style>
+
+<style lang="scss">
+.notificationsList {
+  .v-list-item {
+    .v-list-item__spacer {
+      width: 20px !important;
+    }
   }
 }
 </style>

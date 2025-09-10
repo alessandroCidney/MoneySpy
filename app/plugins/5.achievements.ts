@@ -70,11 +70,7 @@ export default defineNuxtPlugin(async () => {
         completedAt: getCurrentUnixTime(),
       })
 
-      notificationsStore.addNotification({
-        icon: achievementData.icon,
-        text: `Você adquiriu a conquista ${achievementData.title}! Clique para ver`,
-        to: { name: 'achievements' },
-      })
+      notificationsStore.addAchievementNotification(achievementData.id)
     }
   }
 
