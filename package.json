@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
 
+    "deploy": "firebase deploy",
     "deploy:firestore-rules": "firebase deploy --only firestore:rules"
   },
   "dependencies": {
