@@ -33,3 +33,26 @@ export const defaultDarkTheme = {
     'black': '#000000',
   },
 }
+
+export function getThemesDataArr() {
+  const authStore = useAuthStore()
+
+  return [
+    {
+      id: 'defaultLightTheme',
+      colors: [defaultLightTheme.colors.secondary, defaultLightTheme.colors.primary, defaultLightTheme.colors.container],
+      title: 'Tema Claro',
+      description: 'Desbloqueável com a conquista "Novato"',
+
+      allowed: !!authStore.privateProfileData?.achievements.complete.find(item => item.id === 'beginner'),
+    },
+    {
+      id: 'defaultDarkTheme',
+      colors: [defaultDarkTheme.colors.secondary, defaultDarkTheme.colors.primary, defaultDarkTheme.colors.container],
+      title: 'Tema Escuro',
+      description: 'Desbloqueável com a conquista "Novato"',
+
+      allowed: !!authStore.privateProfileData?.achievements.complete.find(item => item.id === 'beginner'),
+    },
+  ]
+}

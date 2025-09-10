@@ -12,6 +12,7 @@ export const APP_ERROR_CODES = {
   },
 
   DEFAULT_ERRORS: {
+    FORBIDDEN: 'Forbidden',
     METHOD_NOT_ALLOWED: 'Method or operation not allowed',
     BAD_REQUEST: 'Bad request',
   },
@@ -50,8 +51,6 @@ export function globalErrorHandler(err: unknown) {
   const messageStore = useMessagesStore()
 
   if (err instanceof FirebaseError) {
-    console.log('code', err.code)
-
     return messageStore.showErrorMessage({
       text: FIREBASE_ERROR_MESSAGES[err.code] ?? APP_ERROR_CODES.GENERIC_ERRORS.UNIDENTIFIED_ERROR,
     })

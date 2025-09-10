@@ -91,14 +91,14 @@
           </header>
 
           <v-card
-            v-for="(themeData, themeIndex) in themesArr"
+            v-for="(themeData, themeIndex) in themesDataArr"
             :key="`themeIndex${themeIndex}`"
             :class="{
               'text-center ultraRounded py-5 themeCard': true,
-              'isActive': vuetifyTheme.name.value === themeData.id,
+              'isActive': localStorageHandler.selectedThemeId.value === themeData.id,
             }"
             flat
-            @click="vuetifyTheme.change(themeData.id)"
+            @click="localStorageHandler.setThemeId(themeData.id)"
           >
             <div class="pa-5">
               <icons-dynamic-theme-icon
@@ -123,8 +123,6 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
 
-import { defaultLightTheme, defaultDarkTheme } from '@/utils/themes'
-
 definePageMeta({
   middleware: 'authenticated',
 })
@@ -132,6 +130,7 @@ definePageMeta({
 const achievementsStore = useAchievementsStore()
 
 const vuetifyTheme = useTheme()
+const localStorageHandler = useLocalStorage()
 
 const route = useRoute()
 const router = useRouter()
@@ -146,20 +145,7 @@ const selectedTab = computed({
   },
 })
 
-const themesArr = ref([
-  {
-    id: 'defaultLightTheme',
-    colors: [defaultLightTheme.colors.secondary, defaultLightTheme.colors.primary, defaultLightTheme.colors.container],
-    title: 'Tema Claro',
-    description: 'Desbloqueável com a conquista "Novato"',
-  },
-  {
-    id: 'defaultDarkTheme',
-    colors: [defaultDarkTheme.colors.secondary, defaultDarkTheme.colors.primary, defaultDarkTheme.colors.container],
-    title: 'Tema Escuro',
-    description: 'Desbloqueável com a conquista "Novato"',
-  },
-])
+const themesDataArr = getThemesDataArr()
 
 function getAchievementProgress(achievementData: AchivementData) {
   return achievementData.currentStep / achievementData.totalSteps * 100

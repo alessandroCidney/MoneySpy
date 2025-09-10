@@ -1,0 +1,49 @@
+import { useTheme } from 'vuetify'
+
+export function useLocalStorage() {
+  const themesDataArr = getThemesDataArr()
+
+  const vuetifyTheme = useTheme()
+  const runtimeConfig = useRuntimeConfig()
+
+  const THEME_SETTINGS_LOCAL_STORAGE_KEY = `${runtimeConfig.public.PROJECT_ID}-theme-settings`
+  const defaultThemeId = themesDataArr[0]?.id as string
+
+  const selectedThemeId = ref(defaultThemeId)
+
+  function themeIsAllowed(themeId: string) {
+    return !!themesDataArr.find(item => item.id === themeId)?.allowed
+  }
+
+  function loadSavedTheme() {
+    const savedThemeId = localStorage.getItem(THEME_SETTINGS_LOCAL_STORAGE_KEY)
+
+    if (savedThemeId && themeIsAllowed(savedThemeId)) {
+      selectedThemeId.value = savedThemeId
+    }
+  }
+
+  loadSavedTheme()
+
+  return {
+    selectedThemeId,
+
+    loadSavedTheme,
+
+    setThemeId(themeId: string) {
+      if (themeIsAllowed(themeId)) {
+        selectedThemeId.value = themeId
+
+        localStorage.setItem(THEME_SETTINGS_LOCAL_STORAGE_KEY, themeId)
+
+        vuetifyTheme.change(themeId)
+      } else {
+        throw new ApplicationError({
+          status: 403,
+          code: APP_ERROR_CODES.DEFAULT_ERRORS.FORBIDDEN,
+          message: 'O tema selecionado não está disponível, será carregado o tema padrão',
+        })
+      }
+    },
+  }
+}

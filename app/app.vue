@@ -7,9 +7,12 @@
 </template>
 
 <script setup lang="ts">
+import { useTheme } from 'vuetify'
+
 const routes = getRoutes()
 const route = useRoute()
 
+// Head settings
 const baseTitle = ref('MoneySpy')
 
 const currentRouteName = computed(() => routes.find(item => item.name === route.name)?.title)
@@ -21,4 +24,10 @@ const titleStr = computed(() => `${titlePrefix.value}${baseTitle.value}`)
 useHead({
   title: titleStr,
 })
+
+// Theme settings
+const vuetifyTheme = useTheme()
+const localStorageHandler = useLocalStorage()
+
+vuetifyTheme.change(localStorageHandler.selectedThemeId.value)
 </script>
