@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div>Index</div>
+    <div>Página inicial</div>
   </v-container>
 </template>
 
@@ -10,4 +10,8 @@ definePageMeta({
 
   layout: 'clear',
 })
+
+const router = useRouter()
+
+router.push({ name: 'home' })
 </script>

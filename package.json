@@ -9,7 +9,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+
+    "deploy:firestore-rules": "firebase deploy --only firestore:rules"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
