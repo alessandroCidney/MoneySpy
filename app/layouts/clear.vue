@@ -6,9 +6,10 @@
         :height="72"
         absolute
       >
-        <template #title>
+        <template #prepend>
           <commons-app-logo
-            max-width="170px"
+            :width="170"
+            class="mx-4"
           />
         </template>
 

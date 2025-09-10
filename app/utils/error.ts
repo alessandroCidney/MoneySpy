@@ -13,6 +13,7 @@ export const APP_ERROR_CODES = {
 
   DEFAULT_ERRORS: {
     FORBIDDEN: 'Forbidden',
+    UNAUTHORIZED: 'Unauthorized',
     METHOD_NOT_ALLOWED: 'Method or operation not allowed',
     BAD_REQUEST: 'Bad request',
   },

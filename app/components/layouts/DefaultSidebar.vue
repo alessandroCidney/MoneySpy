@@ -25,6 +25,7 @@
     :rail="vuetifyDisplay.md.value"
     :rail-width="82"
     :mobile="false"
+    color="root"
     :class="{
       'defaultSidebar': true,
       'pt-2': vuetifyDisplay.md.value,
@@ -37,7 +38,7 @@
       class="logoArea d-flex align-center justify-start ga-2 px-5"
     >
       <commons-app-logo
-        max-width="170px"
+        :width="170"
       />
     </div>
 

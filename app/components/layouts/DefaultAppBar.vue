@@ -3,13 +3,14 @@
     :elevation="0"
     :height="72"
     :absolute="vuetifyDisplay.lgAndUp.value"
+    color="root"
   >
     <template
       v-if="vuetifyDisplay.mdAndDown.value"
       #prepend
     >
       <commons-app-logo
-        width="170px"
+        :width="170"
         class="mx-4"
       />
     </template>

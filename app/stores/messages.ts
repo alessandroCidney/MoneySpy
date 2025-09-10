@@ -57,6 +57,15 @@ export const useMessagesStore = defineStore('messages', {
       })
     },
 
+    showInfoMessage(messageData: Partial<AppMessage>) {
+      this.showMessage({
+        ...messageData,
+
+        icon: 'mdi-information',
+        color: 'info',
+      })
+    },
+
     showErrorMessage(messageData: Partial<AppMessage>) {
       this.showMessage({
         ...messageData,

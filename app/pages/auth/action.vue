@@ -3,8 +3,7 @@
     class="w-100 h-100 d-flex align-center justify-center position-relative"
   >
     <commons-app-logo
-      max-width="150px"
-      min-width="150px"
+      :width="150"
       class="top-0 position-absolute mt-5"
     />
 
@@ -156,25 +155,24 @@ async function startVerification() {
 
   if (typeof actionCode !== 'string') {
     invalidLink.value = true
-    return
-  }
+  } else {
+    switch (mode) {
+      case 'resetPassword':
+        await handleStartPasswordReset()
+        break
 
-  switch (mode) {
-    case 'resetPassword':
-      await handleStartPasswordReset()
-      break
+      case 'recoverEmail':
+        // TODO: Implement email recover
+        invalidLink.value = true
+        break
 
-    case 'recoverEmail':
-      // TODO: Implement email recover
-      invalidLink.value = true
-      break
+      case 'verifyEmail':
+        await handleVerifyEmail()
+        break
 
-    case 'verifyEmail':
-      await handleVerifyEmail()
-      break
-
-    default:
-      invalidLink.value = true
+      default:
+        invalidLink.value = true
+    }
   }
 
   loading.value.initialCheck = false

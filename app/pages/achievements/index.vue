@@ -1,5 +1,5 @@
 <template>
-  <div class="defaultPageContainer">
+  <div class="defaultPageContainer achievementsPage">
     <h1 class="mb-4">
       Conquistas
     </h1>
@@ -42,7 +42,7 @@
           >
             <div>
               <v-avatar
-                :color="getAchievementProgress(achievementData) === 0 ? 'grey' : vuetifyTheme.current.value.colors[achievementData.color]"
+                :color="vuetifyTheme.current.value.colors[achievementData.color]"
                 class="achievementIcon mb-3"
                 size="150"
               >
@@ -97,6 +97,8 @@
               'text-center ultraRounded py-5 themeCard': true,
               'isActive': localStorageHandler.selectedThemeId.value === themeData.id,
             }"
+            color="card"
+            :disabled="!themeData.allowed"
             flat
             @click="localStorageHandler.setThemeId(themeData.id)"
           >
@@ -152,8 +154,8 @@ function getAchievementProgress(achievementData: AchivementData) {
 }
 </script>
 
-<style lang="scss" scoped>
-.cardsGrid {
+<style lang="scss">
+.achievementsPage .cardsGrid {
   display: grid;
 
   // https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
@@ -176,6 +178,10 @@ function getAchievementProgress(achievementData: AchivementData) {
   .themeCard {
     &.isActive {
       outline: 3px solid rgb(var(--v-theme-primary));
+    }
+
+    * {
+      letter-spacing: 0 !important;
     }
   }
 }

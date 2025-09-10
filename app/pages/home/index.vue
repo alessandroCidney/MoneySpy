@@ -38,7 +38,6 @@
 
         <charts-expenses-pie
           :expenses="filterByTheLastSevenDays(expensesStore.items)"
-          width="400px"
           height="400px"
           class="mx-auto"
         />

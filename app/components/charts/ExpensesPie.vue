@@ -29,7 +29,6 @@ use([
 ])
 
 const props = defineProps({
-  width: { type: String, required: true },
   height: { type: String, required: true },
   expenses: { type: Array as PropType<DatabaseExpense[]>, required: true },
 })
@@ -105,6 +104,6 @@ const option = ref(optionData.value)
 <style scoped lang="scss">
 .chart {
   height: v-bind(height);
-  width: v-bind(width);
+  width: 100%;
 }
 </style>

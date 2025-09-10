@@ -3,8 +3,7 @@
     class="w-100 h-100 d-flex align-center justify-center position-relative"
   >
     <commons-app-logo
-      max-width="150px"
-      min-width="150px"
+      :width="150"
       class="top-0 position-absolute mt-5"
     />
 

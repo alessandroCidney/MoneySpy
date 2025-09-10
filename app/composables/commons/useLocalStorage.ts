@@ -41,7 +41,7 @@ export function useLocalStorage() {
         throw new ApplicationError({
           status: 403,
           code: APP_ERROR_CODES.DEFAULT_ERRORS.FORBIDDEN,
-          message: 'O tema selecionado não está disponível, será carregado o tema padrão',
+          message: 'O tema selecionado não está disponível',
         })
       }
     },

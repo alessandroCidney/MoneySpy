@@ -2,7 +2,7 @@ export interface AchivementData {
   id: string
   title: string
   description: string
-  type: 'loginSequenceValidation'
+  type: 'loginSequenceValidation' | 'customValidation'
 
   icon: string
   color: string
@@ -92,7 +92,25 @@ export const useAchievementsStore = defineStore('achievements', () => {
 
       type: 'loginSequenceValidation',
     },
+    {
+      id: 'loving',
+      title: 'Amoroso',
+      icon: 'mdi-heart',
+      color: 'red',
+      description: 'Registre uma doação.',
+
+      totalSteps: 1,
+      initialStep: 0,
+      currentStep: 0,
+
+      type: 'customValidation',
+    },
   ])
+
+  const usersCrud = useUsersCrud()
+  const authStore = useAuthStore()
+  const messagesStore = useMessagesStore()
+  const notificationsStore = useNotificationsStore()
 
   return {
     items,
@@ -126,6 +144,51 @@ export const useAchievementsStore = defineStore('achievements', () => {
 
       if (arrItem) {
         arrItem.currentStep = arrItem.initialStep
+      }
+    },
+
+    async completeAchievement(id: string) {
+      try {
+        if (!authStore.databaseUser || !authStore.privateProfileData) {
+          throw new ApplicationError({
+            code: APP_ERROR_CODES.DEFAULT_ERRORS.UNAUTHORIZED,
+            status: 401,
+            message: 'Usuário não autenticado!',
+          })
+        }
+
+        const achievementData = items.value.find(item => item.id === id)
+
+        if (!achievementData) {
+          throw new ApplicationError({
+            code: APP_ERROR_CODES.DEFAULT_ERRORS.BAD_REQUEST,
+            status: 500,
+            message: 'Conquista não reconhecida pelo sistema',
+          })
+        }
+
+        const privateProfileData = authStore.privateProfileData
+
+        privateProfileData.achievements.complete.push({
+          id,
+          completedAt: getCurrentUnixTime(),
+        })
+
+        await usersCrud.updatePrivateProfileData(authStore.databaseUser.id, privateProfileData)
+
+        this.completeAchievementSteps(id)
+
+        messagesStore.showInfoMessage({
+          text: `Conquista desbloqueada: ${achievementData.title}!`,
+        })
+
+        notificationsStore.addNotification({
+          icon: achievementData.icon,
+          text: `Você desbloqueou a conquista ${achievementData.title}!`,
+          to: { name: 'achievements' },
+        })
+      } catch (err) {
+        globalErrorHandler(err)
       }
     },
   }

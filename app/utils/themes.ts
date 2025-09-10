@@ -21,12 +21,30 @@ export const defaultDarkTheme = {
 
   colors: {
     'primary': '#1ADB87',
-    'secondary': '#13A465',
+    'secondary': '#0F804F',
     'root': '#212121',
     'container': '#333333',
     'card': '#3D3D3D',
     'line': '#616161',
     'neutral': '#f8f8f8',
+
+    'red': '#F44336',
+    'deep-purple': '#673AB7',
+    'black': '#000000',
+  },
+}
+
+export const lovingTheme = {
+  dark: false,
+
+  colors: {
+    'primary': '#F44336',
+    'secondary': '#9B1208',
+    'root': '#FEEDEC',
+    'container': '#FDDAD8',
+    'card': '#FCC8C5',
+    'line': '#FBB5B1',
+    'neutral': '#4E0804',
 
     'red': '#F44336',
     'deep-purple': '#673AB7',
@@ -53,6 +71,14 @@ export function getThemesDataArr() {
       description: 'Desbloqueável com a conquista "Novato"',
 
       allowed: !!authStore.privateProfileData?.achievements.complete.find(item => item.id === 'beginner'),
+    },
+    {
+      id: 'lovingTheme',
+      colors: [lovingTheme.colors.secondary, lovingTheme.colors.primary, lovingTheme.colors.container],
+      title: 'Tema Amoroso',
+      description: 'Desbloqueável com a conquista "Amoroso"',
+
+      allowed: !!authStore.privateProfileData?.achievements.complete.find(item => item.id === 'loving'),
     },
   ]
 }

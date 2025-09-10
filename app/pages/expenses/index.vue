@@ -215,6 +215,7 @@ definePageMeta({
 
 const expensesStore = useExpensesStore()
 const messageStore = useMessagesStore()
+const achievementsStore = useAchievementsStore()
 
 const formRules = useRules()
 
@@ -267,6 +268,10 @@ async function handleCreateExpense() {
       currency: expensesStore.selectedCurrency,
       name: '',
     })
+
+    if (createExpenseFormPayload.value.type === 'Doação') {
+      await achievementsStore.completeAchievement('loving')
+    }
   } else {
     messageStore.showErrorMessage({ text: 'Dados inválidos!' })
   }
