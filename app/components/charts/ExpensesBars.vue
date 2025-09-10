@@ -62,6 +62,8 @@ const vuetifyTheme = useTheme()
 const optionData = computed(() => ({
   textStyle: {
     fontFamily: 'Roboto',
+
+    color: vuetifyTheme.current.value.colors.neutral,
   },
 
   xAxis: {
@@ -80,7 +82,7 @@ const optionData = computed(() => ({
 
     splitLine: {
       lineStyle: {
-        color: '#eee',
+        color: vuetifyTheme.current.value.colors.line,
       },
     },
 

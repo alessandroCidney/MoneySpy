@@ -83,7 +83,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       id: 'legendary',
       title: 'Lendário',
       icon: 'mdi-calendar-star',
-      color: 'secondary',
+      color: 'black',
       description: 'Entre por 1 ano.',
 
       totalSteps: 365,

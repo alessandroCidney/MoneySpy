@@ -41,7 +41,7 @@
       >
         <div
           :class="{
-            'bg-white giantInput d-flex align-center justify-start px-6': true,
+            'bg-card giantInput d-flex align-center justify-start px-6': true,
             'isFocused': valueFieldIsFocused,
           }"
         >
@@ -53,6 +53,7 @@
             :rules="[formRules.requiredNumber]"
             :autofocus="$route.query.autofocus === 'true'"
             :disabled="expensesStore.loadingCreate"
+            bg-color="card"
             variant="solo"
             type="number"
             lang="pt"
@@ -65,7 +66,7 @@
 
         <div
           :class="{
-            'bg-white giantInput d-flex align-center justify-start px-6': true,
+            'bg-card giantInput d-flex align-center justify-start px-6': true,
             'isFocused': typeFieldIsFocused,
           }"
         >
@@ -75,6 +76,7 @@
             :rules="[formRules.requiredString]"
             :items="expenseTypes.filter(item => item.type === selectedMode).map(item => item.name)"
             :disabled="expensesStore.loadingCreate"
+            bg-color="card"
             placeholder="Tipo"
             variant="solo"
             hide-details
@@ -99,13 +101,13 @@
       </v-form>
     </section>
 
-    <section class="bg-white pa-8 ultraRounded">
+    <section class="bg-card pa-8 ultraRounded">
       <h2>Registros anteriores</h2>
 
       <v-data-table
         :items="expensesStore.items"
         :headers="expenseTableHeaders"
-        class="expensesTable"
+        class="expensesTable bg-card"
       >
         <template #[`item.type`]="{ item: expenseData }">
           <v-avatar
@@ -297,7 +299,7 @@ async function handleCreateExpense() {
     height: 70px;
 
     &:nth-child(2n) {
-      background-color: #f9f9f9;
+      background-color: rgb(var(--v-theme-container));
     }
 
     td {

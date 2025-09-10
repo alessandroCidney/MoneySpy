@@ -60,6 +60,12 @@ const optionData = computed(() => ({
   legend: {
     bottom: '5%',
     left: 'center',
+
+    textStyle: {
+      fontFamily: 'Roboto',
+
+      color: vuetifyTheme.current.value.colors.neutral,
+    },
   },
   series: [
     {
@@ -76,13 +82,6 @@ const optionData = computed(() => ({
         show: false,
         position: 'center',
       },
-      // emphasis: {
-      //   label: {
-      //     show: true,
-      //     fontSize: 40,
-      //     fontWeight: 'bold',
-      //   },
-      // },
       labelLine: {
         show: false,
       },

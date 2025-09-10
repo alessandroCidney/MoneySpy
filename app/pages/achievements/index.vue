@@ -8,63 +8,122 @@
       Acompanhe o seu progresso na plataforma e desbloqueie recompensas!
     </p>
 
-    <section class="achievementsList">
-      <header class="onlyForScreenReader">
-        <h2 class="d-none">
-          Lista de conquistas
-        </h2>
-      </header>
+    <v-tabs
+      v-model="selectedTab"
+      class="mb-5"
+    >
+      <v-tab value="achievements">
+        Conquistas
+      </v-tab>
 
-      <article
-        v-for="(achievementData, achievementIndex) in achievementsStore.items"
-        :key="`achievementIndex${achievementIndex}`"
-        :class="{
-          'defaultWhiteCard achievementCard text-center d-flex align-center justify-space-between flex-column': true,
-        }"
-      >
-        <div>
-          <v-avatar
-            :color="getAchievementProgress(achievementData) === 0 ? 'grey' : vuetifyTheme.current.value.colors[achievementData.color]"
-            class="achievementIcon mb-3"
-            size="150"
+      <v-tab value="rewards">
+        Recompensas
+      </v-tab>
+    </v-tabs>
+
+    <v-tabs-window
+      v-model="selectedTab"
+      class="overflow-visible"
+    >
+      <v-tabs-window-item value="achievements">
+        <section class="cardsGrid">
+          <header class="onlyForScreenReader">
+            <h2 class="d-none">
+              Lista de conquistas
+            </h2>
+          </header>
+
+          <article
+            v-for="(achievementData, achievementIndex) in achievementsStore.items"
+            :key="`achievementIndex${achievementIndex}`"
+            :class="{
+              'defaultWhiteCard achievementCard text-center d-flex align-center justify-space-between flex-column': true,
+            }"
           >
-            <v-icon
-              size="80"
-            >
-              {{ achievementData.icon }}
-            </v-icon>
-          </v-avatar>
-        </div>
+            <div>
+              <v-avatar
+                :color="getAchievementProgress(achievementData) === 0 ? 'grey' : vuetifyTheme.current.value.colors[achievementData.color]"
+                class="achievementIcon mb-3"
+                size="150"
+              >
+                <v-icon
+                  size="80"
+                >
+                  {{ achievementData.icon }}
+                </v-icon>
+              </v-avatar>
+            </div>
 
-        <div class="w-100">
-          <h3>
-            {{ achievementData.title }}
-          </h3>
+            <div class="w-100">
+              <h3>
+                {{ achievementData.title }}
+              </h3>
 
-          <p class="mb-10">
-            {{ achievementData.description }}
-          </p>
+              <p class="mb-10">
+                {{ achievementData.description }}
+              </p>
 
-          <div class="w-100 d-flex align-center justify-center ga-2">
-            <v-progress-linear
-              :model-value="getAchievementProgress(achievementData)"
-              :color="getAchievementProgress(achievementData) === 100 ? 'primary' : 'blue'"
-              height="12"
-              rounded
-            />
+              <div class="w-100 d-flex align-center justify-center ga-2">
+                <v-progress-linear
+                  :model-value="getAchievementProgress(achievementData)"
+                  :color="getAchievementProgress(achievementData) === 100 ? 'primary' : 'blue'"
+                  height="12"
+                  rounded
+                />
 
-            <span class="font-weight-medium">
-              {{ achievementData.currentStep }}/{{ achievementData.totalSteps }}
-            </span>
-          </div>
-        </div>
-      </article>
-    </section>
+                <span class="font-weight-medium">
+                  {{ achievementData.currentStep }}/{{ achievementData.totalSteps }}
+                </span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </v-tabs-window-item>
+
+      <v-tabs-window-item
+        value="rewards"
+      >
+        <section class="cardsGrid">
+          <header class="onlyForScreenReader">
+            <h2 class="d-none">
+              Temas conquistados
+            </h2>
+          </header>
+
+          <v-card
+            v-for="(themeData, themeIndex) in themesArr"
+            :key="`themeIndex${themeIndex}`"
+            :class="{
+              'text-center ultraRounded py-5 themeCard': true,
+              'isActive': vuetifyTheme.name.value === themeData.id,
+            }"
+            flat
+            @click="vuetifyTheme.change(themeData.id)"
+          >
+            <div class="pa-5">
+              <icons-dynamic-theme-icon
+                :colors="themeData.colors"
+              />
+            </div>
+
+            <v-card-title>
+              {{ themeData.title }}
+            </v-card-title>
+
+            <v-card-text>
+              {{ themeData.description }}
+            </v-card-text>
+          </v-card>
+        </section>
+      </v-tabs-window-item>
+    </v-tabs-window>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
+
+import { defaultLightTheme, defaultDarkTheme } from '@/utils/themes'
 
 definePageMeta({
   middleware: 'authenticated',
@@ -74,13 +133,41 @@ const achievementsStore = useAchievementsStore()
 
 const vuetifyTheme = useTheme()
 
+const route = useRoute()
+const router = useRouter()
+
+const selectedTab = computed({
+  get() {
+    return route.query.tab ?? 'achievements'
+  },
+
+  set(newValue) {
+    router.push({ query: { tab: newValue } })
+  },
+})
+
+const themesArr = ref([
+  {
+    id: 'defaultLightTheme',
+    colors: [defaultLightTheme.colors.secondary, defaultLightTheme.colors.primary, defaultLightTheme.colors.container],
+    title: 'Tema Claro',
+    description: 'Desbloqueável com a conquista "Novato"',
+  },
+  {
+    id: 'defaultDarkTheme',
+    colors: [defaultDarkTheme.colors.secondary, defaultDarkTheme.colors.primary, defaultDarkTheme.colors.container],
+    title: 'Tema Escuro',
+    description: 'Desbloqueável com a conquista "Novato"',
+  },
+])
+
 function getAchievementProgress(achievementData: AchivementData) {
   return achievementData.currentStep / achievementData.totalSteps * 100
 }
 </script>
 
 <style lang="scss" scoped>
-.achievementsList {
+.cardsGrid {
   display: grid;
 
   // https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
@@ -97,6 +184,12 @@ function getAchievementProgress(achievementData: AchivementData) {
 
     h3 {
       font-size: 1.5rem;
+    }
+  }
+
+  .themeCard {
+    &.isActive {
+      outline: 3px solid rgb(var(--v-theme-primary));
     }
   }
 }

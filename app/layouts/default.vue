@@ -11,7 +11,7 @@
         <layouts-default-app-bar />
       </template>
 
-      <v-main>
+      <v-main class="removeTransitions">
         <slot />
       </v-main>
     </v-app>
@@ -23,3 +23,9 @@ import { useDisplay } from 'vuetify'
 
 const vuetifyDisplay = useDisplay()
 </script>
+
+<style lang="scss">
+.removeTransitions {
+  transition: 0s !important;
+}
+</style>

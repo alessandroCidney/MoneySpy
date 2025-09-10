@@ -49,7 +49,7 @@
           Principais despesas
         </h2>
 
-        <v-list>
+        <v-list bg-color="card">
           <v-list-item
             v-for="expenseData in expensesByType"
             :key="expenseData.type"
@@ -85,7 +85,10 @@
           Movimentações recentes
         </h2>
 
-        <v-list class="pa-0">
+        <v-list
+          bg-color="card"
+          class="pa-0"
+        >
           <v-list-item
             v-for="expenseData in filterByTheLastSevenDays(expensesStore.items)"
             :key="expenseData.id"
@@ -95,7 +98,7 @@
           >
             <template #prepend>
               <v-avatar
-                :color="expenseData.value > 0 ? 'primary' : 'black'"
+                :color="expenseData.value > 0 ? 'primary' : 'secondary'"
               >
                 <v-icon>
                   {{ getExpenseTypeData(expenseData.type)?.icon }}
