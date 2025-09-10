@@ -77,6 +77,7 @@ const optionData = computed(() => ({
       },
     },
   },
+
   yAxis: {
     type: 'value',
 

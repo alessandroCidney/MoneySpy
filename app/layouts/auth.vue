@@ -62,7 +62,7 @@ import chartsAndCalcsImagePath from '@/assets/images/illustrations/chartsAndCalc
 @media(max-width: 960px) {
   .loginPageContainer {
     .loginPageContentContainer {
-      max-width: 95%;
+      max-width: 100%;
     }
   }
 }

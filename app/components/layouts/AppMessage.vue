@@ -3,7 +3,10 @@
     :timeout="messageStore.messageData.timeout"
     :multi-line="messageStore.messageData.multiline"
     :model-value="messageStore.messageData.active"
-    content-class="defaultAppMessage"
+    :content-class="{
+      'defaultAppMessage': true,
+      'w-100': vuetifyDisplay.smAndDown.value,
+    }"
     :content-props="{
       style: {
         border: `2px solid ${formattedSnackbarColor}`,
@@ -49,6 +52,10 @@
 </template>
 
 <script setup lang="ts">
+import { useDisplay } from 'vuetify'
+
+const vuetifyDisplay = useDisplay()
+
 const messageStore = useMessagesStore()
 
 const formattedSnackbarColor = computed(() => `rgb(var(--v-theme-${messageStore.messageData.color}))`)

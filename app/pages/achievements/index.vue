@@ -185,4 +185,10 @@ function getAchievementProgress(achievementData: AchivementData) {
     }
   }
 }
+
+@media(max-width: 600px) {
+  .achievementsPage .cardsGrid .achievementCard {
+    aspect-ratio: auto;
+  }
+}
 </style>

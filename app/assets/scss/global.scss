@@ -82,3 +82,12 @@ h1, h2, h3, h4, h5, h6 {
 .v-main {
   background-color: rgb(var(--v-theme-root)) !important;
 }
+
+@media(max-width: 960px) {
+  .defaultPageContainer {
+    border-radius: 0;
+
+    padding: 16px;
+    margin: 8px 0px 0px 0px;
+  }
+}

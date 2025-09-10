@@ -36,7 +36,7 @@
       <v-form
         ref="createExpenseForm"
         v-model="createExpenseFormIsValid"
-        class="d-flex align-center justify-start ga-4"
+        class="d-flex align-center justify-start flex-column flex-md-row ga-4"
         @submit.prevent="handleCreateExpense"
       >
         <div
@@ -88,15 +88,23 @@
         <v-btn
           :color="selectedMode === 'expense' ? 'secondary' : 'primary'"
           :loading="expensesStore.loadingCreate"
+          :icon="vuetifyDisplay.mdAndUp.value"
+          :block="vuetifyDisplay.smAndDown.value"
+          :rounded="vuetifyDisplay.smAndDown.value || undefined"
+          variant="flat"
           type="submit"
-          size="70"
-          icon
+          :size="vuetifyDisplay.smAndDown.value ? 'x-large' : 70"
         >
           <v-icon
-            size="50"
+            :start="vuetifyDisplay.smAndDown.value"
+            :size="vuetifyDisplay.smAndDown.value ? 30 : 50"
           >
             mdi-plus
           </v-icon>
+
+          <span v-if="vuetifyDisplay.smAndDown.value">
+            Adicionar
+          </span>
         </v-btn>
       </v-form>
     </section>
@@ -208,10 +216,13 @@
 import type { VDataTable } from 'vuetify/components'
 
 import { useExpensesStore } from '@/stores/cruds/expenses'
+import { useDisplay } from 'vuetify'
 
 definePageMeta({
   middleware: 'authenticated',
 })
+
+const vuetifyDisplay = useDisplay()
 
 const expensesStore = useExpensesStore()
 const messageStore = useMessagesStore()
@@ -310,6 +321,14 @@ async function handleCreateExpense() {
     td {
       border-bottom: 0 !important;
     }
+  }
+}
+
+@media(max-width: 960px) {
+  .giantInput {
+    min-width: auto;
+
+    width: 100%;
   }
 }
 </style>

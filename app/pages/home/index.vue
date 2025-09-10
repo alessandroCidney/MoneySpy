@@ -15,7 +15,12 @@
     v-else
     class="defaultPageContainer"
   >
-    <h1 class="mb-4">
+    <h1
+      :class="{
+        'mb-4': true,
+        'onlyForScreenReader': vuetifyDisplay.smAndDown.value,
+      }"
+    >
       Resumo Geral
     </h1>
 
@@ -123,29 +128,48 @@
       </section>
     </div>
 
-    <div class="position-absolute top-0 right-0 pa-8">
-      <v-btn
-        color="primary"
-        size="large"
-        rounded
-        flat
-        @click="$router.push({
-          path: '/expenses',
-          query: { autofocus: 'true' },
-        })"
-      >
-        <v-icon start>
-          mdi-plus-circle
-        </v-icon>
+    <v-fab
+      v-if="vuetifyDisplay.smAndDown.value"
+      class="homePageAddButton"
+      color="primary"
+      size="large"
+      icon
+      app
+      @click="$router.push({
+        path: '/expenses',
+        query: { autofocus: 'true' },
+      })"
+    >
+      <v-icon size="30">
+        mdi-plus
+      </v-icon>
+    </v-fab>
 
-        Adicionar
-      </v-btn>
-    </div>
+    <v-btn
+      v-else
+      class="homePageAddButton"
+      color="primary"
+      size="large"
+      position="absolute"
+      rounded
+      flat
+      @click="$router.push({
+        path: '/expenses',
+        query: { autofocus: 'true' },
+      })"
+    >
+      <v-icon start>
+        mdi-plus-circle
+      </v-icon>
+
+      Adicionar
+    </v-btn>
   </div>
 </template>
 
 <script setup lang="ts">
 import _ from 'lodash'
+import { useDisplay } from 'vuetify'
 import { useExpensesStore } from '~/stores/cruds/expenses'
 
 definePageMeta({
@@ -157,6 +181,8 @@ const authStore = useAuthStore()
 if (!authStore.databaseUser) {
   throw new Error('Unauthenticated')
 }
+
+const vuetifyDisplay = useDisplay()
 
 const expensesStore = useExpensesStore()
 
@@ -196,6 +222,11 @@ const expensesByType = computed(() => {
 <style lang="scss" scoped>
 .homePageSection {
   flex: 1 1 0;
+}
+
+.homePageAddButton {
+  top: 0;
+  right: 0;
 }
 
 // .homePageAside {
@@ -258,6 +289,14 @@ const expensesByType = computed(() => {
       "expensesPie expensesPie expensesPie"
       "mainExpenses mainExpenses mainExpenses"
       "latestExpenses latestExpenses latestExpenses";
+  }
+}
+
+@media(max-width: 960px) {
+  .homePageAddButton {
+    top: auto;
+    right: 10px;
+    bottom: 90px;
   }
 }
 </style>

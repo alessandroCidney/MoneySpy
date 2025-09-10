@@ -40,6 +40,7 @@
         />
 
         <v-btn
+          :block="vuetifyDisplay.smAndDown.value"
           :loading="loadingUpdateProfileData"
           variant="flat"
           color="primary"
@@ -58,7 +59,12 @@
         Acesso
       </h2>
 
+      <p class="mb-4">
+        Precisa ir embora? Ficaremos te esperando!
+      </p>
+
       <v-btn
+        :block="vuetifyDisplay.smAndDown.value"
         :loading="loadingSignOut"
         color="black"
         size="large"
@@ -76,6 +82,7 @@
 
 <script setup lang="ts">
 import { getAuth, signOut } from 'firebase/auth'
+import { useDisplay } from 'vuetify'
 
 definePageMeta({
   middleware: 'authenticated',
@@ -84,6 +91,8 @@ definePageMeta({
 const authStore = useAuthStore()
 const formRules = useRules()
 const usersCrud = useUsersCrud()
+
+const vuetifyDisplay = useDisplay()
 
 const formIsValid = ref(false)
 
