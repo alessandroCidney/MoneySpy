@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-container max-width="1000px">
     <h1>Política de privacidade</h1>
 
     <p>
@@ -89,11 +89,19 @@
     <p>
       Este documento/política pode ser atualizado futuramente. Caso isso seja necessário, realizaremos uma notificação prévia via interface da plataforma. Para continuar utilizando a plataforma, será sempre necessário aceitar os documentos/termos/políticas mais recentes. Caso isso não seja possível, o usuário não poderá continuar utilizando a plataforma, e poderá, caso deseje, realizar a exclusão de sua conta conforme descrito no tópico "Sobre a exclusão de conta e dados".
     </p>
-  </v-main>
+
+    <h2>
+      Suporte e contato
+    </h2>
+
+    <p>
+      Para tirar dúvidas ou reportar possíveis problemas, acesse o nosso <a href="https://docs.google.com/forms/d/e/1FAIpQLSc6DTN5Q9Am-vEN5u4QnsDrGZyFB-6Gc9v2-JP1QIFwORm0sA/viewform?usp=dialog">Formulário de Suporte</a>.
+    </p>
+  </v-container>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'empty',
+  layout: 'document',
 })
 </script>

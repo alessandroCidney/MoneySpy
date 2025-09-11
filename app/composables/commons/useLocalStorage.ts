@@ -15,11 +15,21 @@ export function useLocalStorage() {
     return !!themesDataArr.find(item => item.id === themeId)?.allowed
   }
 
+  function getSystemTheme() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'defaultDarkTheme'
+      : 'defaultLightTheme'
+  }
+
   function loadSavedTheme() {
     const savedThemeId = localStorage.getItem(THEME_SETTINGS_LOCAL_STORAGE_KEY)
 
-    if (savedThemeId && themeIsAllowed(savedThemeId)) {
+    if (typeof savedThemeId === 'string' && themeIsAllowed(savedThemeId)) {
       selectedThemeId.value = savedThemeId
+    }
+
+    if (savedThemeId === null) {
+      selectedThemeId.value = getSystemTheme()
     }
   }
 

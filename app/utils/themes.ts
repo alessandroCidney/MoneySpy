@@ -62,7 +62,7 @@ export function getThemesDataArr() {
       title: 'Tema Claro',
       description: 'Desbloqueável com a conquista "Novato"',
 
-      allowed: !!authStore.privateProfileData?.achievements.complete.find(item => item.id === 'beginner'),
+      allowed: true,
     },
     {
       id: 'defaultDarkTheme',
@@ -70,7 +70,7 @@ export function getThemesDataArr() {
       title: 'Tema Escuro',
       description: 'Desbloqueável com a conquista "Novato"',
 
-      allowed: !!authStore.privateProfileData?.achievements.complete.find(item => item.id === 'beginner'),
+      allowed: true,
     },
     {
       id: 'lovingTheme',
