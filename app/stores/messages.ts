@@ -8,7 +8,10 @@ interface AppMessage {
   timeout: number
   multiline: boolean
 
-  action?: () => void | Promise<void>
+  action?: {
+    title: string
+    handler: () => void | Promise<void>
+  }
 }
 
 const defaultMessage: AppMessage = {
@@ -98,7 +101,7 @@ export const useMessagesStore = defineStore('messages', {
     callAction() {
       this.setMessageActive(false)
 
-      this.messageData.action?.()
+      this.messageData.action?.handler()
     },
   },
 })

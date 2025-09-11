@@ -102,7 +102,7 @@
             class="mb-4"
             rounded
             block
-            @click="reloadNuxtApp()"
+            @click="reloadWithRedirect()"
           >
             Continuar
           </v-btn>
@@ -188,6 +188,10 @@ async function handleVerifyEmail() {
   } catch {
     invalidLink.value = true
   }
+}
+
+function reloadWithRedirect() {
+  window.location.href = `${window.location.origin}/auth/login`
 }
 
 const formRules = useRules()

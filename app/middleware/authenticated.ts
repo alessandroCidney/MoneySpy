@@ -9,6 +9,11 @@ export default defineNuxtRouteMiddleware((to) => {
     return
   }
 
+  // Verify email
+  if (authStore.emailIsVerified === false && to.name === 'auth-verify-email') {
+    return
+  }
+
   if (authStore.emailIsVerified === false && to.name !== 'auth-verify-email') {
     return navigateTo({
       name: 'auth-verify-email',
@@ -19,6 +24,11 @@ export default defineNuxtRouteMiddleware((to) => {
     return navigateTo({
       name: 'home',
     })
+  }
+
+  // Complete profile
+  if (authStore.incompleteProfile && to.name === 'auth-complete-profile') {
+    return
   }
 
   if (authStore.incompleteProfile && to.name !== 'auth-complete-profile') {
@@ -33,9 +43,10 @@ export default defineNuxtRouteMiddleware((to) => {
     })
   }
 
+  // Auth
   if (!authStore.isAuthenticated) {
     return navigateTo({
-      name: 'auth-join-us',
+      name: 'auth-login',
     })
   }
 })

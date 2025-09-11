@@ -3,17 +3,14 @@
     :timeout="messageStore.messageData.timeout"
     :multi-line="messageStore.messageData.multiline"
     :model-value="messageStore.messageData.active"
-    :content-class="{
-      'defaultAppMessage': true,
-      'w-100': vuetifyDisplay.smAndDown.value,
-    }"
     :content-props="{
       style: {
         border: `2px solid ${formattedSnackbarColor}`,
       },
     }"
+    content-class="defaultAppMessage"
     color="root"
-    location="bottom right"
+    :location="vuetifyDisplay.smAndDown.value ? 'bottom center' : 'bottom right'"
     @update:model-value="messageStore.setMessageActive"
   >
     <v-icon
@@ -37,7 +34,7 @@
         ripple
         @click="messageStore.callAction()"
       >
-        Ver detalhes
+        {{ messageStore.messageData.action.title }}
       </v-btn>
 
       <v-btn

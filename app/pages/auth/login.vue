@@ -110,6 +110,9 @@ definePageMeta({
 
 const nuxtApp = useNuxtApp()
 
+const authStore = useAuthStore()
+const usersCrud = useUsersCrud()
+
 const formRules = useRules()
 
 const createAccountFormRef = useTemplateRef('createAccountFormRef')
@@ -135,11 +138,13 @@ async function handleSignInWithEmailAndPassword() {
     if (validationResult?.valid) {
       const auth = getAuth()
 
-      await signInWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         createAccountPayload.value.email,
         createAccountPayload.value.password,
       )
+
+      await checkIfIsRegistered(userCredential.user.uid)
 
       window.location.reload()
     }
@@ -148,6 +153,10 @@ async function handleSignInWithEmailAndPassword() {
   } finally {
     loading.value.emailAndPassword = false
   }
+}
+
+async function checkIfIsRegistered(userId: string) {
+  await usersCrud.get(userId)
 }
 
 async function handleSignInWithGoogle() {
@@ -160,10 +169,27 @@ async function handleSignInWithGoogle() {
       prompt: 'select_account',
     })
 
-    await signInWithPopup(nuxtApp.$firebaseAuth, googleProvider)
+    const userCredential = await signInWithPopup(nuxtApp.$firebaseAuth, googleProvider)
+
+    /**
+     * Signing in via Google automatically adds the account to the authentication service even if it's not in the database.
+     * Therefore, the account must be removed from there if the user did not register on the account creation page.
+     */
+    await usersCrud.get(userCredential.user.uid)
 
     window.location.reload()
   } catch (err) {
+    if (err instanceof ApplicationError && err.status === 404 && err.code === APP_ERROR_CODES.CRUD_OPERATIONS.DOCUMENT_NOT_FOUND) {
+      await authStore.handleDeleteFirebaseAccount()
+
+      globalErrorHandler(new ApplicationError({
+        ...err,
+        message: 'Conta não encontrada. Por favor, registre-se para continuar.',
+      }))
+
+      return
+    }
+
     globalErrorHandler(err)
   } finally {
     loading.value.google = false

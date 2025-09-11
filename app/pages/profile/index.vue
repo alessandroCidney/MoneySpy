@@ -4,7 +4,7 @@
       Perfil
     </h1>
 
-    <section class="mb-8">
+    <div class="mb-8">
       <h2 class="mb-4">
         Dados pessoais
       </h2>
@@ -20,7 +20,7 @@
         <v-text-field
           v-model="formPayload.name"
           :rules="[formRules.requiredString]"
-          :disabled="loadingUpdateProfileData"
+          :disabled="somethingIsLoading"
           label="Nome"
           variant="solo"
           rounded
@@ -30,7 +30,7 @@
         <v-text-field
           v-model="formPayload.email"
           :rules="[formRules.requiredString]"
-          :disabled="loadingUpdateProfileData"
+          :disabled="somethingIsLoading"
           label="E-mail"
           variant="solo"
           hint="Por enquanto o e-mail não pode ser alterado."
@@ -41,8 +41,10 @@
 
         <v-btn
           :block="vuetifyDisplay.smAndDown.value"
-          :loading="loadingUpdateProfileData"
+          :loading="loading.updateProfileData"
+          :disabled="somethingIsLoading && !loading.updateProfileData"
           variant="flat"
+          width="300px"
           color="primary"
           size="large"
           type="submit"
@@ -52,9 +54,9 @@
           Atualizar dados
         </v-btn>
       </v-form>
-    </section>
+    </div>
 
-    <section>
+    <div class="mb-8">
       <h2 class="mb-4">
         Acesso
       </h2>
@@ -65,23 +67,48 @@
 
       <v-btn
         :block="vuetifyDisplay.smAndDown.value"
-        :loading="loadingSignOut"
+        :loading="authStore.loadingSignOut"
+        :disabled="somethingIsLoading"
         color="black"
         size="large"
-        width="150px"
+        width="300px"
         prepend-icon="mdi-logout"
         rounded
         flat
-        @click="handleSignOut()"
+        @click="authStore.handleSignOut()"
       >
         Sair
       </v-btn>
-    </section>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="mb-4">
+        Exclusão de conta e dados
+      </h2>
+
+      <p class="mb-4">
+        Deseja excluir sua conta? Tudo bem, sentiremos sua falta!
+      </p>
+
+      <v-btn
+        :block="vuetifyDisplay.smAndDown.value"
+        :loading="loading.deleteAccount"
+        :disabled="somethingIsLoading && !loading.deleteAccount"
+        color="error"
+        size="large"
+        width="300px"
+        prepend-icon="mdi-logout"
+        rounded
+        flat
+        @click="handleDeleteAccount()"
+      >
+        Excluir conta
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getAuth, signOut } from 'firebase/auth'
 import { useDisplay } from 'vuetify'
 
 definePageMeta({
@@ -105,11 +132,16 @@ const formPayload = ref({
   email: authStore.authUser.email,
 })
 
-const loadingUpdateProfileData = ref(false)
+const loading = ref({
+  updateProfileData: false,
+  deleteAccount: false,
+})
+
+const somethingIsLoading = computed(() => Object.values(loading.value).some(item => item === true))
 
 async function handleUpdateProfileData() {
   try {
-    loadingUpdateProfileData.value = true
+    loading.value.updateProfileData = true
 
     if (!authStore.databaseUser) {
       throw new Error('Unauthenticated')
@@ -124,25 +156,49 @@ async function handleUpdateProfileData() {
   } catch (err) {
     globalErrorHandler(err)
   } finally {
-    loadingUpdateProfileData.value = false
+    loading.value.updateProfileData = false
   }
 }
 
-const loadingSignOut = ref(false)
-
-async function handleSignOut() {
+async function handleDeleteAccount() {
   try {
-    loadingSignOut.value = true
+    loading.value.deleteAccount = true
 
-    const auth = getAuth()
+    if (!authStore.databaseUser || !authStore.privateProfileData) {
+      throw new ApplicationError({
+        code: APP_ERROR_CODES.DEFAULT_ERRORS.UNAUTHORIZED,
+        status: 401,
+        message: 'Usuário não autenticado!',
+      })
+    }
 
-    await signOut(auth)
+    await usersCrud.update({
+      ...authStore.databaseUser,
+
+      name: '[DELETED]',
+
+      active: false,
+      deleted: true,
+
+      profilePhoto: {
+        type: 'icon',
+        value: 'mdi-face-man',
+      },
+    })
+
+    await usersCrud.updatePrivateProfileData(authStore.databaseUser.id, {
+      ...authStore.privateProfileData,
+
+      email: '[DELETED]',
+    })
+
+    await authStore.handleDeleteFirebaseAccount()
 
     window.location.reload()
   } catch (err) {
     globalErrorHandler(err)
   } finally {
-    loadingSignOut.value = false
+    loading.value.deleteAccount = false
   }
 }
 </script>

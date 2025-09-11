@@ -1,5 +1,5 @@
 import { FirebaseError } from 'firebase/app'
-import type { AuthErrorCodes } from 'firebase/auth'
+import { AuthErrorCodes } from 'firebase/auth'
 
 export const APP_ERROR_CODES = {
   CRUD_OPERATIONS: {
@@ -46,12 +46,24 @@ const FIREBASE_ERROR_MESSAGES: Partial<Record<ValueOf<typeof AuthErrorCodes>, st
   'auth/invalid-credential': 'E-mail ou senha incorretos',
   'auth/weak-password': 'A senha informada é muito fraca',
   'auth/invalid-action-code': 'O link utilizado está expirado ou é inválido',
+  'auth/requires-recent-login': 'Esta ação precisa de um login recente, deseja reautenticar?',
 }
 
 export function globalErrorHandler(err: unknown) {
   const messageStore = useMessagesStore()
+  const authStore = useAuthStore()
 
   if (err instanceof FirebaseError) {
+    if (err.code === AuthErrorCodes.CREDENTIAL_TOO_OLD_LOGIN_AGAIN) {
+      return messageStore.showErrorMessage({
+        text: FIREBASE_ERROR_MESSAGES[err.code],
+        action: {
+          title: 'Fazer login',
+          handler: authStore.handleSignOut,
+        },
+      })
+    }
+
     return messageStore.showErrorMessage({
       text: FIREBASE_ERROR_MESSAGES[err.code] ?? APP_ERROR_CODES.GENERIC_ERRORS.UNIDENTIFIED_ERROR,
     })

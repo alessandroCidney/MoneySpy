@@ -7,6 +7,10 @@ async function loadAdditionalItems() {
   const usersCrud = useUsersCrud()
   const notificationsStore = useNotificationsStore()
 
+  // "Cached" cruds
+  const expensesStore = useExpensesStore()
+  expensesStore.list()
+
   // First login
   if (authStore.databaseUser?.firstLogin && authStore.emailIsVerified && !authStore.incompleteProfile) {
     const result = await usersCrud.update({
@@ -18,10 +22,6 @@ async function loadAdditionalItems() {
 
     notificationsStore.addAchievementNotification('beginner')
   }
-
-  // "Cached" cruds
-  const expensesStore = useExpensesStore()
-  expensesStore.list()
 }
 
 export default defineNuxtPlugin(async () => {

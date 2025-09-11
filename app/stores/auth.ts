@@ -1,4 +1,4 @@
-import { getAuth, signOut, type User } from 'firebase/auth'
+import { deleteUser, getAuth, signOut, type User } from 'firebase/auth'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -8,6 +8,7 @@ export const useAuthStore = defineStore('auth', {
 
     loadingAuth: true,
     loadingSignOut: false,
+    loadingDeleteFirebaseAccount: false,
   }),
 
   getters: {
@@ -80,6 +81,22 @@ export const useAuthStore = defineStore('auth', {
         window.location.reload()
 
         this.loadingSignOut = false
+      }
+    },
+
+    async handleDeleteFirebaseAccount() {
+      try {
+        this.loadingDeleteFirebaseAccount = true
+
+        const auth = getAuth()
+
+        if (auth.currentUser) {
+          await deleteUser(auth.currentUser)
+        }
+      } catch (err) {
+        globalErrorHandler(err)
+      } finally {
+        this.loadingDeleteFirebaseAccount = false
       }
     },
   },

@@ -225,8 +225,8 @@ const expensesByType = computed(() => {
 }
 
 .homePageAddButton {
-  top: 0;
-  right: 0;
+  top: 32px;
+  right: 32px;
 }
 
 // .homePageAside {
