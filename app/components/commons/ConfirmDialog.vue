@@ -32,7 +32,7 @@
         <v-btn
           :loading="loadingConfirm"
           size="large"
-          color="primary"
+          :color="dangerous ? 'error' : 'primary'"
           variant="flat"
           class="px-4"
           @click="handleConfirm()"
@@ -51,6 +51,8 @@ const loadingConfirm = ref(false)
 const props = defineProps({
   confirm: { type: Function, required: true },
   cancel: { type: Function, default: () => {} },
+
+  dangerous: Boolean,
 })
 
 async function handleConfirm() {

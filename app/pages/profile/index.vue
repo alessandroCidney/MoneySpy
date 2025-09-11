@@ -65,20 +65,32 @@
         Precisa ir embora? Ficaremos te esperando!
       </p>
 
-      <v-btn
-        :block="vuetifyDisplay.smAndDown.value"
-        :loading="authStore.loadingSignOut"
-        :disabled="somethingIsLoading"
-        color="black"
-        size="large"
-        width="300px"
-        prepend-icon="mdi-logout"
-        rounded
-        flat
-        @click="authStore.handleSignOut()"
+      <commons-confirm-dialog
+        :confirm="authStore.handleSignOut"
       >
-        Sair
-      </v-btn>
+        <template #title>
+          Sair
+        </template>
+
+        <template #text>
+          Deseja realmente sair da plataforma?
+        </template>
+
+        <template #activator="{ props: activatorProps }">
+          <v-btn
+            :block="vuetifyDisplay.smAndDown.value"
+            color="black"
+            size="large"
+            width="300px"
+            prepend-icon="mdi-logout"
+            rounded
+            flat
+            v-bind="activatorProps"
+          >
+            Sair
+          </v-btn>
+        </template>
+      </commons-confirm-dialog>
     </div>
 
     <div class="mb-8">
@@ -90,20 +102,33 @@
         Deseja excluir sua conta? Tudo bem, sentiremos sua falta!
       </p>
 
-      <v-btn
-        :block="vuetifyDisplay.smAndDown.value"
-        :loading="loading.deleteAccount"
-        :disabled="somethingIsLoading && !loading.deleteAccount"
-        color="error"
-        size="large"
-        width="300px"
-        prepend-icon="mdi-logout"
-        rounded
-        flat
-        @click="handleDeleteAccount()"
+      <commons-confirm-dialog
+        :confirm="handleDeleteAccount"
+        dangerous
       >
-        Excluir conta
-      </v-btn>
+        <template #title>
+          Excluir conta e dados
+        </template>
+
+        <template #text>
+          Deseja realmente excluir sua conta e seus dados?
+        </template>
+
+        <template #activator="{ props: activatorProps }">
+          <v-btn
+            :block="vuetifyDisplay.smAndDown.value"
+            color="error"
+            size="large"
+            width="300px"
+            prepend-icon="mdi-delete"
+            rounded
+            flat
+            v-bind="activatorProps"
+          >
+            Excluir conta
+          </v-btn>
+        </template>
+      </commons-confirm-dialog>
     </div>
   </div>
 </template>
