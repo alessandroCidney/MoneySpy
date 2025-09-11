@@ -1,17 +1,13 @@
 <template>
-  <v-container>
-    <div>Página inicial</div>
-  </v-container>
+  <v-container />
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'unauthenticated',
+  middleware() {
+    return navigateTo({ name: 'home' })
+  },
 
   layout: 'clear',
 })
-
-const router = useRouter()
-
-router.push({ name: 'home' })
 </script>

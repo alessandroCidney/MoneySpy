@@ -80,6 +80,29 @@
           Entrar com o Google
         </v-btn>
       </v-form>
+
+      <div
+        :style="{ maxWidth: '450px' }"
+        class="text-caption text-disabled text-center mx-auto mt-3"
+      >
+        Ao continuar a criação de conta, você concorda com a versão mais recente de nossos
+
+        <nuxt-link
+          :to="{ name: 'documents-terms-of-use' }"
+          class="defaultAnchor"
+        >
+          Termos de Uso
+        </nuxt-link>
+
+        e de nossa
+
+        <nuxt-link
+          :to="{ name: 'documents-privacy-policy' }"
+          class="defaultAnchor"
+        >
+          Política de Privacidade
+        </nuxt-link>.
+      </div>
     </div>
 
     <div

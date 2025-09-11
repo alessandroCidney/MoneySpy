@@ -28,12 +28,12 @@
 
       <v-main class="applicationDocumentsPage">
         <v-tabs tag="nav">
-          <v-tab :to="{ name: 'documents-privacy-policy' }">
-            Política de privacidade
-          </v-tab>
-
           <v-tab :to="{ name: 'documents-terms-of-use' }">
             Termos de uso
+          </v-tab>
+
+          <v-tab :to="{ name: 'documents-privacy-policy' }">
+            Política de privacidade
           </v-tab>
         </v-tabs>
 
