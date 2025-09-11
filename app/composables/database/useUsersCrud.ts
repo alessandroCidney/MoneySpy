@@ -1,7 +1,8 @@
 import { useFirestoreCrud, type DatabaseObject, type PartialDatabaseObject } from './commons/useFirestoreCrud'
 
 export interface DatabaseUser extends DatabaseObject {
-  active: true
+  active: boolean
+  deleted: boolean
 
   firstLogin: boolean
 
@@ -25,6 +26,18 @@ export interface DatabaseUserPrivateData extends DatabaseObject {
     inProgressPayload: {
       lastLoginValidationTime: number
       loginSequenceCounter: number
+    }
+  }
+
+  documents: {
+    privacyPolicy: {
+      accepted: boolean
+      acceptedAt: number
+    }
+
+    termsOfUse: {
+      accepted: boolean
+      acceptedAt: number
     }
   }
 }
@@ -65,6 +78,18 @@ export function useUsersCrud() {
           inProgressPayload: {
             lastLoginValidationTime: getCurrentUnixTime(),
             loginSequenceCounter: 1,
+          },
+        },
+
+        documents: {
+          privacyPolicy: {
+            accepted: true,
+            acceptedAt: getCurrentUnixTime(),
+          },
+
+          termsOfUse: {
+            accepted: true,
+            acceptedAt: getCurrentUnixTime(),
           },
         },
       })

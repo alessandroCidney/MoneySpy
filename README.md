@@ -5,7 +5,7 @@ MoneySpy is a Nuxt.js/Vue.js website where you can log and monitor your expenses
 ## How to run the website?
 
 ### Live Website
-You can access the website at [https://moneyspy-prod.web.app](https://moneyspy-prod.web.app)
+You can access the website at https://moneyspy-prod.web.app
 
 ### Run manually
 
@@ -29,7 +29,7 @@ firebase deploy # or npm run deploy
 ```
 
 #### Package installation
-First, make sure to install dependencies with NPM or an equivalent package manager.
+Make sure to install dependencies with NPM or an equivalent package manager.
 
 (Note that the project was created with NPM and has a package-lock.json file. Therefore, if you want to use a different package manager, remove the package-lock.json file before running the packages install command.)
 
@@ -38,10 +38,10 @@ npm install
 ```
 
 #### Environment variables
-After that, set the environment variables as specified in the .env.example file.
+After that, set the environment variables as specified in the **.env.example** file.
 
 #### Run at localhost
-Finally, to run the project at https://localhost:3000, use the command:
+Finally, to run the project at http://localhost:3000, use the command:
 
 ```bash
 npm run dev

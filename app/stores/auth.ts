@@ -11,8 +11,15 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated(state) {
-      return !!state.databaseUser && !!state.authUser
+    acceptedAllDocuments(state) {
+      return !!state.privateProfileData
+        && Object
+          .values(state.privateProfileData.documents)
+          .every(documentData => documentData.accepted)
+    },
+
+    isAuthenticated(state): boolean {
+      return !!state.databaseUser?.active && !state.databaseUser.deleted && !!state.authUser // && this.acceptedAllDocuments
     },
 
     emailIsVerified(state) {

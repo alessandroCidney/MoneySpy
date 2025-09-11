@@ -3,11 +3,11 @@ import { getAuth } from 'firebase/auth'
 import { useExpensesStore } from '~/stores/cruds/expenses'
 
 async function loadAdditionalItems() {
-  // Initial achievements
   const authStore = useAuthStore()
   const usersCrud = useUsersCrud()
   const notificationsStore = useNotificationsStore()
 
+  // First login
   if (authStore.databaseUser?.firstLogin && authStore.emailIsVerified && !authStore.incompleteProfile) {
     const result = await usersCrud.update({
       ...authStore.databaseUser,
