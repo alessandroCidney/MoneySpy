@@ -1,7 +1,29 @@
 <template>
+  <div
+    v-if="isEmpty"
+    class="flex-fill d-flex align-center justify-center w-100"
+  >
+    <commons-warning-screen
+      title="Vamos começar!"
+      description="Adicione um novo registro para iniciar."
+    >
+      <template #image>
+        <commons-theme-image
+          :aspect-ratio="530 / 430"
+          base-path="/images/illustrations"
+          filename="bars-chart.svg"
+          class="mx-auto"
+          min-width="200px"
+          width="300px"
+        />
+      </template>
+    </commons-warning-screen>
+  </div>
+
   <v-chart
-    class="chart"
+    v-else
     :option="option"
+    class="chart"
     autoresize
   />
 </template>
@@ -21,6 +43,8 @@ import VChart from 'vue-echarts'
 import _ from 'lodash'
 import { useTheme } from 'vuetify'
 
+import { useExpensesStore } from '@/stores/cruds/expenses'
+
 use([
   CanvasRenderer,
   BarChart,
@@ -30,21 +54,24 @@ use([
   GridComponent,
 ])
 
-const props = defineProps({
+const expensesStore = useExpensesStore()
+
+defineProps({
   height: { type: String, required: true },
-  expenses: { type: Array as PropType<DatabaseExpense[]>, required: true },
 })
 
-const expensesPerDay = computed(() => {
-  const lastSevenDaysExpenses = props.expenses
+const lastSevenDaysExpenses = computed(() => filterByTheLastSevenDays(expensesStore.items))
 
+const isEmpty = computed(() => lastSevenDaysExpenses.value.length === 0)
+
+const expensesPerDay = computed(() => {
   const allDays = getLastSevenDays().map(dayName => ({
     dayName,
     positive: [] as DatabaseExpense[],
     negative: [] as DatabaseExpense[],
   }))
 
-  for (const expenseData of lastSevenDaysExpenses) {
+  for (const expenseData of lastSevenDaysExpenses.value) {
     const registeredDayData = allDays.find(registeredDay => registeredDay.dayName === getDayName(expenseData.createdAt))
 
     const group = expenseData.value > 0 ? 'positive' : 'negative'

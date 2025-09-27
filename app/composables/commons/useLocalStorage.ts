@@ -17,8 +17,8 @@ export function useLocalStorage() {
 
   function getSystemTheme() {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'defaultDarkTheme'
-      : 'defaultLightTheme'
+      ? 'darkTheme'
+      : 'lightTheme'
   }
 
   function loadSavedTheme() {

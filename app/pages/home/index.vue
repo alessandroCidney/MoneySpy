@@ -25,35 +25,59 @@
     </h1>
 
     <div class="homePageGrid w-100">
-      <section class="expensesBars defaultWhiteCard">
+      <section class="expensesBars defaultWhiteCard d-flex align-start justify-start flex-column">
         <h2>
-          Como foi a sua semana:
+          Como foi a sua semana
         </h2>
 
         <charts-expenses-bars
-          :expenses="filterByTheLastSevenDays(expensesStore.items)"
           height="500px"
         />
       </section>
 
-      <section class="expensesPie defaultWhiteCard">
+      <section class="expensesPie defaultWhiteCard d-flex align-start justify-start flex-column">
         <h2>
           Entradas e saídas
         </h2>
 
         <charts-expenses-pie
-          :expenses="filterByTheLastSevenDays(expensesStore.items)"
           height="400px"
           class="mx-auto"
         />
       </section>
 
-      <section class="mainExpenses defaultWhiteCard">
+      <section class="mainExpenses defaultWhiteCard d-flex align-start justify-start flex-column">
         <h2>
           Principais despesas
         </h2>
 
-        <v-list bg-color="card">
+        <commons-warning-screen
+          v-if="expensesByType.length === 0"
+          description="As principais despesas aparecem aqui."
+        >
+          <template #image>
+            <commons-theme-image
+              :aspect-ratio="1"
+              base-path="/images/illustrations"
+              filename="checklist.svg"
+              class="mx-auto flex-fill"
+              min-width="200px"
+              width="200px"
+            />
+          </template>
+
+          <template #title>
+            <h3>
+              Nenhum registro adicionado
+            </h3>
+          </template>
+        </commons-warning-screen>
+
+        <v-list
+          v-else
+          class="w-100"
+          bg-color="card"
+        >
           <v-list-item
             v-for="expenseData in expensesByType"
             :key="expenseData.type"
@@ -63,7 +87,7 @@
           >
             <template #prepend>
               <v-avatar
-                :color="'black'"
+                color="secondary"
               >
                 <v-icon>
                   {{ expenseData.icon }}
@@ -89,12 +113,35 @@
           Movimentações recentes
         </h2>
 
+        <commons-warning-screen
+          v-if="lastSevenDaysExpenses.length === 0"
+          description="As movimentações recentes aparecem aqui."
+        >
+          <template #image>
+            <commons-theme-image
+              :aspect-ratio="1"
+              base-path="/images/illustrations"
+              filename="coins.svg"
+              class="mx-auto"
+              min-width="200px"
+              width="200px"
+            />
+          </template>
+
+          <template #title>
+            <h3>
+              Nenhum registro adicionado
+            </h3>
+          </template>
+        </commons-warning-screen>
+
         <v-list
+          v-else
           bg-color="card"
           class="pa-0"
         >
           <v-list-item
-            v-for="expenseData in filterByTheLastSevenDays(expensesStore.items)"
+            v-for="expenseData in lastSevenDaysExpenses"
             :key="expenseData.id"
             :class="{
               'py-5 px-0': true,
@@ -186,6 +233,8 @@ const vuetifyDisplay = useDisplay()
 
 const expensesStore = useExpensesStore()
 
+const lastSevenDaysExpenses = computed(() => filterByTheLastSevenDays(expensesStore.items))
+
 const expensesByType = computed(() => {
   interface ExpenseTypeData {
     type: string
@@ -196,7 +245,7 @@ const expensesByType = computed(() => {
 
   const expenseTypesData: ExpenseTypeData[] = []
 
-  for (const expenseData of filterByTheLastSevenDays(expensesStore.items)) {
+  for (const expenseData of lastSevenDaysExpenses.value) {
     if (expenseData.value < 0) {
       const expenseTypeDataItem = expenseTypesData.find(item => item.type === expenseData.type)
 

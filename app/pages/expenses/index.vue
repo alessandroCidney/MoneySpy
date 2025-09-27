@@ -1,10 +1,10 @@
 <template>
-  <div class="defaultPageContainer">
+  <div class="defaultPageContainer d-flex align-start justify-start flex-column">
     <h1 class="mb-4 onlyForScreenReader">
       Novo registro
     </h1>
 
-    <section class="mb-8">
+    <section class="mb-8 w-100">
       <v-btn-toggle
         v-model="selectedMode"
         :color="selectedMode === 'expense' ? 'secondary' : 'primary'"
@@ -109,10 +109,28 @@
       </v-form>
     </section>
 
-    <section class="bg-card pa-8 ultraRounded">
+    <section class="bg-card pa-8 ultraRounded w-100 d-flex align-start justify-start flex-column flex-fill">
       <h2>Registros anteriores</h2>
 
+      <commons-warning-screen
+        v-if="expensesStore.items.length === 0"
+        title="Nenhum registro adicionado"
+        description="Os registros adicionados aparecem aqui."
+      >
+        <template #image>
+          <commons-theme-image
+            :aspect-ratio="900 / 600"
+            base-path="/images/illustrations"
+            filename="money.svg"
+            class="mx-auto"
+            min-width="200px"
+            width="300px"
+          />
+        </template>
+      </commons-warning-screen>
+
       <v-data-table
+        v-else
         :items="expensesStore.items"
         :headers="expenseTableHeaders"
         class="expensesTable bg-card"

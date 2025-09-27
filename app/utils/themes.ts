@@ -1,4 +1,4 @@
-export const defaultLightTheme = {
+export const lightTheme = {
   dark: false,
 
   colors: {
@@ -9,6 +9,7 @@ export const defaultLightTheme = {
     'card': '#FFFFFF',
     'line': '#eeeeee',
     'neutral': '#424A52',
+    'neutral-darken-1': '#525C66',
 
     'red': '#F44336',
     'deep-purple': '#673AB7',
@@ -16,7 +17,7 @@ export const defaultLightTheme = {
   },
 }
 
-export const defaultDarkTheme = {
+export const darkTheme = {
   dark: true,
 
   colors: {
@@ -57,16 +58,16 @@ export function getThemesDataArr() {
 
   return [
     {
-      id: 'defaultLightTheme',
-      colors: [defaultLightTheme.colors.secondary, defaultLightTheme.colors.primary, defaultLightTheme.colors.container],
+      id: 'lightTheme',
+      colors: [lightTheme.colors.secondary, lightTheme.colors.primary, lightTheme.colors.container],
       title: 'Tema Claro',
       description: 'Desbloqueável com a conquista "Novato"',
 
       allowed: true,
     },
     {
-      id: 'defaultDarkTheme',
-      colors: [defaultDarkTheme.colors.secondary, defaultDarkTheme.colors.primary, defaultDarkTheme.colors.container],
+      id: 'darkTheme',
+      colors: [darkTheme.colors.secondary, darkTheme.colors.primary, darkTheme.colors.container],
       title: 'Tema Escuro',
       description: 'Desbloqueável com a conquista "Novato"',
 

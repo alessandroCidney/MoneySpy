@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import chartsAndCalcsImagePath from '@/assets/images/illustrations/chartsAndCalcs.png'
+import chartsAndCalcsImagePath from '@/assets/images/illustrations/tinified-charts-and-calcs.png'
 </script>
 
 <style lang="scss">

@@ -19,6 +19,10 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   app: {
+    pageTransition: {
+      name: 'fade-transition',
+    },
+
     head: {
       meta: [
         {

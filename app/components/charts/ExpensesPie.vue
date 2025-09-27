@@ -1,7 +1,34 @@
 <template>
+  <div
+    v-if="isEmpty"
+    class="flex-fill d-flex align-center justify-center w-100"
+  >
+    <commons-warning-screen
+      description="As entradas e saídas aparecem aqui."
+    >
+      <template #title>
+        <h3>
+          Nenhum registro adicionado
+        </h3>
+      </template>
+
+      <template #image>
+        <commons-theme-image
+          :aspect-ratio="1"
+          base-path="/images/illustrations"
+          filename="pie-chart.svg"
+          class="mx-auto"
+          min-width="200px"
+          width="200px"
+        />
+      </template>
+    </commons-warning-screen>
+  </div>
+
   <v-chart
-    class="chart"
+    v-else
     :option="option"
+    class="chart"
     autoresize
   />
 </template>
@@ -18,7 +45,10 @@ import {
 import VChart from 'vue-echarts'
 
 import { useTheme } from 'vuetify'
+
 import _ from 'lodash'
+
+import { useExpensesStore } from '@/stores/cruds/expenses'
 
 use([
   CanvasRenderer,
@@ -28,10 +58,15 @@ use([
   LegendComponent,
 ])
 
-const props = defineProps({
+const expensesStore = useExpensesStore()
+
+defineProps({
   height: { type: String, required: true },
-  expenses: { type: Array as PropType<DatabaseExpense[]>, required: true },
 })
+
+const lastSevenDaysExpenses = computed(() => filterByTheLastSevenDays(expensesStore.items))
+
+const isEmpty = computed(() => lastSevenDaysExpenses.value.length === 0)
 
 const chartData = computed(() => {
   const summary = {
@@ -39,7 +74,7 @@ const chartData = computed(() => {
     negative: 0,
   }
 
-  for (const expenseData of props.expenses) {
+  for (const expenseData of lastSevenDaysExpenses.value) {
     if (expenseData.value > 0) {
       summary.positive += expenseData.value
     } else {
