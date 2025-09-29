@@ -19,10 +19,6 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   app: {
-    pageTransition: {
-      name: 'fade-transition',
-    },
-
     head: {
       meta: [
         {
@@ -71,6 +67,7 @@ export default defineNuxtConfig({
       APP_ID: process.env.APP_ID,
 
       BLOCK_APP_ACCESS: process.env.BLOCK_APP_ACCESS,
+      SUPPORT_FORM_URL: process.env.SUPPORT_FORM_URL,
     },
   },
 

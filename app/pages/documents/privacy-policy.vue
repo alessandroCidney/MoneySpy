@@ -87,7 +87,7 @@
     </h2>
 
     <p>
-      Este documento/política pode ser atualizado futuramente. Caso isso seja necessário, realizaremos uma notificação prévia via interface da plataforma. Para continuar utilizando a plataforma, será sempre necessário aceitar os documentos/termos/políticas mais recentes. Caso isso não seja possível, o usuário não poderá continuar utilizando a plataforma, e poderá, caso deseje, realizar a exclusão de sua conta conforme descrito no tópico "Sobre a exclusão de conta e dados".
+      Este documento/política pode ser atualizado futuramente. Caso isso seja necessário, realizaremos uma notificação via interface da plataforma. Para continuar utilizando a plataforma, será sempre necessário aceitar os documentos/termos/políticas mais recentes. Caso isso não seja possível, o usuário não poderá continuar utilizando a plataforma, e poderá, caso deseje, realizar a exclusão de sua conta conforme descrito no tópico "Sobre a exclusão de conta e dados".
     </p>
 
     <h2>
@@ -95,7 +95,7 @@
     </h2>
 
     <p>
-      Para tirar dúvidas ou reportar possíveis problemas, acesse o nosso <a href="https://docs.google.com/forms/d/e/1FAIpQLSc6DTN5Q9Am-vEN5u4QnsDrGZyFB-6Gc9v2-JP1QIFwORm0sA/viewform?usp=dialog">Formulário de Suporte</a>.
+      Para tirar dúvidas ou reportar possíveis problemas, acesse o nosso <a :href="SUPPORT_FORM_URL">Formulário de Suporte</a>.
     </p>
   </v-container>
 </template>
@@ -104,4 +104,6 @@
 definePageMeta({
   layout: 'document',
 })
+
+const { public: { SUPPORT_FORM_URL } } = useRuntimeConfig()
 </script>

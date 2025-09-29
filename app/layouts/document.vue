@@ -53,12 +53,16 @@ const router = useRouter()
     margin-bottom: 10px;
   }
 
-  p {
+  p, li {
     margin-bottom: 20px;
   }
 
   p + h2 {
     margin-top: 50px;
+  }
+
+  li {
+    transform: translateX(20px);
   }
 }
 </style>

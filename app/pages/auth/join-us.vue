@@ -8,8 +8,8 @@
     />
 
     <div class="px-5">
-      <h1 class="mb-7 font-weight-bold text-center">
-        Criar nova conta
+      <h1 class="mb-2 font-weight-bold text-center">
+        Criar conta
       </h1>
 
       <p class="mb-10 text-center">

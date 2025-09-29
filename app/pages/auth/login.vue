@@ -8,7 +8,7 @@
     />
 
     <div class="px-5">
-      <h1 class="mb-7 font-weight-bold text-center">
+      <h1 class="mb-2 font-weight-bold text-center">
         Entrar
       </h1>
 
