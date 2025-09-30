@@ -57,7 +57,7 @@ const router = useRouter()
     margin-bottom: 20px;
   }
 
-  p + h2 {
+  section {
     margin-top: 50px;
   }
 
