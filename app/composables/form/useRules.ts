@@ -5,7 +5,13 @@ export function useRules() {
     },
 
     requiredNumber(value: string | number) {
-      return (!isNaN(typeof value === 'string' ? parseFloat(value) : value) && value !== undefined) || 'Valor obrigatório'
+      return (isValidNumber(value) && value !== undefined) || 'Valor obrigatório'
+    },
+
+    numberGreaterThanZero(value: string | number) {
+      const numberValue = stringToNumber(value)
+
+      return numberValue > 0 || 'Apenas valores maiores que zero'
     },
 
     validEmail(value: unknown) {

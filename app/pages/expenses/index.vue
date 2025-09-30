@@ -47,17 +47,16 @@
         >
           <div>R$</div>
 
-          <v-text-field
+          <forms-number-text-field
             v-model="createExpenseFormPayload.value"
             v-model:focused="valueFieldIsFocused"
-            :rules="[formRules.requiredNumber]"
+            :rules="[formRules.requiredNumber, formRules.numberGreaterThanZero]"
             :autofocus="$route.query.autofocus === 'true'"
             :disabled="expensesStore.loadingCreate"
+            :step="0.05"
+            :min="0"
             bg-color="card"
             variant="solo"
-            type="number"
-            lang="pt"
-            step="0.05"
             hide-details
             rounded
             flat
@@ -174,17 +173,15 @@
             </template>
 
             <template #form="{ internalPayload }">
-              <v-text-field
+              <pages-expenses-expense-value-field
                 v-model="internalPayload.value"
-                :rules="[formRules.requiredNumber]"
-                label="Valor"
-                type="number"
+                @update:mode="internalPayload.type = ''"
               />
 
               <v-combobox
                 v-model="internalPayload.type"
                 :rules="[formRules.requiredString]"
-                :items="expenseTypes.map(item => item.name)"
+                :items="expenseTypes.filter(item => item.type === (internalPayload.value > 0 ? 'income' : 'expense')).map(item => item.name)"
                 label="Tipo"
               />
             </template>
