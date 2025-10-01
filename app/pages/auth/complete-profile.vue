@@ -64,31 +64,30 @@
           flat
         />
 
-        <div class="bg-container avatarsList">
+        <div
+          class="avatarsList bg-container"
+          role="list"
+        >
           <div
-            role="list"
+            v-for="(iconData, iconIndex) in iconAvatarsList"
+            :key="`iconIndex${iconIndex}`"
+            role="listitem"
           >
-            <div
-              v-for="(iconData, iconIndex) in iconAvatarsList"
-              :key="`iconIndex${iconIndex}`"
-              role="listitem"
+            <v-btn
+              :color="iconData.value === formPayload.profilePhoto?.value ? 'primary' : 'line'"
+              variant="tonal"
+              size="100"
+              icon
+              flat
+              @click="formPayload.profilePhoto = iconData"
             >
-              <v-btn
-                :color="iconData.value === formPayload.profilePhoto?.value ? 'primary' : 'line'"
-                variant="tonal"
-                size="100"
-                icon
-                flat
-                @click="formPayload.profilePhoto = iconData"
+              <v-icon
+                size="70"
+                color="text"
               >
-                <v-icon
-                  size="70"
-                  color="text"
-                >
-                  {{ iconData.value }}
-                </v-icon>
-              </v-btn>
-            </div>
+                {{ iconData.value }}
+              </v-icon>
+            </v-btn>
           </div>
         </div>
 
