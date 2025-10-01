@@ -20,6 +20,8 @@ export interface CompletedAchievementData {
 export interface DatabaseUserPrivateData extends DatabaseObject {
   email: string | null
 
+  dateOfBirth: string | null
+
   achievements: {
     complete: CompletedAchievementData[]
 
@@ -67,6 +69,7 @@ export function useUsersCrud() {
         name: 'Dados privados do perfil',
 
         email: params.privateData.email || null,
+        dateOfBirth: null,
 
         createdBy: params.baseData.id,
 

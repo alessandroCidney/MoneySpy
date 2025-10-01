@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
 
     incompleteProfile(state) {
       if (state.databaseUser) {
-        return !state.databaseUser.name || !state.databaseUser.profilePhoto
+        return !state.databaseUser.name || !state.databaseUser.profilePhoto || !state.privateProfileData?.dateOfBirth
       }
     },
 

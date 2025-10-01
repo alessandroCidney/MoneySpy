@@ -1,45 +1,106 @@
 <template>
-  <div class="w-100 h-100 d-flex align-center justify-center">
+  <div
+    v-if="loading"
+    class="h-100 w-100 d-flex align-center justify-center"
+  >
     <v-progress-circular
-      v-if="loading"
       color="primary"
       size="250"
       width="10"
       indeterminate
     />
+  </div>
 
+  <div
+    v-else
+    class="completeProfilePage"
+  >
     <section
-      v-else
       class="completeProfileContent"
     >
-      <h1 class="giantTitle">
+      <h1 class="giantTitle mb-3">
         Complete seu perfil!
       </h1>
 
-      <v-form @submit.prevent="handleSave()">
-        <div class="text-center mb-10">
-          <commons-user-avatar
-            :profile-photo="authStore.authUser?.photoURL ? { type: 'providerPhoto', value: 'google.com' } : undefined"
-            size="300"
-          />
+      <v-form
+        ref="completeProfileFormRef"
+        class="completeProfileForm"
+        @submit.prevent="handleSave()"
+      >
+        <div class="text-center mb-8">
+          <h3 class="mb-2 text-neutral">
+            Avatar
+          </h3>
+
+          <v-avatar
+            class="selectedAvatar"
+            color="primary"
+            size="200"
+          >
+            <v-icon size="150">
+              {{ formPayload.profilePhoto?.value }}
+            </v-icon>
+          </v-avatar>
         </div>
 
-        <div class="d-flex align-center justify-center flex-column">
-          <forms-auto-grow-input
-            v-model="formPayload.name"
-          />
+        <v-text-field
+          v-model="formPayload.name"
+          :rules="[formRules.requiredString]"
+          label="Qual o seu nome?"
+          variant="solo-filled"
+          rounded
+          flat
+        />
 
+        <v-text-field
+          v-model="formPayload.dateOfBirth"
+          :rules="[formRules.requiredString]"
+          :max="getMaxInputDate()"
+          :min="getMinInputDate()"
+          label="Quando você nasceu?"
+          variant="solo-filled"
+          type="date"
+          rounded
+          flat
+        />
+
+        <div class="bg-container avatarsList">
+          <div
+            v-for="(iconData, iconIndex) in iconAvatarsList"
+            :key="`iconIndex${iconIndex}`"
+            role="list"
+          >
+            <div role="listitem">
+              <v-btn
+                :color="iconData.value === formPayload.profilePhoto?.value ? 'primary' : 'line'"
+                variant="tonal"
+                size="100"
+                icon
+                flat
+                @click="formPayload.profilePhoto = iconData"
+              >
+                <v-icon
+                  size="70"
+                  color="text"
+                >
+                  {{ iconData.value }}
+                </v-icon>
+              </v-btn>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
           <v-btn
-            :disabled="!formIsValid"
             color="primary"
             size="x-large"
-            class="mt-10"
+            class="mt-7"
             append-icon="mdi-arrow-right"
             variant="flat"
             rounded
             type="submit"
           >
-            Continuar
+            Salvar e continuar
           </v-btn>
         </div>
       </v-form>
@@ -57,50 +118,127 @@ definePageMeta({
 const authStore = useAuthStore()
 const usersCrud = useUsersCrud()
 
-interface FormPayload {
-  name: string
-  profilePhoto: File
+const formRules = useRules()
+
+const completeProfileFormRef = useTemplateRef('completeProfileFormRef')
+
+interface ProfilePhoto {
+  type: 'icon'
+  value: string
 }
 
-const formPayload = ref<Partial<FormPayload>>({
+interface FormPayload {
+  name: string
+
+  profilePhoto: ProfilePhoto
+
+  dateOfBirth: string
+}
+
+const formPayload = ref<FormPayload>({
   name: authStore.authUser?.displayName ?? '',
-  profilePhoto: undefined,
+
+  profilePhoto: {
+    type: 'icon',
+    value: 'mdi-emoticon',
+  },
+
+  dateOfBirth: '',
 })
 
-const formIsValid = computed(() => !!formPayload.value.name)
-
 const loading = ref(false)
+
+const iconAvatarsList = ref<ProfilePhoto[]>([
+  {
+    type: 'icon',
+    value: 'mdi-face-man',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-face-woman',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-emoticon-happy',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-emoticon',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-emoticon-excited',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-emoticon-cool',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-emoticon-wink',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-robot',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-robot-excited',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-dog',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-cat',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-bird',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-owl',
+  },
+  {
+    type: 'icon',
+    value: 'mdi-star-face',
+  },
+])
 
 async function handleSave() {
   try {
     loading.value = true
 
-    if (!authStore.databaseUser) {
+    if (!authStore.databaseUser || !authStore.privateProfileData) {
       throw new Error('Unauthenticated')
     }
 
-    const validatedFormPayload = formPayload.value as FormPayload
+    const validationResult = await completeProfileFormRef.value?.validate()
 
-    const currentProviderData = authStore.authUser?.providerData[0]
+    if (validationResult?.valid) {
+      const validatedFormPayload = formPayload.value as FormPayload
 
-    await usersCrud.update({
-      ...authStore.databaseUser,
-      name: validatedFormPayload.name,
+      await usersCrud.update({
+        ...authStore.databaseUser,
 
-      profilePhoto: currentProviderData?.photoURL
-        ? {
-            type: 'providerPhoto',
-            value: currentProviderData?.providerId,
-          }
-        : {
-            type: 'icon',
-            value: 'mdi-face-man',
-          },
-    })
+        name: validatedFormPayload.name,
+        profilePhoto: validatedFormPayload.profilePhoto,
+      })
 
-    window.location.reload()
+      await usersCrud.updatePrivateProfileData(authStore.databaseUser.id, {
+        ...authStore.privateProfileData,
 
-    await wait(3000)
+        dateOfBirth: validatedFormPayload.dateOfBirth,
+      })
+
+      window.location.reload()
+
+      await wait(3000)
+    } else {
+      globalErrorHandler(new Error('Dados inválidos'))
+    }
   } catch (err) {
     globalErrorHandler(err)
   } finally {
@@ -110,23 +248,43 @@ async function handleSave() {
 </script>
 
 <style lang="scss" scoped>
-.completeProfileContent {
-  .giantTitle {
-    font-size: 4rem;
-    font-weight: bold !important;
+.completeProfilePage {
+  position: relative;
 
-    margin-bottom: 20px;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
 
-    text-align: center;
+  .completeProfileContent {
+    .giantTitle {
+      font-size: 2rem;
+      font-weight: bold !important;
+
+      text-align: center;
+    }
+
+    .completeProfileForm {
+      margin: auto;
+
+      width: 900px;
+      max-width: 90%;
+
+      .selectedAvatar {
+        border: 5px solid rgb(var(--v-theme-text));
+      }
+
+      .avatarsList {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        padding: 20px;
+
+        border-radius: 50px;
+      }
+    }
   }
-
-  // .profilePhotoUpload {
-  //   width: 300px;
-  //   height: 300px;
-
-  //   border-radius: 50%;
-
-  //   margin: 0 auto 50px auto;
-  // }
 }
 </style>

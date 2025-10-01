@@ -2,7 +2,7 @@
   <v-app-bar
     :elevation="0"
     :height="72"
-    :absolute="vuetifyDisplay.lgAndUp.value"
+
     color="root"
   >
     <template

@@ -50,5 +50,5 @@ const selectedProfilePhotoUrl = computed(() => {
   return selectedProfilePhoto.value.value
 })
 
-const iconSize = computed(() => Math.floor(parseInt(props.size) * 0.9))
+const iconSize = computed(() => Math.floor(parseInt(props.size) * 0.75))
 </script>

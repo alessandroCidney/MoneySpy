@@ -10,6 +10,7 @@ export const lightTheme = {
     'line': '#eeeeee',
     'neutral': '#424A52',
     'neutral-darken-1': '#525C66',
+    'text': '#000000',
 
     'red': '#F44336',
     'deep-purple': '#673AB7',
@@ -26,8 +27,9 @@ export const darkTheme = {
     'root': '#212121',
     'container': '#333333',
     'card': '#3D3D3D',
-    'line': '#616161',
+    'line': '#525252',
     'neutral': '#f8f8f8',
+    'text': '#FFFFFF',
 
     'red': '#F44336',
     'deep-purple': '#673AB7',
@@ -46,6 +48,7 @@ export const lovingTheme = {
     'card': '#FCC8C5',
     'line': '#FBB5B1',
     'neutral': '#4E0804',
+    'text': '#000000',
 
     'red': '#F44336',
     'deep-purple': '#673AB7',
