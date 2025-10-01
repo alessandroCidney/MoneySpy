@@ -1,10 +1,10 @@
 <template>
-  <div class="defaultPageContainer">
+  <div class="defaultPageContainer profilePageContainer">
     <h1 class="mb-4">
       Perfil
     </h1>
 
-    <div class="mb-8">
+    <section>
       <h2 class="mb-4">
         Dados pessoais
       </h2>
@@ -14,11 +14,11 @@
       </p>
 
       <v-form
-        v-model="formIsValid"
+        v-model="updateProfileDataFormIsValid"
         @submit.prevent="handleUpdateProfileData()"
       >
         <v-text-field
-          v-model="formPayload.name"
+          v-model="updateProfileFormPayload.name"
           :rules="[formRules.requiredString]"
           :disabled="somethingIsLoading"
           label="Nome"
@@ -28,7 +28,20 @@
         />
 
         <v-text-field
-          v-model="formPayload.email"
+          v-model="updateProfileFormPayload.dateOfBirth"
+          :rules="[formRules.requiredString]"
+          :disabled="somethingIsLoading"
+          :max="getMaxInputDate()"
+          :min="getMinInputDate()"
+          label="Data de nascimento"
+          variant="solo"
+          type="date"
+          rounded
+          flat
+        />
+
+        <v-text-field
+          v-model="updateProfileFormPayload.email"
           :rules="[formRules.requiredString]"
           :disabled="somethingIsLoading"
           label="E-mail"
@@ -54,9 +67,40 @@
           Atualizar dados
         </v-btn>
       </v-form>
-    </div>
+    </section>
 
-    <div class="mb-8">
+    <section>
+      <h2 class="mb-4">
+        Métodos de login
+      </h2>
+
+      <p class="mb-4">
+        Aqui você pode ver os métodos de autenticação habilitados para a sua conta.
+      </p>
+
+      <div
+        v-if="authStore.authUser?.providerData"
+        class="d-flex align-center justify-start ga-3"
+        role="list"
+      >
+        <div
+          v-for="(providerId, providerIndex) in activeAuthProviders"
+          :key="`providerIndex${providerIndex}`"
+          role="listitem"
+        >
+          <v-avatar
+            color="card"
+            size="60"
+          >
+            <v-icon size="30">
+              {{ providerIcons[providerId as keyof typeof providerIcons] }}
+            </v-icon>
+          </v-avatar>
+        </div>
+      </div>
+    </section>
+
+    <section>
       <h2 class="mb-4">
         Acesso
       </h2>
@@ -91,9 +135,9 @@
           </v-btn>
         </template>
       </commons-confirm-dialog>
-    </div>
+    </section>
 
-    <div class="mb-8">
+    <section>
       <h2 class="mb-4">
         Exclusão de conta e dados
       </h2>
@@ -104,14 +148,80 @@
 
       <commons-confirm-dialog
         :confirm="handleDeleteAccount"
+        :disable-confirm="!isRecentLogin"
         dangerous
       >
         <template #title>
           Excluir conta e dados
         </template>
 
-        <template #text>
-          Deseja realmente excluir sua conta e seus dados?
+        <template #text="{ loadingConfirm }">
+          <p class="mb-4">
+            Atenção: Sua conta e dados serão excluídos da plataforma permanentemente e não será possível recuperá-los.
+          </p>
+
+          <v-alert
+            v-if="isRecentLogin"
+            type="success"
+            variant="tonal"
+          >
+            Usuário identificado! Clique em "Continuar" para prosseguir.
+          </v-alert>
+
+          <v-form
+            v-else
+            ref="deleteAccountFormRef"
+            :disabled="loadingConfirm"
+          >
+            <p class="mb-4">
+              Para continuar confirme sua identidade escolhendo uma das opções abaixo:
+            </p>
+
+            <div v-if="activeAuthProviders.includes('password')">
+              <forms-password-text-field
+                v-model="deleteAccountFormPayload.password"
+                :rules="[formRules.requiredString]"
+                label="Informar senha de login com e-mail"
+              />
+
+              <v-btn
+                :loading="deleteAccountLoading.reauthenticateWithEmail"
+                :disabled="somethingIsLoadingInDeleteAccount && !deleteAccountLoading.reauthenticateWithEmail"
+                color="primary"
+                size="x-large"
+                variant="flat"
+                class="mb-4"
+                rounded
+                block
+                @click="reauthenticateWithEmail()"
+              >
+                Identifique-se com e-mail e senha
+              </v-btn>
+            </div>
+
+            <div v-if="activeAuthProviders.includes('google.com')">
+              <v-btn
+                :loading="deleteAccountLoading.reauthenticateWithGoogle"
+                :disabled="somethingIsLoadingInDeleteAccount && !deleteAccountLoading.reauthenticateWithGoogle"
+                color="secondary"
+                size="x-large"
+                variant="outlined"
+                rounded
+                block
+                @click="reauthenticateWithGoogle()"
+              >
+                <template #prepend>
+                  <v-img
+                    :src="googleLogo"
+                    width="27px"
+                    height="27px"
+                  />
+                </template>
+
+                Identifique-se com o Google
+              </v-btn>
+            </div>
+          </v-form>
         </template>
 
         <template #activator="{ props: activatorProps }">
@@ -129,12 +239,15 @@
           </v-btn>
         </template>
       </commons-confirm-dialog>
-    </div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
+import { EmailAuthProvider, getAuth, GoogleAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from 'firebase/auth'
+
+import googleLogo from '@/assets/images/logos/googleLogo.svg'
 
 definePageMeta({
   middleware: 'authenticated',
@@ -146,14 +259,24 @@ const usersCrud = useUsersCrud()
 
 const vuetifyDisplay = useDisplay()
 
-const formIsValid = ref(false)
+const isRecentLogin = ref(false)
 
-if (!authStore.databaseUser || !authStore.authUser) {
+const providerIcons = {
+  'google.com': 'mdi-google',
+  'password': 'mdi-email',
+}
+
+if (!authStore.databaseUser || !authStore.authUser || !authStore.privateProfileData) {
   throw new Error('Unauthenticated')
 }
 
-const formPayload = ref({
+const activeAuthProviders = computed(() => authStore.authUser?.providerData.map(item => item.providerId) ?? [])
+
+const updateProfileDataFormIsValid = ref(false)
+
+const updateProfileFormPayload = ref({
   name: authStore.databaseUser.name,
+  dateOfBirth: authStore.privateProfileData.dateOfBirth,
   email: authStore.authUser.email,
 })
 
@@ -168,20 +291,95 @@ async function handleUpdateProfileData() {
   try {
     loading.value.updateProfileData = true
 
-    if (!authStore.databaseUser) {
+    if (!authStore.databaseUser || !authStore.privateProfileData) {
       throw new Error('Unauthenticated')
     }
 
-    const result = await usersCrud.update({
+    const baseUpdateResult = await usersCrud.update({
       ...authStore.databaseUser,
-      name: formPayload.value.name,
+      name: updateProfileFormPayload.value.name,
     })
 
-    authStore.setDatabaseUser(result as DatabaseUser)
+    const privateDataUpdateResult = await usersCrud.updatePrivateProfileData(authStore.databaseUser.id, {
+      ...authStore.privateProfileData,
+
+      dateOfBirth: updateProfileFormPayload.value.dateOfBirth,
+    })
+
+    authStore.setDatabaseUser(baseUpdateResult as DatabaseUser)
+    authStore.setPrivateProfileData(privateDataUpdateResult as DatabaseUserPrivateData)
   } catch (err) {
     globalErrorHandler(err)
   } finally {
     loading.value.updateProfileData = false
+  }
+}
+
+const deleteAccountFormRef = useTemplateRef('deleteAccountFormRef')
+
+const deleteAccountFormPayload = ref({
+  password: '',
+})
+
+const deleteAccountLoading = ref({
+  reauthenticateWithEmail: false,
+  reauthenticateWithGoogle: false,
+})
+
+const somethingIsLoadingInDeleteAccount = computed(() => Object.values(deleteAccountLoading.value).some(item => item === true))
+
+async function reauthenticateWithEmail() {
+  try {
+    deleteAccountLoading.value.reauthenticateWithEmail = true
+
+    const validationResult = await deleteAccountFormRef.value?.validate()
+
+    if (validationResult?.valid) {
+      const credential = EmailAuthProvider.credential(
+        authStore.authUser?.email ?? '',
+        deleteAccountFormPayload.value.password,
+      )
+
+      const auth = getAuth()
+
+      if (auth.currentUser) {
+        await reauthenticateWithCredential(auth.currentUser, credential)
+
+        isRecentLogin.value = true
+      }
+    }
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    deleteAccountLoading.value.reauthenticateWithEmail = false
+  }
+}
+
+async function reauthenticateWithGoogle() {
+  try {
+    deleteAccountLoading.value.reauthenticateWithGoogle = true
+
+    const validationResult = await deleteAccountFormRef.value?.validate()
+
+    if (validationResult?.valid) {
+      const googleAuthProvider = new GoogleAuthProvider()
+
+      googleAuthProvider.setCustomParameters({
+        prompt: 'select_account',
+      })
+
+      const auth = getAuth()
+
+      if (auth.currentUser) {
+        await reauthenticateWithPopup(auth.currentUser, googleAuthProvider)
+
+        isRecentLogin.value = true
+      }
+    }
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    deleteAccountLoading.value.reauthenticateWithGoogle = false
   }
 }
 
@@ -231,5 +429,11 @@ async function handleDeleteAccount() {
 <style lang="scss" scoped>
 .profilePhotoAvatar {
   border: 3px solid #000;
+}
+
+.profilePageContainer {
+  section {
+    margin-bottom: 50px;
+  }
 }
 </style>

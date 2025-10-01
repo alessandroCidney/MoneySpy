@@ -16,7 +16,10 @@
       </template>
 
       <template #text>
-        <slot name="text" />
+        <slot
+          :loading-confirm="loadingConfirm"
+          name="text"
+        />
       </template>
 
       <v-card-actions>
@@ -31,6 +34,7 @@
 
         <v-btn
           :loading="loadingConfirm"
+          :disabled="disableConfirm"
           size="large"
           :color="dangerous ? 'error' : 'primary'"
           variant="flat"
@@ -53,6 +57,7 @@ const props = defineProps({
   cancel: { type: Function, default: () => {} },
 
   dangerous: Boolean,
+  disableConfirm: Boolean,
 })
 
 async function handleConfirm() {
