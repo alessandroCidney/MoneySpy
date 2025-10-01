@@ -97,6 +97,101 @@
             </v-icon>
           </v-avatar>
         </div>
+
+        <div
+          v-if="activeAuthProviders.length < 2"
+          role="listitem"
+        >
+          <commons-generic-dialog>
+            <template #title>
+              Adicionar método de login
+            </template>
+
+            <template #text>
+              <p class="mb-4">
+                Aqui você pode adicionar novos métodos de login para a sua conta.
+              </p>
+
+              <v-alert
+                v-if="activeAuthProviders.length === 2"
+                type="success"
+                variant="tonal"
+              >
+                Todos os provedores disponíveis já estão adicionados.
+              </v-alert>
+
+              <v-form
+                ref="addProviderFormRef"
+              >
+                <div v-if="!activeAuthProviders.includes('password')">
+                  <forms-password-text-field
+                    v-model="addProviderFormPayload.password"
+                    :rules="[formRules.requiredString, formRules.strongPassword]"
+                    label="Informar senha de login com e-mail"
+                  />
+
+                  <forms-password-text-field
+                    v-model="addProviderFormPayload.confirmPassword"
+                    :rules="[(confirmPassword: unknown) => formRules.matchingPasswords(addProviderFormPayload.password, confirmPassword)]"
+                    label="Confirme a nova senha"
+                  />
+
+                  <v-btn
+                    :loading="addProviderLoading.email"
+                    :disabled="somethingIsLoadingInProviderLink && !addProviderLoading.email"
+                    color="primary"
+                    size="x-large"
+                    variant="flat"
+                    class="mb-4"
+                    rounded
+                    block
+                    @click="addEmailProvider()"
+                  >
+                    Identifique-se com e-mail e senha
+                  </v-btn>
+                </div>
+
+                <div v-if="!activeAuthProviders.includes('google.com')">
+                  <v-btn
+                    :loading="addProviderLoading.google"
+                    :disabled="somethingIsLoadingInProviderLink && !addProviderLoading.google"
+                    color="secondary"
+                    size="x-large"
+                    variant="outlined"
+                    rounded
+                    block
+                    @click="addGoogleProvider()"
+                  >
+                    <template #prepend>
+                      <v-img
+                        :src="googleLogo"
+                        width="27px"
+                        height="27px"
+                      />
+                    </template>
+
+                    Identifique-se com o Google
+                  </v-btn>
+                </div>
+              </v-form>
+            </template>
+
+            <template #activator="{ props }">
+              <v-btn
+                v-if="activeAuthProviders.length < 2"
+                color="secondary"
+                icon="mdi-plus"
+                size="60"
+                flat
+                v-bind="props"
+              >
+                <v-icon size="30">
+                  mdi-plus
+                </v-icon>
+              </v-btn>
+            </template>
+          </commons-generic-dialog>
+        </div>
       </div>
     </section>
 
@@ -245,7 +340,7 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
-import { EmailAuthProvider, getAuth, GoogleAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from 'firebase/auth'
+import { EmailAuthProvider, getAuth, GoogleAuthProvider, linkWithCredential, linkWithPopup, reauthenticateWithCredential, reauthenticateWithPopup, sendEmailVerification } from 'firebase/auth'
 
 import googleLogo from '@/assets/images/logos/googleLogo.svg'
 
@@ -315,6 +410,76 @@ async function handleUpdateProfileData() {
   }
 }
 
+// Add new auth provider
+
+const addProviderFormRef = useTemplateRef('addProviderFormRef')
+
+const addProviderFormPayload = ref({
+  password: '',
+  confirmPassword: '',
+})
+
+const addProviderLoading = ref({
+  email: false,
+  google: false,
+})
+
+const somethingIsLoadingInProviderLink = computed(() => Object.values(addProviderLoading.value).some(item => item === true))
+
+async function addEmailProvider() {
+  try {
+    addProviderLoading.value.email = true
+
+    const validationResult = await addProviderFormRef.value?.validate()
+
+    if (validationResult?.valid) {
+      const credential = EmailAuthProvider.credential(
+        authStore.privateProfileData?.email ?? '',
+        addProviderFormPayload.value.password,
+      )
+
+      const auth = getAuth()
+
+      if (auth.currentUser) {
+        await linkWithCredential(auth.currentUser, credential)
+
+        await sendEmailVerification(auth.currentUser)
+
+        window.location.reload()
+      }
+    }
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    addProviderLoading.value.email = false
+  }
+}
+async function addGoogleProvider() {
+  try {
+    addProviderLoading.value.google = true
+
+    const googleAuthProvider = new GoogleAuthProvider()
+
+    googleAuthProvider.setCustomParameters({
+      prompt: 'select_account',
+    })
+
+    const auth = getAuth()
+
+    if (auth.currentUser) {
+      await linkWithPopup(auth.currentUser, googleAuthProvider)
+
+      window.location.reload()
+    }
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    addProviderLoading.value.google = false
+  }
+}
+
+// Delete account
+
 const deleteAccountFormRef = useTemplateRef('deleteAccountFormRef')
 
 const deleteAccountFormPayload = ref({
@@ -359,22 +524,18 @@ async function reauthenticateWithGoogle() {
   try {
     deleteAccountLoading.value.reauthenticateWithGoogle = true
 
-    const validationResult = await deleteAccountFormRef.value?.validate()
+    const googleAuthProvider = new GoogleAuthProvider()
 
-    if (validationResult?.valid) {
-      const googleAuthProvider = new GoogleAuthProvider()
+    googleAuthProvider.setCustomParameters({
+      prompt: 'select_account',
+    })
 
-      googleAuthProvider.setCustomParameters({
-        prompt: 'select_account',
-      })
+    const auth = getAuth()
 
-      const auth = getAuth()
+    if (auth.currentUser) {
+      await reauthenticateWithPopup(auth.currentUser, googleAuthProvider)
 
-      if (auth.currentUser) {
-        await reauthenticateWithPopup(auth.currentUser, googleAuthProvider)
-
-        isRecentLogin.value = true
-      }
+      isRecentLogin.value = true
     }
   } catch (err) {
     globalErrorHandler(err)
