@@ -87,7 +87,56 @@
         v-if="authStore.authUser && authStore.databaseUser"
         class="userAvatarCard px-4 d-flex align-center justify-center ga-2"
       >
-        <commons-user-avatar size="45" />
+        <v-menu
+          :disabled="loadingUpdateProfilePhoto"
+          max-height="500px"
+          max-width="500px"
+          location="bottom"
+          content-class="changeAvatarMenu"
+        >
+          <template #activator="{ props }">
+            <commons-user-avatar
+              size="45"
+              :loading="loadingUpdateProfilePhoto"
+              v-bind="props"
+            />
+          </template>
+
+          <v-card>
+            <template #title>
+              Mudar avatar
+            </template>
+
+            <template #text>
+              <div
+                class="changeAvatarMenuList"
+                role="list"
+              >
+                <div
+                  v-for="(iconData, iconIndex) in iconAvatarsList.filter(item => item.value !== authStore.databaseUser?.profilePhoto?.value)"
+                  :key="`iconIndex${iconIndex}`"
+                  role="listitem"
+                >
+                  <v-btn
+                    color="line"
+                    variant="tonal"
+                    size="80"
+                    icon
+                    flat
+                    @click="updateProfilePhoto(iconData)"
+                  >
+                    <v-icon
+                      size="50"
+                      color="text"
+                    >
+                      {{ iconData.value }}
+                    </v-icon>
+                  </v-btn>
+                </div>
+              </div>
+            </template>
+          </v-card>
+        </v-menu>
 
         <div v-if="vuetifyDisplay.mdAndUp.value">
           <div class="font-weight-medium userDisplayNameText">
@@ -108,8 +157,39 @@ import { useDisplay } from 'vuetify'
 
 const authStore = useAuthStore()
 const notificationsStore = useNotificationsStore()
+const messagesStore = useMessagesStore()
+
+const usersCrud = useUsersCrud()
 
 const vuetifyDisplay = useDisplay()
+
+const loadingUpdateProfilePhoto = ref(false)
+
+async function updateProfilePhoto(iconData: ArrayElementType<typeof iconAvatarsList>) {
+  try {
+    loadingUpdateProfilePhoto.value = true
+
+    if (!authStore.databaseUser) {
+      throw new Error('Unauthenticated')
+    }
+
+    const updatedUser = await usersCrud.update({
+      ...authStore.databaseUser,
+
+      profilePhoto: iconData,
+    })
+
+    authStore.setDatabaseUser(updatedUser as DatabaseUser)
+
+    messagesStore.showSuccessMessage({
+      text: 'Avatar atualizado com sucesso!',
+    })
+  } catch (err) {
+    globalErrorHandler(err)
+  } finally {
+    loadingUpdateProfilePhoto.value = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -125,6 +205,22 @@ const vuetifyDisplay = useDisplay()
   .v-list-item {
     .v-list-item__spacer {
       width: 20px !important;
+    }
+  }
+}
+
+.changeAvatarMenu {
+  .changeAvatarMenuList {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    > div {
+      width: calc(25% - (3 * 10px));
+
+      text-align: center;
     }
   }
 }

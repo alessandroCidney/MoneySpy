@@ -1,22 +1,34 @@
 <template>
-  <v-avatar
-    :color="selectedProfilePhoto.type === 'icon' ? '#333' : undefined"
-    :size="size"
-  >
-    <v-icon
-      v-if="selectedProfilePhoto.type === 'icon'"
-      :size="iconSize"
-    >
-      {{ selectedProfilePhoto.value }}
-    </v-icon>
+  <div>
+    <v-hover>
+      <template #default="{ isHovering, props: hoverProps }">
+        <v-avatar
+          :color="isHovering ? 'primary' : '#333'"
+          :size="size"
+          class="position-relative cursor-pointer"
+          v-bind="hoverProps"
+        >
+          <div
+            v-if="loading"
+            class="w-100 h-100 d-flex align-center justify-center"
+          >
+            <v-progress-circular
+              width="3"
+              size="30"
+              indeterminate
+            />
+          </div>
 
-    <v-img
-      v-else-if="selectedProfilePhotoUrl"
-      :src="selectedProfilePhotoUrl"
-      referrerpolicy="no-referrer"
-      cover
-    />
-  </v-avatar>
+          <v-icon
+            v-else
+            :size="iconSize"
+          >
+            {{ selectedProfilePhoto.value }}
+          </v-icon>
+        </v-avatar>
+      </template>
+    </v-hover>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -26,29 +38,11 @@ const props = defineProps({
   size: { type: String, required: true },
 
   profilePhoto: { type: Object as PropType<DatabaseUser['profilePhoto']>, default: undefined },
+
+  loading: Boolean,
 })
 
 const selectedProfilePhoto = computed(() => props.profilePhoto ?? authStore.userProfilePhoto)
-
-const selectedProfilePhotoUrl = computed(() => {
-  // The URL should not be saved in the profile photo object.
-  // The "providerPhoto" type signals that it is necessary to fetch the "photoURL" from the "authUser"
-  const isProviderPhoto = selectedProfilePhoto.value.type === 'providerPhoto'
-
-  const isGooglePhoto = selectedProfilePhoto.value.value === 'google.com'
-    && authStore.authUser?.photoURL
-    && isGoogleProfilePhoto(authStore.authUser.photoURL)
-
-  if (isProviderPhoto) {
-    if (isGooglePhoto) {
-      return increaseGoogleProfilePhotoSize(authStore.authUser?.photoURL ?? '', parseInt(props.size))
-    }
-
-    return authStore.authUser?.photoURL
-  }
-
-  return selectedProfilePhoto.value.value
-})
 
 const iconSize = computed(() => Math.floor(parseInt(props.size) * 0.75))
 </script>

@@ -66,11 +66,13 @@
 
         <div class="bg-container avatarsList">
           <div
-            v-for="(iconData, iconIndex) in iconAvatarsList"
-            :key="`iconIndex${iconIndex}`"
             role="list"
           >
-            <div role="listitem">
+            <div
+              v-for="(iconData, iconIndex) in iconAvatarsList"
+              :key="`iconIndex${iconIndex}`"
+              role="listitem"
+            >
               <v-btn
                 :color="iconData.value === formPayload.profilePhoto?.value ? 'primary' : 'line'"
                 variant="tonal"
@@ -147,65 +149,6 @@ const formPayload = ref<FormPayload>({
 })
 
 const loading = ref(false)
-
-const iconAvatarsList = ref<ProfilePhoto[]>([
-  {
-    type: 'icon',
-    value: 'mdi-face-man',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-face-woman',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-emoticon-happy',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-emoticon',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-emoticon-excited',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-emoticon-cool',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-emoticon-wink',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-robot',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-robot-excited',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-dog',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-cat',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-bird',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-owl',
-  },
-  {
-    type: 'icon',
-    value: 'mdi-star-face',
-  },
-])
 
 async function handleSave() {
   try {
