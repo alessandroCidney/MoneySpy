@@ -1,11 +1,11 @@
-# MoneySpy (IN PROGRESS)
+# MoneySpy
 
 MoneySpy is a Nuxt.js/Vue.js website where you can log and monitor your expenses. It offers a great dashboard, an expense tracking interface, an achievements system, profile settings, authentication, and more.
 
 ## How to run the website?
 
 ### Live Website
-You can access the website at https://moneyspy-prod.web.app
+You can access the website at https://moneyspy.com.br
 
 ### Run manually
 
