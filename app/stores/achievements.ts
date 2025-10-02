@@ -97,7 +97,7 @@ export const useAchievementsStore = defineStore('achievements', () => {
       title: 'Amoroso',
       icon: 'mdi-heart',
       color: 'red',
-      description: 'Registre uma doação.',
+      description: 'Registre uma doação sua.',
 
       totalSteps: 1,
       initialStep: 0,

@@ -6,9 +6,9 @@ import {
   getDocs,
   orderBy,
   query,
+  type QueryConstraint,
   setDoc,
   updateDoc,
-  type OrderByDirection,
 } from 'firebase/firestore'
 
 import { v4 as uuidV4 } from 'uuid'
@@ -105,8 +105,8 @@ export function useFirestoreCrud<T extends DatabaseObject>(basePath: string) {
       return data
     },
 
-    async list(params = { orderBy: 'createdAt', orderDirection: 'desc' as OrderByDirection }) {
-      const q = query(collection(nuxtApp.$firebaseFirestore, basePath), orderBy(params.orderBy, params.orderDirection))
+    async list(queryConstraints: QueryConstraint[] = [orderBy('createdAt', 'desc')]) {
+      const q = query(collection(nuxtApp.$firebaseFirestore, basePath), ...queryConstraints)
 
       const querySnapshot = await getDocs(q)
 

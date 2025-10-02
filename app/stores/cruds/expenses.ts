@@ -1,3 +1,5 @@
+import { orderBy, where } from 'firebase/firestore'
+
 export const useExpensesStore = defineStore('expenses', {
   state: () => ({
     items: [] as DatabaseExpense[],
@@ -19,7 +21,16 @@ export const useExpensesStore = defineStore('expenses', {
 
         const expensesCrud = useExpensesCrud()
 
-        this.items = await expensesCrud.list()
+        const sevenDaysAgoDate = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000)
+
+        sevenDaysAgoDate.setHours(0, 0, 0, 0)
+
+        const sevenDaysAgoUnixTimestamp = dateToUnixTimestamp(sevenDaysAgoDate)
+
+        this.items = await expensesCrud.list([
+          orderBy('expenseDate', 'desc'),
+          where('expenseDate', '>=', sevenDaysAgoUnixTimestamp),
+        ])
         this.loadedOnce = true
       } catch (err) {
         globalErrorHandler(err)
@@ -36,7 +47,7 @@ export const useExpensesStore = defineStore('expenses', {
 
         const itemObj = await expensesCrud.create(...rest)
 
-        this.items.push(itemObj)
+        this.items.unshift(itemObj)
 
         const messageStore = useMessagesStore()
         messageStore.showSuccessMessage({ text: 'Registro adicionado!' })

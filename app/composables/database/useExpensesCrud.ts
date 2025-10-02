@@ -8,6 +8,7 @@ export interface DatabaseExpense extends DatabaseObject {
   value: number
   currency: string
   type: string
+  expenseDate: number
 }
 
 interface UseExpensesCrudParams {

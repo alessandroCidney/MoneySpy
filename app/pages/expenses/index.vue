@@ -8,9 +8,15 @@
       <v-btn-toggle
         v-model="selectedMode"
         :color="selectedMode === 'expense' ? 'secondary' : 'primary'"
-        class="mb-4 ultraRounded"
+        :class="{
+          'mb-4 ultraRounded w-100': true,
+          'w-100': vuetifyDisplay.xs.value,
+        }"
       >
         <v-btn
+          :class="{
+            'flex-fill': vuetifyDisplay.xs.value,
+          }"
           value="expense"
           size="large"
         >
@@ -18,10 +24,13 @@
             mdi-minus-circle
           </v-icon>
 
-          Nova Despesa
+          {{ vuetifyDisplay.xs.value ? 'Despesa' : 'Nova Despesa' }}
         </v-btn>
 
         <v-btn
+          :class="{
+            'flex-fill': vuetifyDisplay.xs.value,
+          }"
           value="income"
           size="large"
         >
@@ -29,7 +38,7 @@
             mdi-plus-circle
           </v-icon>
 
-          Nova Entrada
+          {{ vuetifyDisplay.xs.value ? 'Entrada' : 'Nova Entrada' }}
         </v-btn>
       </v-btn-toggle>
 
@@ -37,6 +46,7 @@
         ref="createExpenseForm"
         v-model="createExpenseFormIsValid"
         class="d-flex align-center justify-start flex-column flex-md-row ga-4"
+        autocomplete="off"
         @submit.prevent="handleCreateExpense"
       >
         <div
@@ -76,7 +86,7 @@
             :items="expenseTypes.filter(item => item.type === selectedMode).map(item => item.name)"
             :disabled="expensesStore.loadingCreate"
             bg-color="card"
-            placeholder="Tipo"
+            placeholder="Selecionar tipo"
             variant="solo"
             hide-details
             rounded
@@ -132,7 +142,8 @@
         v-else
         :items="expensesStore.items"
         :headers="expenseTableHeaders"
-        class="expensesTable bg-card"
+        items-per-page-text="Itens por página:"
+        class="expensesTable bg-card flex-fill"
       >
         <template #[`item.type`]="{ item: expenseData }">
           <v-avatar
@@ -150,7 +161,7 @@
         </template>
 
         <template #[`item.createdAt`]="{ item: expenseData }">
-          {{ dateToLargeStr(expenseData.createdAt) }}
+          {{ dateToLargeStr(expenseData.expenseDate) }}
         </template>
 
         <template #[`item.value`]="{ item: expenseData }">
@@ -255,7 +266,7 @@ const createExpenseFormIsValid = ref(false)
 
 const createExpenseFormPayload = ref({
   value: 0,
-  type: '',
+  type: undefined,
 })
 
 const selectedMode = ref<'expense' | 'income'>('expense')
@@ -290,13 +301,19 @@ async function handleCreateExpense() {
   if (validationResult?.valid) {
     await expensesStore.create({
       value: selectedMode.value === 'expense' ? createExpenseFormPayload.value.value * -1 : createExpenseFormPayload.value.value,
-      type: createExpenseFormPayload.value.type,
+      type: createExpenseFormPayload.value.type ?? '',
       currency: expensesStore.selectedCurrency,
+      expenseDate: getCurrentUnixTime(),
       name: '',
     })
 
-    if (createExpenseFormPayload.value.type === 'Doação') {
+    if (createExpenseFormPayload.value.type === 'Doação' && createExpenseFormPayload.value.value < 0) {
       await achievementsStore.completeAchievement('loving')
+    }
+
+    createExpenseFormPayload.value = {
+      value: 0,
+      type: undefined,
     }
   } else {
     messageStore.showErrorMessage({ text: 'Dados inválidos!' })
